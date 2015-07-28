@@ -1,0 +1,64 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+header {
+  width: 920px;
+  margin: 0 auto;
+}
+
+header h1 {
+  text-align: center;
+}
+
+nav ul {
+  width: 100%;
+	margin: 0 auto;
+	padding: 0;
+}
+
+nav ul li {
+	display: inline-block;
+}
+
+nav > ul > li > a {
+	color: #000;
+	display: block;
+	padding: 0 24px;
+	text-decoration: none;
+}
+
+#content {
+  width: 920px;
+  margin: 0 auto;
+}
+
+.gallery-item {
+  width: 800px;
+  margin: 15px;
+  height: 150px;
+  position: relative;
+  border: 1px solid;
+  border-color: #aaa;
+  overflow: hidden;
+}
+
+.item-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.item-label {
+  z-index: 100;
+  width: 100%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  text-align: right;
+  color: #666;
+  padding: 15px;
+  background: rgba(225, 225, 225, 0.8);
+}
