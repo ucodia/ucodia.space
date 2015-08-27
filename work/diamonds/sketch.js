@@ -55,9 +55,9 @@ function Diamond(x, y, r, n) {
 
   // colors
   this.alpha = 50;
-  this.cyan = color(0, 174, 239);
-  this.magenta = color(236, 0, 140);
-  this.yellow = color(255, 242, 0);
+  this.cyan = color(0, 174, 239, this.alpha);
+  this.magenta = color(236, 0, 140, this.alpha);
+  this.yellow = color(255, 242, 0, this.alpha);
 
   // init
   this.dots = [];
@@ -88,11 +88,11 @@ function Diamond(x, y, r, n) {
       var sel = (i + 3) % 3;
 
       if (sel === 0)
-        fill(this.cyan, this.alpha);
+        fill(this.cyan);
       else if (sel === 1)
-        fill(this.yellow, this.alpha);
+        fill(this.yellow);
       else if (sel === 2)
-        fill(this.magenta, this.alpha);
+        fill(this.magenta);
 
       for (var j = 0; j < this.dots.length; j++) {
       	if (i != j) {
