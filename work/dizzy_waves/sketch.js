@@ -36,12 +36,12 @@ function setup() {
 
   // panel
   colorSlider = createSlider(1, 64, 16);
-  panel = getElement('panel');
+  panel = select('#panel');
   panel.child(colorSlider);
 }
 
 function draw() {
-  background(maxColor);
+  background(maxColor, 0, maxColor);
   translate(-spacing, -spacing);
 
   // update value from panel
