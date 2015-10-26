@@ -8,6 +8,7 @@ var diams = [];
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
   noStroke();
+  frameRate(30);
 
   var spacing = width * spaceRatio / (n + 1);
   var r = width * (1 - spaceRatio) / (n * 2);
@@ -27,7 +28,7 @@ function draw() {
 
   for (var i = 0; i < n; ++i) {
     diams[i].draw();
-    diams[i].move(TWO_PI / 720);
+    diams[i].move(TWO_PI / 1080);
   }
 }
 
