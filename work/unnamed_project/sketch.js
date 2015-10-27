@@ -5,23 +5,27 @@ var rotationInc;
 var borderWeight;
 var weightInc;
 var maxColor;
+var colorCursor;
+var borderCursor;
+var borderAuto = false;
+var paused = false;
 
 var canvas;
 var cap;
 var capWidth;
 var capWidth;
-var colorCursor;
 
 function setup() {
   canvas = createCanvas(window.innerWidth, window.innerHeight);
 
-  // globals
+  // defaults
   capRotation = 0;
-  rotationInc = TWO_PI / 360;
-  borderWeight = 5;
+  rotationInc = TWO_PI / 180;
+  borderWeight = 3;
   weightInc = 0.5;
   maxColor = 100;
   colorCursor = new Looper(0, maxColor);
+  borderCursor = new Looper(0, 10);
   
   colorMode(HSB, maxColor);
   
@@ -39,7 +43,9 @@ function draw() {
   
   project();
   input();
-  capture();
+
+  if (!paused)
+    capture();
 }
 
 function project() {
@@ -66,7 +72,7 @@ function capture() {
   push();
   
   stroke(colorCursor.next(), maxColor * 0.6, maxColor * 0.8);
-  strokeWeight(borderWeight);
+  strokeWeight(borderAuto ? borderCursor.next() / 10 : borderWeight);
   noFill();
   
   translate(mouseX, mouseY);
@@ -100,15 +106,16 @@ function input() {
   }
   
   if (keyIsPressed) {
-    
     if (key === "r")
-      console.log("capture");
-    else if (key === " ")
-      console.log("pause");
+      saveCanvas("capture-" + getTimestamp(), "png");
+    else if (key === "w")
+      borderAuto = !borderAuto;
   }
 }
 
-function mousePressed() {
+function keyPressed() {
+  if (key === " ")
+    paused = !paused;
 }
 
 function mouseWheel(event) {
@@ -123,6 +130,13 @@ function mouseWheel(event) {
 function windowResized() {
   resizeCanvas(window.innerWidth, window.innerHeight);
   init();
+}
+
+function getTimestamp() {
+  return new Date().toISOString().split("-").join("")
+                                 .split("T").join("-")
+                                 .split(":").join("")
+                                 .substring(0, 15);
 }
 
 function Looper(start, end) {
