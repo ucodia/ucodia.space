@@ -45,21 +45,21 @@ function draw() {
 function project() {
   image(cap, 0, 0);
   
-//  push();
-//
-//  translate(width, 0);
-//  scale(-1, 1);
-//  image(cap, 0, 0);
-//
-//  translate(0, height);
-//  scale(1, -1);
-//  image(cap, 0, 0);
-//
-//  translate(width, 0);
-//  scale(-1 ,1);
-//  image(cap, 0, 0);
-//
-//  pop();
+  push();
+
+  translate(width, 0);
+  scale(-1, 1);
+  image(cap, 0, 0);
+
+  translate(0, height);
+  scale(1, -1);
+  image(cap, 0, 0);
+
+  translate(width, 0);
+  scale(-1 ,1);
+  image(cap, 0, 0);
+
+  pop();
 }
 
 function capture() {
@@ -77,7 +77,7 @@ function capture() {
   var capY = mouseY - capHeight / 2;
   
   rect(capX, capY, capWidth, capHeight);
-  cap = get(capX < 0 ? 0 : capX, capY < 0 ? 0 : capY, capWidth, capHeight);
+  cap = get(capX, capY, capWidth, capHeight);
   
   pop();
 }
