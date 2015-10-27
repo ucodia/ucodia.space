@@ -101,8 +101,6 @@ function input() {
 			capRotation = TWO_PI + capRotation;
 		else if (capRotation > TWO_PI)
 			capRotation = TWO_PI - capRotation;
-    
-    console.log("rotate");
   }
   
   if (keyIsPressed) {
