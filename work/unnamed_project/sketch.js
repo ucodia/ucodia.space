@@ -12,7 +12,6 @@ var borderCursor;
 var posLock;
 var borderAuto;
 var paused;
-var urlUpdate;
 
 var canvas;
 var cap;
@@ -38,7 +37,6 @@ function setup() {
   posLock = params.hasOwnProperty("x") || params.hasOwnProperty("y");
   borderAuto = params.beat ? JSON.parse(params.beat) : false;
   paused = false;
-  urlUpdate = true;
 
   colorMode(HSB, maxColor);
   frameRate(30);
@@ -57,9 +55,6 @@ function draw() {
   
   project();
   input();
-
-  if (urlUpdate)
-    url();
 
   if (!paused)
     capture();
@@ -105,12 +100,6 @@ function capture() {
   pop();
 }
 
-function url() {
-  var oldState = getURLParams();
-  var newState = getParams();
-  setURLParams(oldState, newState);
-}
-
 // input hooks
 
 function input() {
@@ -145,7 +134,7 @@ function keyPressed() {
   else if (k === "l")
     posLock = !posLock;
   else if (k === "c")
-    copyToClipboard(buildURL(getParams()));
+    copyToClipboard(setURLParams(getParams()));
   else if (k === " ")
     paused = !paused;
 }
@@ -179,15 +168,17 @@ function buildURL(params) {
   return location.origin + location.pathname + "?" + paramString;
 }
 
-function setURLParams(oldState, newState) {
-  var target = buildURL(newState);
+function setURLParams(params) {
+  var oldState = getURLParams();
+  var url = buildURL(params);
 
   try {
-    history.pushState(oldState, "", target);
+    history.pushState(oldState, "", url);
   }
   catch (e) {
-    urlUpdate = false;
   }
+
+  return url;
 }
 
 function copyToClipboard(text) {
