@@ -161,7 +161,7 @@ function getParams() {
   var params = {
     x: posX,
     y: posY,
-    rot: Number(capRotation.toFixed(2));
+    rot: Number(capRotation.toFixed(2))
   };
 
   if (posLock) params.lock = true;
