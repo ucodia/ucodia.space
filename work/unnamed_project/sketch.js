@@ -140,7 +140,7 @@ function input() {
 function keyPressed() {
   var k = key.toLowerCase();
 
-  else if (k === "w")
+  if (k === "w")
     borderAuto = !borderAuto;
   else if (k === "l")
     posLock = !posLock;
