@@ -35,7 +35,7 @@ function setup() {
   maxColor = 100;
   colorCursor = new Looper(0, maxColor);
   borderCursor = new Looper(0, 10);
-  posLock = params.lock ? JSON.parse(params.lock) : false;
+  posLock = params.hasOwnProperty("x") || params.hasOwnProperty("y");
   borderAuto = params.beat ? JSON.parse(params.beat) : false;
   paused = false;
   urlUpdate = true;
@@ -130,21 +130,20 @@ function input() {
 		else if (capRotation > TWO_PI)
 			capRotation = TWO_PI - capRotation;
   }
-  
-  if (keyIsPressed) {
-    if (key === "r")
-      saveCanvas("capture-" + getTimestamp(), "png");
-    else if (key === "s")
-      saveFrames("capture", "png", 900, 30); 
-    else if (key === "w")
-      borderAuto = !borderAuto;
-    else if (key === "l")
-      posLock = !posLock;
-  }
 }
 
 function keyPressed() {
-  if (key === " ")
+  var k = key.toLowerCase();
+
+  if (k === "r")
+    saveCanvas("capture-" + getTimestamp(), "png");
+  else if (k === "w")
+    borderAuto = !borderAuto;
+  else if (k === "l")
+    posLock = !posLock;
+  else if (k === "c")
+    copyToClipboard(buildURL(getParams()));
+  else if (k === " ")
     paused = !paused;
 }
 
@@ -164,18 +163,21 @@ function getParams() {
     rot: Number(capRotation.toFixed(2))
   };
 
-  if (posLock) params.lock = true;
   if (borderAuto) params.beat = true;
 
   return params;
 }
 
-function setURLParams(oldState, newState) {
-  var paramString = Object.keys(newState).map(function(key) {
-    return key + '=' + newState[key];
+function buildURL(params) {
+  var paramString = Object.keys(params).map(function(key) {
+    return key + '=' + params[key];
   }).join('&');
 
-  var target = location.origin + location.pathname + "?" + paramString;
+  return location.origin + location.pathname + "?" + paramString;
+}
+
+function setURLParams(oldState, newState) {
+  var target = buildURL(newState);
 
   try {
     history.pushState(oldState, "", target);
@@ -183,6 +185,10 @@ function setURLParams(oldState, newState) {
   catch (e) {
     urlUpdate = false;
   }
+}
+
+function copyToClipboard(text) {
+  window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
 }
 
 function windowResized() {
