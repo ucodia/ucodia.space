@@ -12,6 +12,7 @@ var borderCursor;
 var posLock;
 var borderAuto;
 var paused;
+var urlUpdate;
 
 var canvas;
 var cap;
@@ -37,6 +38,7 @@ function setup() {
   posLock = params.lock ? JSON.parse(params.lock) : false;
   borderAuto = params.beat ? JSON.parse(params.beat) : false;
   paused = false;
+  urlUpdate = true;
 
   colorMode(HSB, maxColor);
   frameRate(30);
@@ -55,7 +57,9 @@ function draw() {
   
   project();
   input();
-  url();
+
+  if (urlUpdate)
+    url();
 
   if (!paused)
     capture();
@@ -102,7 +106,24 @@ function capture() {
 }
 
 function url() {
+  var oldState = getURLParams();
+  var newState = getParams();
+  setURLParams(oldState, newState);
+}
 
+function setURLParams(oldState, newState) {
+  var paramString = Object.keys(newState).map(function(key) {
+    return key + '=' + newState[key];
+  }).join('&');
+
+  var target = location.origin + location.pathname + "?" + paramString;
+
+  try {
+    history.pushState(oldState, "", target);
+  }
+  catch (e) {
+    urlUpdate = false;
+  }
 }
 
 // input hooks
@@ -150,6 +171,19 @@ function mouseWheel(event) {
 }
 
 // other stuff
+
+function getParams() {
+  var params = {
+    x: posX,
+    y: posY,
+    rot: capRotation
+  };
+
+  if (posLock) params.lock = true;
+  if (borderAuto) params.beat = true;
+
+  return params;
+}
 
 function windowResized() {
   resizeCanvas(window.innerWidth, window.innerHeight);
