@@ -130,13 +130,16 @@ function input() {
 		else if (capRotation > TWO_PI)
 			capRotation = TWO_PI - capRotation;
   }
+
+  if (keyPressed) {
+    if (key.toLowerCase() === "r")
+      saveCanvas("capture-" + getTimestamp(), "png");
+  };
 }
 
 function keyPressed() {
   var k = key.toLowerCase();
 
-  if (k === "r")
-    saveCanvas("capture-" + getTimestamp(), "png");
   else if (k === "w")
     borderAuto = !borderAuto;
   else if (k === "l")
