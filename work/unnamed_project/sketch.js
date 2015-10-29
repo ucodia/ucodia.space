@@ -111,21 +111,6 @@ function url() {
   setURLParams(oldState, newState);
 }
 
-function setURLParams(oldState, newState) {
-  var paramString = Object.keys(newState).map(function(key) {
-    return key + '=' + newState[key];
-  }).join('&');
-
-  var target = location.origin + location.pathname + "?" + paramString;
-
-  try {
-    history.pushState(oldState, "", target);
-  }
-  catch (e) {
-    urlUpdate = false;
-  }
-}
-
 // input hooks
 
 function input() {
@@ -176,13 +161,28 @@ function getParams() {
   var params = {
     x: posX,
     y: posY,
-    rot: capRotation
+    rot: Number(capRotation.toFixed(2));
   };
 
   if (posLock) params.lock = true;
   if (borderAuto) params.beat = true;
 
   return params;
+}
+
+function setURLParams(oldState, newState) {
+  var paramString = Object.keys(newState).map(function(key) {
+    return key + '=' + newState[key];
+  }).join('&');
+
+  var target = location.origin + location.pathname + "?" + paramString;
+
+  try {
+    history.pushState(oldState, "", target);
+  }
+  catch (e) {
+    urlUpdate = false;
+  }
 }
 
 function windowResized() {
