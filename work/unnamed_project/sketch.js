@@ -1,5 +1,7 @@
 // unnamed project by lionel ringenbach @ ucodia.io
 
+var posX;
+var posY;
 var capRotation;
 var rotationInc;
 var borderWeight;
@@ -7,8 +9,9 @@ var weightInc;
 var maxColor;
 var colorCursor;
 var borderCursor;
-var borderAuto = false;
-var paused = false;
+var posLock;
+var borderAuto;
+var paused;
 
 var canvas;
 var cap;
@@ -18,16 +21,25 @@ var capWidth;
 function setup() {
   canvas = createCanvas(window.innerWidth, window.innerHeight);
 
+  // gather url paramters to initialize the sketch
+  var params = getURLParams();
+
   // defaults
-  capRotation = 0;
+  posX = params.x ? JSON.parse(params.x) : 0;
+  posY = params.y ? JSON.parse(params.y) : 0;
+  capRotation = params.rot ? JSON.parse(params.rot) : 0;
   rotationInc = TWO_PI / 180;
   borderWeight = 3;
   weightInc = 0.5;
   maxColor = 100;
   colorCursor = new Looper(0, maxColor);
   borderCursor = new Looper(0, 10);
-  
+  posLock = params.lock ? JSON.parse(params.lock) : false;
+  borderAuto = params.beat ? JSON.parse(params.beat) : false;
+  paused = false;
+
   colorMode(HSB, maxColor);
+  frameRate(30);
   
   init();
 }
@@ -43,6 +55,7 @@ function draw() {
   
   project();
   input();
+  url();
 
   if (!paused)
     capture();
@@ -75,12 +88,12 @@ function capture() {
   strokeWeight(borderAuto ? borderCursor.next() / 10 : borderWeight);
   noFill();
   
-  translate(mouseX, mouseY);
+  translate(posX, posY);
   rotate(capRotation);
-  translate(-mouseX, -mouseY);
+  translate(-posX, -posY);
   
-  var capX = mouseX - capWidth / 2;
-  var capY = mouseY - capHeight / 2;
+  var capX = posX - capWidth / 2;
+  var capY = posY - capHeight / 2;
   
   rect(capX, capY, capWidth, capHeight);
   cap = get(capX, capY, capWidth, capHeight);
@@ -88,9 +101,18 @@ function capture() {
   pop();
 }
 
+function url() {
+
+}
+
 // input hooks
 
 function input() {
+  if (!posLock) {
+    posX = mouseX;
+    posY = mouseY;
+  }
+
   if (mouseIsPressed) {
     if (mouseButton == LEFT)
 			capRotation -= rotationInc;
@@ -106,8 +128,12 @@ function input() {
   if (keyIsPressed) {
     if (key === "r")
       saveCanvas("capture-" + getTimestamp(), "png");
+    else if (key === "s")
+      saveFrames("capture", "png", 900, 30); 
     else if (key === "w")
       borderAuto = !borderAuto;
+    else if (key === "l")
+      posLock = !posLock;
   }
 }
 
@@ -133,8 +159,7 @@ function windowResized() {
 function getTimestamp() {
   return new Date().toISOString().split("-").join("")
                                  .split("T").join("-")
-                                 .split(":").join("")
-                                 .substring(0, 15);
+                                 .split(":").join("");
 }
 
 function Looper(start, end) {
