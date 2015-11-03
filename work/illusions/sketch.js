@@ -91,9 +91,9 @@ function invert() {
 
 // event hooks
 
-function mousePressed() {
-  if (mouseButton == LEFT)
-    invert();
+function touchStarted() {
+    invert();   
+    return false;
 }
 
 function keyPressed() {
