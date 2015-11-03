@@ -1,14 +1,13 @@
 // illusions by lionel ringenbach @ ucodia.io
 
 var n = 3;
-var elems = [];
 var shapes = [];
 var bands = [];
 var backColor = 0;
 var foreColor = 255;
 var size = 0;
 var space = 0;
-var speed = 5;
+var speed = 10;
 var paused = false;
 
 function setup() {
@@ -28,8 +27,7 @@ function init() {
 
   for (var i = 0; i < n; i++) {
   	var baseX = (space + size) * (i + 1) - size / 2;
-  	elems[i] = { x: baseX, y: baseY };
-    shapes[i] = i;
+  	shapes[i] = { x: baseX, y: baseY, form: i };
   }
   
   for (var i = 0; i < n + 2; i++) {
@@ -50,27 +48,25 @@ function draw() {
     
     noStroke();
     fill(foreColor);
-    rect(band.x, band.y, space * 0.5, height);
+    rect(band.x, band.y, size / 2, height);
   }
   
-  // draw elements
-  for (var i = 0; i < elems.length; i++) {
-    var elem = elems[i];
+  // draw shapes
+  for (var i = 0; i < shapes.length; i++) {
     var shape = shapes[i];
     
-    noFill();
-    strokeWeight(size * 0.15);
-    stroke(backColor);
+    noStroke();
+    fill(backColor);
     
-    if (shape == 0)
-      rect(elem.x, elem.y, size, size);    
-    else if (shape == 1)
-      ellipse(elem.x, elem.y, size, size); 
-    else if (shape == 2)
-      equi(elem.x, elem.y, size, 1);
+    if (shape.form == 0)
+      rect(shape.x, shape.y, size, size);    
+    else if (shape.form == 1)
+      ellipse(shape.x, shape.y, size, size); 
+    else if (shape.form == 2)
+      equi(shape.x, shape.y, size, 1);
   }
   
-  // animate bands and elements
+  // animate bands and shapes
   for (var i = 0; i < bands.length; i++) {
     var band = bands[i];
     
@@ -78,8 +74,15 @@ function draw() {
     
     if (band.x >= width + size + (space / 2)) {
       band.x = -(size + (space / 2));
-      shuffle(shapes, true);
+      shiftShapes();
     }
+  }
+}
+
+function shiftShapes() {
+  for (var i = 0; i < shapes.length; i++) {
+    var shape = shapes[i];
+    shape.form = (shape.form + 1) % 3;
   }
 }
 
