@@ -7,7 +7,7 @@ var backColor = 0;
 var foreColor = 255;
 var size = 0;
 var space = 0;
-var speed = 10;
+var speed = 7;
 var paused = false;
 
 function setup() {
@@ -48,15 +48,16 @@ function draw() {
     
     noStroke();
     fill(foreColor);
-    rect(band.x, band.y, size / 2, height);
+    rect(band.x, band.y, size * 0.7, height);
   }
   
   // draw shapes
   for (var i = 0; i < shapes.length; i++) {
     var shape = shapes[i];
     
-    noStroke();
-    fill(backColor);
+    strokeWeight(size * 0.15);
+    stroke(backColor);
+    noFill();
     
     if (shape.form == 0)
       rect(shape.x, shape.y, size, size);    
