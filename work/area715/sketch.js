@@ -1,4 +1,4 @@
-// untitled #1 by lionel ringenbach @ ucodia.io
+// area 715 by lionel ringenbach @ ucodia.io
 
 var posX;
 var posY;
@@ -9,6 +9,8 @@ var weightInc;
 var maxColor;
 var colorCursor;
 var borderCursor;
+var overlay;
+var mirror;
 var posLock;
 var borderAuto;
 var paused;
@@ -34,69 +36,106 @@ function setup() {
   maxColor = 100;
   colorCursor = new Looper(0, maxColor);
   borderCursor = new Looper(0, 10);
+  overlay = params.overlay ? params.overlay : "rect";
+  mirror = params.mirror ? params.mirror : "hv";
   posLock = params.hasOwnProperty("x") || params.hasOwnProperty("y");
   borderAuto = params.beat ? JSON.parse(params.beat) : false;
   paused = false;
 
-  colorMode(HSB, maxColor);
-  frameRate(30);
-  
   init();
 }
 
 function init() {
-  capWidth = width / 2;
-  capHeight = height / 2;
+  colorMode(HSB, maxColor);
+  frameRate(30);
+
+  if (mirror === "hv") {
+    capWidth = width / 2;
+    capHeight = height / 2;
+  }
+  else if (mirror === "h") {
+    capWidth = width;
+    capHeight = height / 2;
+  }
+  else if (mirror === "v") {
+    capWidth = width / 2;
+    capHeight = height;
+  }
   cap = createImage(capWidth, capHeight);
 }
 
 function draw() {
   background(0);
-  
+
   project();
   input();
 
-  if (!paused)
+  if (!paused) {
+    graphics();
     capture();
+  }
 }
 
 function project() {
   image(cap, 0, 0);
-  
+
   push();
 
-  translate(width, 0);
-  scale(-1, 1);
-  image(cap, 0, 0);
+  if (mirror === "hv") {
+    translate(width, 0);
+    scale(-1, 1);
+    image(cap, 0, 0);
 
-  translate(0, height);
-  scale(1, -1);
-  image(cap, 0, 0);
+    translate(0, height);
+    scale(1, -1);
+    image(cap, 0, 0);
 
-  translate(width, 0);
-  scale(-1 ,1);
-  image(cap, 0, 0);
+    translate(width, 0);
+    scale(-1 ,1);
+    image(cap, 0, 0);
+  }
+  else if (mirror === "h") {
+    translate(0, height);
+    scale(1, -1);
+    image(cap, 0, 0);
+  }
+  else if (mirror === "v") {
+    translate(width, 0);
+    scale(-1, 1);
+    image(cap, 0, 0);
+  }
 
   pop();
 }
 
 function capture() {
+  var capX = posX - capWidth / 2;
+  var capY = posY - capHeight / 2;
+  cap = get(capX, capY, capWidth, capHeight);
+}
+
+function graphics() {
   push();
-  
-  stroke(colorCursor.next(), maxColor * 0.6, maxColor * 0.8);
-  strokeWeight(borderAuto ? borderCursor.next() / 10 : borderWeight);
-  noFill();
-  
+
   translate(posX, posY);
   rotate(capRotation);
   translate(-posX, -posY);
-  
-  var capX = posX - capWidth / 2;
-  var capY = posY - capHeight / 2;
-  
-  rect(capX, capY, capWidth, capHeight);
-  cap = get(capX, capY, capWidth, capHeight);
-  
+
+  stroke(colorCursor.next(), maxColor * 0.6, maxColor * 0.8);
+  strokeWeight(borderAuto ? borderCursor.next() / 10 : borderWeight);
+  noFill();
+
+  if (overlay == "rect") {
+    rectMode(CENTER);
+    rect(posX, posY, capWidth, capHeight);
+  }
+  else if (overlay == "equi") {
+    equi(posX, posY, height / 2 * 0.8);
+  }
+  else if (overlay == "circ") {
+    ellipse(posX, posY, capHeight, capHeight);
+  }
+
   pop();
 }
 
@@ -152,7 +191,10 @@ function getParams() {
   var params = {
     x: posX,
     y: posY,
-    rot: Number(capRotation.toFixed(2))
+    rot: Number(capRotation.toFixed(2)),
+    border: borderWeight,
+    overlay: overlay,
+    mirror: mirror
   };
 
   if (borderAuto) params.beat = true;
