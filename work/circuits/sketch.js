@@ -5,25 +5,27 @@ var spacing = 40;
 var nodeSize = spacing * 0.45;
 var linkSize = nodeSize * 0.1;
 var offset = spacing / 2;
-var nColors = 4;
-
-// models
-var circuit;
-var palette;
 
 function setup() {
-	createCanvas();	
-	palette = createPalette(nColors, 0.5);	
+	createCanvas();		
 	generate();
 }
 
 function generate() {
 	resizeCanvas(window.innerWidth, window.innerHeight);
-	init();
-	display();
+	
+	var nColors = randomInt(2, 4);
+	var colorOffset = random(0, 1);
+	palette = createPalette(nColors, colorOffset);
+	
+	var cols = Math.ceil(width / spacing);
+	var rows = Math.ceil(height / spacing);	
+	circuit = createCircuit(cols, rows, nColors);
+	
+	display(circuit, palette);
 }
 
-function display() {
+function display(circuit, palette) {
 	background(0);
 	
 	for (var i = 0; i < circuit.paths.length; i++) {
@@ -87,25 +89,32 @@ function getPosition(node) {
 	}
 }
 
-function init() {
-	var cols = Math.ceil(width / spacing);
-	var rows = Math.ceil(height / spacing);
+function createCircuit(cols, rows, nColors) {	
+	// initialize node grid
+	var nodes = [];
+	for	(var i = 0; i < cols; i++) {
+		if (!nodes[i]) nodes[i] = [];
+		for	(var j = 0; j < rows; j++) {
+			nodes[i][j] = null;
+		}	
+	}
 	
-	circuit = createCircuit(cols, rows);
+	// initialize paths
+	var paths = [];
 	
-	//generate circuit
-	for (var i = 0; i < circuit.cols; i++) {
-		for (var j = 0; j < circuit.rows; j++) {
+	// generate circuit
+	for (var i = 0; i < cols; i++) {
+		for (var j = 0; j < rows; j++) {
 			// skip if node is already defined
-			if (circuit.nodes[i][j]) continue;
+			if (nodes[i][j]) continue;
 
 			// create a new node and start new path
 			var current = createNode(i, j);
-			var path = createPath(current, cols);
+			var path = createPath(current, cols, nColors);
 			
 			if (path.size > 0) {
-				circuit.nodes[i][j] = current;
-				circuit.paths.push(path);
+				nodes[i][j] = current;
+				paths.push(path);
 					
 				var count = 1;
 				var last = current;
@@ -128,8 +137,8 @@ function init() {
 					
 					// next position is outside boundaries
 					// or already has a node
-					if (nextX >= circuit.cols || nextY >= circuit.rows ||
-						circuit.nodes[nextX][nextY]) {
+					if (nextX >= cols || nextY >= rows ||
+						nodes[nextX][nextY]) {
 						// stop the path prematurely
 						path.size = count;
 						break;
@@ -137,7 +146,7 @@ function init() {
 					
 					// initialize next node
 					var next = createNode(nextX, nextY);
-					circuit.nodes[nextX][nextY] = next;
+					nodes[nextX][nextY] = next;
 					
 					// link nodes
 					last.right = next;
@@ -151,6 +160,13 @@ function init() {
 			}
 		}
 	}
+	
+	return {
+		cols: cols,
+		rows: rows,
+		nodes: nodes,
+		paths: paths
+	}
 }
 
 function createNode(x, y) {
@@ -163,28 +179,7 @@ function createNode(x, y) {
 	}
 }
 
-function createCircuit(cols, rows) {
-	// initialize node grid
-	var nodes = [];
-	for	(var i = 0; i < cols; i++) {
-		if (!nodes[i]) nodes[i] = [];
-		for	(var j = 0; j < rows; j++) {
-			nodes[i][j] = null;
-		}	
-	}
-	
-	// initialize paths
-	var paths = [];
-	
-	return {
-		cols: cols,
-		rows: rows,
-		nodes: nodes,
-		paths: paths
-	}
-}
-
-function createPath(head, max) {
+function createPath(head, max, nColors) {
 	var size = randomInt(0, max);
 	var color = randomInt(0, nColors - 1);
 	var style = randomInt(0, 1);
@@ -207,7 +202,7 @@ function createPalette(n, offset) {
 	for (var i = 0; i < n; i++) {
 		var hue = (i + offset) % n;
 		colorMode(HSB, n, 100, 100);
-		palette[i] = color(hue, 70, 70);
+		palette[i] = color(hue, 70, 90);
 	}
 	pop();
 	
