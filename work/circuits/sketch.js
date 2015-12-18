@@ -229,6 +229,8 @@ function windowResized() {
 }
 
 function mousePressed() {
+	if (mouseButton == RIGHT) return;
+	
 	generate();
 }
 
