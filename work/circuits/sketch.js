@@ -5,9 +5,22 @@ var spacing = 40;
 var nodeSize = spacing * 0.45;
 var linkSize = nodeSize * 0.1;
 var offset = spacing / 2;
+var backColor;
 
 function setup() {
-	createCanvas();		
+	createCanvas();	
+	
+	// defaults
+	backColor = color(0);
+	
+	// ui
+	var themeSel = createSelect();
+	themeSel.option('dark');
+	themeSel.option('light');
+	themeSel.changed(themeChanged);
+	var panel = select('#panel');
+	panel.child(themeSel);
+	
 	generate();
 }
 
@@ -26,7 +39,7 @@ function generate() {
 }
 
 function display(circuit, palette) {
-	background(0);
+	background(backColor);
 	
 	for (var i = 0; i < circuit.paths.length; i++) {
 		var path = circuit.paths[i];
@@ -62,7 +75,7 @@ function displayEndpoint(node, c, s) {
 	if (s === 0) {
 		stroke(c);
 		strokeWeight(linkSize);
-		fill(0, 0, 0);
+		fill(backColor);
 		ellipse(pos.x, pos.y, nodeSize, nodeSize);
 	}
 	// style = 1 -> full endpoint
@@ -217,6 +230,21 @@ function windowResized() {
 
 function mousePressed() {
 	generate();
+}
+
+function themeChanged(evt) {
+	evt.preventDefault();
+	
+	if (evt && evt.target) {
+		theme = evt.target.value;
+		
+		if (theme === 'light')
+			backColor = color(255);
+		else
+			backColor = color(0);
+		
+		generate();
+	}
 }
 
 // utilities
