@@ -1,20 +1,19 @@
-// circuits
+// circuits by lionel ringenbach @ ucodia.io
 
+// display parameters
 var spacing = 40;
 var nodeSize = spacing * 0.45;
 var linkSize = nodeSize * 0.1;
 var offset = spacing / 2;
-var circuit;
-var colors = [];
+var nColors = 4;
 
+// models
+var circuit;
+var palette;
 
 function setup() {
-	colors.push(color("#ff7e00"));
-	colors.push(color("#33b7bc"));
-	colors.push(color("#b6c000"));
-	colors.push(color("#f1e2ab"));
-	
-	createCanvas();
+	createCanvas();	
+	palette = createPalette(nColors, 0.5);	
 	generate();
 }
 
@@ -32,8 +31,7 @@ function display() {
 		var current = path.head;
 		
 		// define path color
-		colorMode(HSB, 100);
-		var c = colors[path.color];
+		var c = palette[path.color];
 		
 		while (current) {
 			var pos = getPosition(current);
@@ -188,7 +186,7 @@ function createCircuit(cols, rows) {
 
 function createPath(head, max) {
 	var size = randomInt(0, max);
-	var color = randomInt(0, 3);
+	var color = randomInt(0, nColors - 1);
 	var style = randomInt(0, 1);
 	
 	return {
@@ -198,6 +196,22 @@ function createPath(head, max) {
 		head: head,
 		tail: head
 	}
+}
+
+function createPalette(n, offset) {
+	if (!offset) offset = 0;
+	
+	var palette = []
+		
+	push();	
+	for (var i = 0; i < n; i++) {
+		var hue = (i + offset) % n;
+		colorMode(HSB, n, 100, 100);
+		palette[i] = color(hue, 70, 70);
+	}
+	pop();
+	
+	return palette;
 }
 
 // event hookups
