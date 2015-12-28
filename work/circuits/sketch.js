@@ -35,67 +35,60 @@ function generate() {
 	var rows = Math.ceil(height / spacing);	
 	circuit = createCircuit(cols, rows, nColors);
 	
-	display(circuit, palette);
+	drawCircuit(circuit, palette);
 }
 
-function display(circuit, palette) {
+function drawCircuit(circuit, palette) {
 	background(backColor);
 	
 	for (var i = 0; i < circuit.paths.length; i++) {
 		var path = circuit.paths[i];
-		var current = path.head;
-		
-		// define path color
-		var c = palette[path.color];
-		
-		while (current) {
-			var pos = getPosition(current);
-			
-			// current node is a link
-			if (current.left && current.right) {
-				displayLink(current.left, current, c);
-			}
-			
-			current = current.right;
-		}
-			
-		if (path.size > 1) {
-			displayLink(path.tail.left, path.tail, c);
-			displayEndpoint(path.tail, c, path.style);
-		}
-		
-		displayEndpoint(path.head, c, path.style);
+		drawPath(path);
 	}
 }
 
-function displayEndpoint(node, c, s) {
-	var pos = getPosition(node);
+function drawPath(path) {
+	// pick path color from palette
+	var c = palette[path.color];
 	
-	// style = 0 -> outline endpoint
-	if (s === 0) {
+	drawTrace(path.nodes, c);
+	
+	drawPad(path.nodes[0], c, path.style);
+	if (path.size > 1)
+		drawPad(path.nodes[path.nodes.length - 1], c, path.style);
+}
+
+function drawTrace(nodes, c) {
+	for (var i = 0; i < nodes.length - 1; i++) {
 		stroke(c);
 		strokeWeight(linkSize);
-		fill(backColor);
-		ellipse(pos.x, pos.y, nodeSize, nodeSize);
+		
+		var lPos = getNodePosition(nodes[i]);
+		var rPos = getNodePosition(nodes[i + 1]);
+		line(lPos.x, lPos.y, rPos.x, rPos.y);
 	}
-	// style = 1 -> full endpoint
-	else if (s > 0) {
+}
+
+function drawPad(node, c, s) {
+	var pos = getNodePosition(node);
+	
+	// style = 0 -> circular pad
+	if (s === 0) {
 		noStroke();
 		fill(c);
 		ellipse(pos.x, pos.y, nodeSize, nodeSize);
 	}
+	// style = 1 -> circular pad with hole
+	else if (s > 0) {
+		stroke(c);
+		strokeWeight(linkSize);
+		fill(backColor);
+		ellipse(pos.x, pos.y, nodeSize, nodeSize);
+		
+	}
 }
 
-function displayLink(left, right, c) {
-	stroke(c);
-	strokeWeight(linkSize);
-	
-	var lPos = getPosition(left);
-	var rPos = getPosition(right);
-	line(lPos.x, lPos.y, rPos.x, rPos.y);
-}
-
-function getPosition(node) {
+function getNodePosition(node) {
 	return {
 		x: offset + (spacing * node.x),
 		y: offset + (spacing * node.y)
@@ -103,12 +96,12 @@ function getPosition(node) {
 }
 
 function createCircuit(cols, rows, nColors) {	
-	// initialize node grid
-	var nodes = [];
+	// create reference grid
+	var grid = [];
 	for	(var i = 0; i < cols; i++) {
-		if (!nodes[i]) nodes[i] = [];
+		if (!grid[i]) grid[i] = [];
 		for	(var j = 0; j < rows; j++) {
-			nodes[i][j] = null;
+			grid[i][j] = null;
 		}	
 	}
 	
@@ -119,14 +112,15 @@ function createCircuit(cols, rows, nColors) {
 	for (var i = 0; i < cols; i++) {
 		for (var j = 0; j < rows; j++) {
 			// skip if node is already defined
-			if (nodes[i][j]) continue;
+			if (grid[i][j]) continue;
 
 			// create a new node and start new path
 			var current = createNode(i, j);
-			var path = createPath(current, cols, nColors);
+			var path = createPath(cols, nColors);
+			path.nodes.push(current);
 			
 			if (path.size > 0) {
-				nodes[i][j] = current;
+				grid[i][j] = current;
 				paths.push(path);
 					
 				var count = 1;
@@ -151,7 +145,7 @@ function createCircuit(cols, rows, nColors) {
 					// next position is outside boundaries
 					// or already has a node
 					if (nextX >= cols || nextY >= rows ||
-						nodes[nextX][nextY]) {
+						grid[nextX][nextY]) {
 						// stop the path prematurely
 						path.size = count;
 						break;
@@ -159,12 +153,8 @@ function createCircuit(cols, rows, nColors) {
 					
 					// initialize next node
 					var next = createNode(nextX, nextY);
-					nodes[nextX][nextY] = next;
-					
-					// link nodes
-					last.right = next;
-					next.left = last;
-					path.tail = next;
+					grid[nextX][nextY] = next;
+					path.nodes.push(next);
 					
 					// update chain condition
 					last = next;
@@ -177,32 +167,28 @@ function createCircuit(cols, rows, nColors) {
 	return {
 		cols: cols,
 		rows: rows,
-		nodes: nodes,
 		paths: paths
 	}
 }
 
 function createNode(x, y) {
 	return {
-		type: 'empty',
 		x: x,
-		y: y,
-		left: null,
-		right: null
+		y: y
 	}
 }
 
-function createPath(head, max, nColors) {
+function createPath(max, nColors) {
+	var nodes = [];
 	var size = randomInt(0, max);
 	var color = randomInt(0, nColors - 1);
 	var style = randomInt(0, 1);
 	
 	return {
+		nodes: nodes,
 		size: size,
 		color: color,
-		style: style,
-		head: head,
-		tail: head
+		style: style
 	}
 }
 
