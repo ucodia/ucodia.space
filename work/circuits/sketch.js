@@ -192,10 +192,10 @@ function createPalette(n, offset) {
 	
 	var palette = []
 		
-	push();	
+	push();
+	colorMode(HSB, n, 100, 100);
 	for (var i = 0; i < n; i++) {
-		var hue = (i + offset) % n;
-		colorMode(HSB, n, 100, 100);
+		var hue = (i + offset) % n;	
 		palette[i] = color(hue, 70, 90);
 	}
 	pop();
