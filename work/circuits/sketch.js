@@ -54,7 +54,7 @@ function drawPath(path) {
 	drawTrace(path.nodes, c);
 	
 	drawPad(path.nodes[0], c, path.style);
-	if (path.size > 1)
+	if (path.nodes.length > 1)
 		drawPad(path.nodes[path.nodes.length - 1], c, path.style);
 }
 
@@ -114,20 +114,22 @@ function createCircuit(cols, rows, nColors) {
 			// skip if node is already defined
 			if (grid[i][j]) continue;
 
-			// create a new node and start new path
-			var current = createNode(i, j);
-			var path = createPath(cols, nColors);
-			path.nodes.push(current);
-			
-			if (path.size > 0) {
-				grid[i][j] = current;
-				paths.push(path);
+			// generate new path length
+			var pathLength = randomInt(0, cols);
 					
-				var count = 1;
-				var last = current;
+			if (pathLength > 0) {
+				// start new path with new node
+				var current = createNode(i, j);
+				var path = createPath(cols, nColors);
+				path.nodes.push(current);	
+				paths.push(path);
 				
+				// update referennce grid
+				grid[i][j] = current;
+								
 				// generate path
-				while (count < path.size) {
+				while (path.nodes.length < pathLength) {
+					var last = path.nodes[path.nodes.length - 1];
 					var nextX = last.x;
 					var nextY = last.y;
 					var dir = randomInt(0, 1);
@@ -142,23 +144,18 @@ function createCircuit(cols, rows, nColors) {
 						nextY++;
 					}
 					
+					// exit prematurely in case
 					// next position is outside boundaries
 					// or already has a node
-					if (nextX >= cols || nextY >= rows ||
-						grid[nextX][nextY]) {
-						// stop the path prematurely
-						path.size = count;
+					if ((nextX >= cols || nextY >= rows) || grid[nextX][nextY])
 						break;
-					}
 					
 					// initialize next node
 					var next = createNode(nextX, nextY);
-					grid[nextX][nextY] = next;
 					path.nodes.push(next);
 					
-					// update chain condition
-					last = next;
-					count++;
+					// update reference grid
+					grid[nextX][nextY] = next;
 				}			
 			}
 		}
@@ -180,13 +177,11 @@ function createNode(x, y) {
 
 function createPath(max, nColors) {
 	var nodes = [];
-	var size = randomInt(0, max);
 	var color = randomInt(0, nColors - 1);
 	var style = randomInt(0, 1);
 	
 	return {
 		nodes: nodes,
-		size: size,
 		color: color,
 		style: style
 	}
