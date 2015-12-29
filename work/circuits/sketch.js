@@ -11,12 +11,12 @@ function setup() {
 	createCanvas();	
 	
 	// defaults
-	backColor = color(0);
+	backColor = color(255);
 	
 	// ui
 	var themeSel = createSelect();
-	themeSel.option('dark');
 	themeSel.option('light');
+	themeSel.option('dark');
 	themeSel.changed(themeChanged);
 	var panel = select('#panel');
 	panel.child(themeSel);
@@ -229,10 +229,10 @@ function themeChanged(evt) {
 	if (evt && evt.target) {
 		theme = evt.target.value;
 		
-		if (theme === 'light')
-			backColor = color(255);
-		else
+		if (theme === 'dark')
 			backColor = color(0);
+		else
+			backColor = color(255);
 		
 		generate();
 	}
