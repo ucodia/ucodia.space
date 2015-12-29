@@ -33,7 +33,7 @@ function generate() {
 	palette = createPalette(nColors, colorOffset);
 	
 	// generate pad styles		
-	var padStyles = [circularPadStyle, circularPadWithHoleStyle];
+	var padStyles = [regularPadStyle, padWithHoleStyle];
 
 	// generate circuit
 	var cols = Math.ceil(width / spacing);
@@ -85,11 +85,11 @@ function drawPad(node, color, style) {
 }
 
 // pad styles
-function circularPadStyle(color) {
+function regularPadStyle(color) {
 	noStroke();
 	fill(color);
 }
-function circularPadWithHoleStyle(color) {
+function padWithHoleStyle(color) {
 	stroke(color);
 	strokeWeight(linkSize);
 	fill(backColor);
