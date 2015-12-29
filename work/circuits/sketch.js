@@ -49,18 +49,18 @@ function drawCircuit(circuit, palette) {
 
 function drawPath(path) {
 	// pick path color from palette
-	var c = palette[path.color];
+	var color = palette[path.color];
 	
-	drawTrace(path.nodes, c);
+	drawTrace(path.nodes, color);
 	
-	drawPad(path.nodes[0], c, path.style);
+	drawPad(path.nodes[0], color, path.padStyle);
 	if (path.nodes.length > 1)
-		drawPad(path.nodes[path.nodes.length - 1], c, path.style);
+		drawPad(path.nodes[path.nodes.length - 1], color, path.padStyle);
 }
 
-function drawTrace(nodes, c) {
+function drawTrace(nodes, color) {
 	for (var i = 0; i < nodes.length - 1; i++) {
-		stroke(c);
+		stroke(color);
 		strokeWeight(linkSize);
 		
 		var lPos = getNodePosition(nodes[i]);
@@ -69,22 +69,21 @@ function drawTrace(nodes, c) {
 	}
 }
 
-function drawPad(node, c, s) {
+function drawPad(node, color, style) {
 	var pos = getNodePosition(node);
 	
 	// style = 0 -> circular pad
-	if (s === 0) {
+	if (style === 0) {
 		noStroke();
-		fill(c);
+		fill(color);
 		ellipse(pos.x, pos.y, nodeSize, nodeSize);
 	}
 	// style = 1 -> circular pad with hole
-	else if (s > 0) {
-		stroke(c);
+	else if (style > 0) {
+		stroke(color);
 		strokeWeight(linkSize);
 		fill(backColor);
-		ellipse(pos.x, pos.y, nodeSize, nodeSize);
-		
+		ellipse(pos.x, pos.y, nodeSize, nodeSize);	
 	}
 }
 
@@ -178,12 +177,12 @@ function createNode(x, y) {
 function createPath(max, nColors) {
 	var nodes = [];
 	var color = randomInt(0, nColors - 1);
-	var style = randomInt(0, 1);
+	var padStyle = randomInt(0, 1);
 	
 	return {
 		nodes: nodes,
 		color: color,
-		style: style
+		padStyle: padStyle
 	}
 }
 
