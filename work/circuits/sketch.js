@@ -1,10 +1,10 @@
 // circuits by lionel ringenbach @ ucodia.io
 
 // display parameters
-var spacing = 40;
-var nodeSize = spacing * 0.45;
+var scaling = 40;
+var nodeSize = scaling * 0.45;
 var linkSize = nodeSize * 0.1;
-var offset = spacing / 2;
+var offset = { x: scaling / 2, y: scaling / 2 };
 var backColor;
 
 function setup() {
@@ -36,12 +36,16 @@ function generate() {
 	var padStyles = [regularPadStyle, padWithHoleStyle];
 
 	// generate circuit
-	var cols = Math.ceil(width / spacing);
-	var rows = Math.ceil(height / spacing);	
+	var cols = Math.ceil(width / scaling);
+	var rows = Math.ceil(height / scaling);	
 	var circuit = createCircuit(cols, rows, palette.length, padStyles.length);
 	
 	drawCircuit(circuit, palette, padStyles);
 }
+
+///////////////////////
+// drawing functions //
+///////////////////////
 
 function drawCircuit(circuit, palette, padStyles) {
 	background(backColor);
@@ -70,14 +74,14 @@ function drawTrace(nodes, color) {
 		stroke(color);
 		strokeWeight(linkSize);
 		
-		var lPos = getNodePosition(nodes[i]);
-		var rPos = getNodePosition(nodes[i + 1]);
+		var lPos = getPosition(nodes[i], scaling, offset);
+		var rPos = getPosition(nodes[i + 1], scaling, offset);
 		line(lPos.x, lPos.y, rPos.x, rPos.y);
 	}
 }
 
 function drawPad(node, color, style) {
-	var pos = getNodePosition(node);
+	var pos = getPosition(node, scaling, offset);
 	
 	// apply style and draw pad
 	style(color);
@@ -95,13 +99,9 @@ function padWithHoleStyle(color) {
 	fill(backColor);
 }
 
-
-function getNodePosition(node) {
-	return {
-		x: offset + (spacing * node.x),
-		y: offset + (spacing * node.y)
-	}
-}
+//////////////////////
+// model generation //
+//////////////////////
 
 function createCircuit(cols, rows, nColors, nStyles) {	
 	// create reference grid
@@ -122,10 +122,13 @@ function createCircuit(cols, rows, nColors, nStyles) {
 			// skip if node is already defined
 			if (grid[i][j]) continue;
 
-			// generate new path length
-			var pathLength = randomInt(0, cols);
-					
-			if (pathLength > 0) {
+			// roll a dice for empty node
+			var empty = rollDice(4);
+
+			if (!empty) {
+				// generate new path length
+				var pathLength = randomInt(1, cols);
+				
 				// start new path with new node
 				var current = createNode(i, j);
 				var path = createPath(nColors, nStyles);
@@ -211,7 +214,9 @@ function createPalette(n, offset) {
 	return palette;
 }
 
-// event hookups
+///////////////////
+// event hookups //
+///////////////////
 
 function windowResized() {
 	generate();
@@ -238,8 +243,24 @@ function themeChanged(evt) {
 	}
 }
 
-// utilities
+///////////////
+// utilities //
+///////////////
+
+function getPosition(pos, scale, offset) {
+	if (!scale) scale = 1;
+	if (!offset) offset = { x: 0, y: 0 };
+	
+	return {
+		x: (pos.x * scale) + offset.x,
+		y: (pos.y * scale) + offset.y
+	}
+}
 
 function randomInt(min, max) {
 	return Math.round(random(min, max));
+}
+
+function rollDice(faces) {
+	return randomInt(1, faces) === 1;
 }
