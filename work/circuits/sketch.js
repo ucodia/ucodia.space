@@ -30,7 +30,7 @@ function generate() {
 	// generate color palette
 	var nColors = randomInt(2, 4);
 	var colorOffset = random(0, 1);
-	palette = createPalette(nColors, colorOffset);
+	var palette = createPalette(nColors, colorOffset);
 	
 	// generate pad styles		
 	var padStyles = [regularPadStyle, padWithHoleStyle];
@@ -38,7 +38,7 @@ function generate() {
 	// generate circuit
 	var cols = Math.ceil(width / spacing);
 	var rows = Math.ceil(height / spacing);	
-	circuit = createCircuit(cols, rows, palette.length, padStyles.length);
+	var circuit = createCircuit(cols, rows, palette.length, padStyles.length);
 	
 	drawCircuit(circuit, palette, padStyles);
 }
