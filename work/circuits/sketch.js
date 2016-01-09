@@ -5,14 +5,24 @@ var scaling = 40;
 var nodeSize = scaling * 0.45;
 var linkSize = nodeSize * 0.1;
 var offset = { x: scaling / 2, y: scaling / 2 };
-var backColor;
+
+// theming
+var themes;
+var currentTheme;
+
+// data
+var currentModel;
 
 function setup() {
 	createCanvas();	
 	
-	// defaults
-	backColor = color(255);
-	
+    // defaults
+    themes = {  
+        dark: { backColor: color(0) },
+        light: { backColor: color(255) }
+    }
+    currentTheme = themes.light;
+    
 	// ui
 	var themeSel = createSelect();
 	themeSel.option('light');
@@ -21,10 +31,11 @@ function setup() {
 	var panel = select('#panel');
 	panel.child(themeSel);
 	
-	generate();
+	currentModel = generateModel();
+    drawModel(currentModel);
 }
 
-function generate() {
+function generateModel() {
 	resizeCanvas(window.innerWidth, window.innerHeight);
 	
 	// generate color palette
@@ -39,23 +50,27 @@ function generate() {
 	var cols = Math.ceil(width / scaling);
 	var rows = Math.ceil(height / scaling);	
 	var circuit = createCircuit(cols, rows, palette.length, padStyles.length);
-	
-	drawCircuit(circuit, palette, padStyles);
+
+    return {
+        circuit: circuit,
+        palette: palette,
+        padStyles: padStyles
+    }
 }
 
 ///////////////////////
 // drawing functions //
 ///////////////////////
 
-function drawCircuit(circuit, palette, padStyles) {
-	background(backColor);
+function drawModel(model) {
+	background(currentTheme.backColor);
 	
-	for (var i = 0; i < circuit.paths.length; i++) {
-		var path = circuit.paths[i];
+	for (var i = 0; i < model.circuit.paths.length; i++) {
+		var path = model.circuit.paths[i];
 		
 		// pick path color and pad style
-		var color = palette[path.color];
-		var padStyle = padStyles[path.padStyle];
+		var color = model.palette[path.color];
+		var padStyle = model.padStyles[path.padStyle];
 		
 		drawPath(path, color, padStyle);
 	}
@@ -96,7 +111,7 @@ function regularPadStyle(color) {
 function padWithHoleStyle(color) {
 	stroke(color);
 	strokeWeight(linkSize);
-	fill(backColor);
+	fill(currentTheme.backColor);
 }
 
 //////////////////////
@@ -219,27 +234,30 @@ function createPalette(n, offset) {
 ///////////////////
 
 function windowResized() {
-	generate();
+	currentModel = generateModel();
+    drawModel(currentModel);
 }
 
 function mousePressed() {
 	if (mouseButton == RIGHT) return;
 	
-	generate();
+	currentModel = generateModel();
+    drawModel(currentModel);
+}
+
+function keyPressed() {
+    if (key === ' ') {
+        currentTheme = currentTheme === themes.dark ? themes.light : themes.dark;
+        drawModel(currentModel);
+    }        
 }
 
 function themeChanged(evt) {
 	evt.preventDefault();
 	
 	if (evt && evt.target) {
-		theme = evt.target.value;
-		
-		if (theme === 'dark')
-			backColor = color(0);
-		else
-			backColor = color(255);
-		
-		generate();
+        currentTheme = themes[evt.target.value];
+        drawModel(currentModel);
 	}
 }
 
