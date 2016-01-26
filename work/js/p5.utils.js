@@ -1,3 +1,14 @@
+p5.prototype.lerpGradient = function (palette, amt) {
+  var pos = map(amt, 0, 1, 0, palette.length);
+  var sel = Math.floor(pos) % palette.length;
+   
+  var from = palette[sel];
+  var to = palette[(sel + 1) % palette.length];
+  var innerPos = pos % 1; 
+  
+  return lerpColor(from, to, innerPos);
+}
+
 p5.prototype.equi = function (x, y, size, mode) {
   // the mode changes vertical centering
   var m = mode | 0;
