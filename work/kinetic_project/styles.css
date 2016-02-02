@@ -14,7 +14,7 @@
 #kinetic-counter {
     animation-name: counter;
     animation-duration: 16s;
-    animation-timing-function: ease;
+    animation-timing-function: linear;
     animation-iteration-count: infinite;
 }
 
