@@ -1,14 +1,28 @@
 (function() {
+    var gradients = [];
+
+    
     $.getJSON("gradients.json", function(data) {
-        var index = null;      
-        try { index = JSON.parse(getParameterByName("style")); }
+        gradients = data;
+        
+        // try to get gradient from URL
+        var sel = null;      
+        try { sel = JSON.parse(getParameterByName("style")); }
         catch (error) {}
         
-        if (typeof(index) !== 'number' || index < 0 || index > data.length - 1)
-            index = getRandomInt(0, data.length - 1);
+        // if there is no proper URL defined gradient
+        if (typeof(sel) !== 'number' || sel < 0 || sel > gradients.length - 1)
+            sel = getRandomInt(0, gradients.length - 1);
         
-        var gradient = data[index];
-        
+        defineGradients(gradients[sel]);
+    });
+    
+    $("#content").click(function() {
+        var sel = getRandomInt(0, gradients.length - 1);
+        defineGradients(gradients[sel]);
+    });
+    
+    function defineGradients(gradient) {
         var svgGradients = [
             d3.select("#zinnia1-gradient"),
             d3.select("#zinnia2-gradient")
@@ -18,9 +32,10 @@
             var svgGradient = svgGradients[i];
             setGradient(svgGradient, gradient);
         }
-    });
+    }
     
     function setGradient(svgGradient, gradient) {
+        svgGradient.html("");
         var step = gradient.colors.length === 2 ? 1 :1 / gradient.colors.length - 1;
         
         for (var i = 0; i < gradient.colors.length; i++) {
