@@ -1,34 +1,52 @@
-.kinetic {
-    width: 948.93px;
-    height: 948.93px;
-    position: fixed;
+html {
+  height: 100%;
 }
 
-#kinetic-clock {
-    animation-name: clock;
-    animation-duration: 8s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+body {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  /*background-color: black;*/
 }
 
-#kinetic-counter {
-    animation-name: counter;
-    animation-duration: 16s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+#content {
+  position: relative;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  width: 75%;
+  height: 75%;
 }
 
-@keyframes clock {
+.zinnia {
+  position: fixed;
+  stroke-width: 0;
+  /*fill: white;*/
+}
+
+#zinnia1 {
+  animation-name: zinnia1anim;
+  animation-duration: 8s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+#zinnia2 {
+  animation-name: zinnia2anim;
+  animation-duration: 16s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes zinnia1anim {
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes zinnia2anim {
   100% {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes counter {
-  0% {
-      transform: rotate(0) scale(-1, 1)
-  }
-  100% {
-    transform: rotate(-360deg) scale(-1, 1);
   }
 }
