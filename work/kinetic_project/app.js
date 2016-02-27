@@ -1,28 +1,33 @@
 (function() {
     var gradients = [];
+    var sel = null; 
 
-    
     $.getJSON("gradients.json", function(data) {
         gradients = data;
         
-        // try to get gradient from URL
-        var sel = null;      
+        // try to get gradient from URL   
         try { sel = JSON.parse(getParameterByName("style")); }
-        catch (error) {}
+        catch (e) {}
         
         // if there is no proper URL defined gradient
         if (typeof(sel) !== 'number' || sel < 0 || sel > gradients.length - 1)
             sel = getRandomInt(0, gradients.length - 1);
         
-        defineGradients(gradients[sel]);
+        defineGradients();
     });
     
     $("#content").click(function() {
-        var sel = getRandomInt(0, gradients.length - 1);
-        defineGradients(gradients[sel]);
+        sel = getRandomInt(0, gradients.length - 1);
+        defineGradients();
     });
     
-    function defineGradients(gradient) {
+    function defineGradients() {
+        // set URL parameters
+        var url = buildURL({style: sel});
+        try { history.pushState(null, "", url); } // TODO: fix back navigation not working
+        catch (e) {}
+        
+        var gradient = gradients[sel];
         var svgGradients = [
             d3.select("#zinnia1-gradient"),
             d3.select("#zinnia2-gradient")
@@ -49,6 +54,12 @@
     }
     
     // utilities
+    function buildURL(params) {
+        var paramString = Object.keys(params).map(function(key) {
+            return key + '=' + params[key];
+        }).join('&');
+        return location.origin + location.pathname + "?" + paramString;
+    }
     function getParameterByName(name, url) {
         if (!url) url = window.location.href;
             name = name.replace(/[\[\]]/g, "\\$&");
