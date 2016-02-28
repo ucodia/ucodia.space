@@ -16,7 +16,9 @@
         defineGradients();
     });
     
-    $("#content").click(function() {
+    $(document).click(function(e) {
+        if (e.target.tagName.toLowerCase() === 'a') return;
+        
         sel = getRandomInt(0, gradients.length - 1);
         defineGradients();
     });
