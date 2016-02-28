@@ -16,7 +16,7 @@
         defineGradients();
     });
     
-    $(document).click(function(e) {
+    $(document).on('click touchend',function(e) {
         if (e.target.tagName.toLowerCase() === 'a') return;
         
         sel = getRandomInt(0, gradients.length - 1);
