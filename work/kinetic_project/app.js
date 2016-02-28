@@ -42,13 +42,14 @@
     }
     
     function setGradient(svgGradient, gradient) {
-        svgGradient.html("");
+        svgGradient.selectAll(".zinnia-stop").remove();
         var step = gradient.colors.length === 2 ? 1 :1 / gradient.colors.length - 1;
         
         for (var i = 0; i < gradient.colors.length; i++) {
             var color = gradient.colors[i];
             svgGradient.append('stop')
                 .attr({
+                    class: "zinnia-stop",
                     offset: function() { return i * step },
                     "stop-color": color
                 });
