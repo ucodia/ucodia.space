@@ -27,14 +27,14 @@ body {
 
 #zinnia1 {
   animation-name: zinnia1anim;
-  animation-duration: 25s;
+  animation-duration: 24s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }
 
 #zinnia2 {
   animation-name: zinnia2anim;
-  animation-duration: 15s;
+  animation-duration: 16s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }
@@ -47,9 +47,9 @@ body {
 
 @keyframes zinnia2anim {
   50% {
-    transform: rotate(270deg);
+    transform: rotate(-270deg);
   }
   100% {
-    transform: rotate(-180deg);
+    transform: rotate(180deg);
   }
 }
