@@ -45,8 +45,11 @@ body {
   0% {
     transform: rotate(0deg);
   }
-  100% {
+  50% {
     transform: rotate(-1080deg);
+  }
+  100% {
+    transform: rotate(0deg);
   }
 }
 
@@ -56,8 +59,5 @@ body {
   }
   100% {
     transform: rotate(1080deg);
-  }
-  50% {
-    transform: rotate(0deg);
   }
 }
