@@ -14,7 +14,7 @@ var currentTheme;
 var currentModel;
 
 function setup() {
-	createCanvas();	
+	createCanvas(window.innerWidth, window.innerHeight);	
 	
     // defaults
     themes = {  
@@ -35,9 +35,7 @@ function setup() {
     drawModel(currentModel);
 }
 
-function generateModel() {
-	resizeCanvas(window.innerWidth, window.innerHeight);
-	
+function generateModel() {	
 	// generate color palette
 	var nColors = randomInt(2, 4);
 	var colorOffset = random(0, 1);
@@ -234,6 +232,7 @@ function createPalette(n, offset) {
 ///////////////////
 
 function windowResized() {
+    resizeCanvas(window.innerWidth, window.innerHeight);
 	currentModel = generateModel();
     drawModel(currentModel);
 }
