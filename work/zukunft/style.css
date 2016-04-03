@@ -1,0 +1,12 @@
+svg {
+    background-color: #000;
+}
+
+.outline {
+    stroke: #222;
+    fill: #000;
+}
+
+.dot {
+    fill: #fff;
+}
