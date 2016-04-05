@@ -1,8 +1,9 @@
 (function() {
     // app settings
-    var settings = {
-        tileSize: 25
-    };
+    var settings = {};
+    settings.diceSize = 30;
+    settings.diceCorner = settings.diceSize / 5;
+    settings.dotSize = settings.diceSize / 10;
     
     // app data
     var dataset = [];
@@ -21,31 +22,32 @@
     
     // hookup events
     window.addEventListener('resize', function() {
-        setup();
+        layout();
         gen();
-        redraw();
+        draw();
     });
     document.addEventListener('click', function() {
         gen();
-        redraw();
+        draw();
     });
     
     // startup
-    setup();
+    layout();
     gen();
     draw();
         
-    function setup() {
+    function layout() {
         svg.attr("width", window.innerWidth);
         svg.attr("height", window.innerHeight);
-        settings.columns = Math.ceil(window.innerWidth / settings.tileSize);
-        settings.rows = Math.ceil(window.innerHeight / settings.tileSize);
+        settings.columns = Math.ceil(window.innerWidth / settings.diceSize);
+        settings.rows = Math.ceil(window.innerHeight / settings.diceSize);
     }
     
     function gen() {
-        dataset = [];
+        var count = settings.columns * settings.rows;
+        dataset.splice(0, count);
         
-        for (var i = 0; i < settings.columns * settings.rows; i++) {
+        for (var i = 0; i < count; i++) {
             dataset[i] = {
                 value: randomInt(1, 6),
                 orientation: randomInt(0, 1)
@@ -54,47 +56,54 @@
     }
     
     function draw() {
-        // bind data
-        var g = svg.selectAll('g')
-            .data(dataset)
-            .enter()
-                .append('g')
-                .classed('dice', true)
-                .attr("transform", function(d, i) {
-                    var col = i % settings.columns;
-                    var row = Math.floor(i / settings.columns);
-                    return "translate(" + col * settings.tileSize + "," + row * settings.tileSize + ") " +
-                        "rotate(" + d.orientation * 90 + ", " + settings.tileSize / 2 + ", " + settings.tileSize / 2 + ")"; 
-                });    
+        // data join
+        var dice = svg.selectAll(".dice")
+            .data(dataset);
         
-        // add outline
-        g.append('rect')
-            .attr("width", settings.tileSize)
-            .attr("height", settings.tileSize)
-            .attr("rx", settings.tileSize / 10)
-            .attr("ry", settings.tileSize / 10)
-            .classed("outline", true);
+        // add new elements
+        var entering = dice.enter().append("g")
+            .attr("class", "dice");
         
-        // add dots
+        entering.append('rect')
+            .attr("class", "outline")
+            .attr("width", settings.diceSize)
+            .attr("height", settings.diceSize)
+            .attr("rx", settings.diceCorner)
+            .attr("ry", settings.diceCorner);
+        
         for (var i = 0; i < 9; i++) {
-            g.append('ellipse')
-                .attr("cx", settings.tileSize / 4 * ((i % 3) + 1))
-                .attr("cy", settings.tileSize / 4 * (Math.floor(i / 3) + 1))
-                .attr("rx", settings.tileSize / 10)
-                .attr("ry", settings.tileSize / 10)
+            entering.append("ellipse")
+                .attr("class", "dot dot" + i)
+                .attr("cx", settings.diceSize / 4 * ((i % 3) + 1))
+                .attr("cy", settings.diceSize / 4 * (Math.floor(i / 3) + 1))
+                .attr("rx", settings.dotSize)
+                .attr("ry", settings.dotSize)
                 .style("visibility", function(d) {
                     return facts[d.value].indexOf(i) === -1 ? "hidden" : "visible";
-                })
-                .classed("dot", true);
+                });
         }
-    }
-    
-    function redraw() {
-        svg.selectAll('.dice').remove();
-        draw();
+        
+        // update elements
+        dice.attr("transform", function(d, i) {
+            var col = i % settings.columns;
+            var row = Math.floor(i / settings.columns);
+            return "translate(" + col * settings.diceSize + "," + row * settings.diceSize + ") " +
+                    "rotate(" + d.orientation * 90 + ", " + settings.diceSize / 2 + ", " + settings.diceSize / 2 + ")"; 
+        });
+        
+        for (var i = 0; i < 9; i++) {
+            dice.select(".dot" + i)
+                .style("visibility", function(d) {
+                    return facts[d.value].indexOf(i) === -1 ? "hidden" : "visible";
+                });
+        } 
+
+        // remove old elements
+        var exiting = dice.exit();
+        exiting.remove();
     }
     
     function randomInt (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-})()
+})();
