@@ -1,6 +1,9 @@
 body {
     margin: 0;
     overflow: hidden;
+}
+
+svg {
     background-color: #000;
     cursor: pointer;
 }
