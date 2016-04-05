@@ -7,16 +7,7 @@
     
     // app data
     var dataset = [];
-    
-    // dice fact table
-    var facts = [];
-    facts[1] = [4];
-    facts[2] = [2, 6];
-    facts[3] = [2, 4, 6];
-    facts[4] = [0, 2, 6, 8];
-    facts[5] = [0, 2, 4, 6, 8];
-    facts[6] = [0, 2, 3, 5, 6, 8];
-    
+
     // add svg
     var svg = d3.select("body").append("svg");
     
@@ -64,7 +55,24 @@
         var entering = dice.enter().append("g")
             .attr("class", "dice");
         
-        entering.append('rect')
+        appendDiceTo(entering);
+        
+        // update elements
+        dice.attr("class", function(d, i) { return "dice dice" + d.value; })
+            .attr("transform", function(d, i) {
+                var col = i % settings.columns;
+                var row = Math.floor(i / settings.columns);
+                return "translate(" + col * settings.diceSize + "," + row * settings.diceSize + ") " +
+                        "rotate(" + d.orientation * 90 + ", " + settings.diceSize / 2 + ", " + settings.diceSize / 2 + ")"; 
+            });
+
+        // remove old elements
+        var exiting = dice.exit();
+        exiting.remove();
+    }
+    
+    function appendDiceTo(element) {
+        element.append("rect")
             .attr("class", "outline")
             .attr("width", settings.diceSize)
             .attr("height", settings.diceSize)
@@ -72,35 +80,13 @@
             .attr("ry", settings.diceCorner);
         
         for (var i = 0; i < 9; i++) {
-            entering.append("ellipse")
-                .attr("class", "dot dot" + i)
+            element.append("ellipse")
+                .attr("class", "dot dot" + (i + 1))
                 .attr("cx", settings.diceSize / 4 * ((i % 3) + 1))
                 .attr("cy", settings.diceSize / 4 * (Math.floor(i / 3) + 1))
                 .attr("rx", settings.dotSize)
-                .attr("ry", settings.dotSize)
-                .style("visibility", function(d) {
-                    return facts[d.value].indexOf(i) === -1 ? "hidden" : "visible";
-                });
+                .attr("ry", settings.dotSize);
         }
-        
-        // update elements
-        dice.attr("transform", function(d, i) {
-            var col = i % settings.columns;
-            var row = Math.floor(i / settings.columns);
-            return "translate(" + col * settings.diceSize + "," + row * settings.diceSize + ") " +
-                    "rotate(" + d.orientation * 90 + ", " + settings.diceSize / 2 + ", " + settings.diceSize / 2 + ")"; 
-        });
-        
-        for (var i = 0; i < 9; i++) {
-            dice.select(".dot" + i)
-                .style("visibility", function(d) {
-                    return facts[d.value].indexOf(i) === -1 ? "hidden" : "visible";
-                });
-        } 
-
-        // remove old elements
-        var exiting = dice.exit();
-        exiting.remove();
     }
     
     function randomInt (min, max) {
