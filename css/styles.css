@@ -16,7 +16,7 @@ header {
 
 .logo {
     height: 75px;
-    background-image: url("../img/logo.png");
+    background-image: url("../img/logo.svg");
     background-repeat: no-repeat;
     background-size: contain;
 }
