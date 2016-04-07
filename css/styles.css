@@ -9,6 +9,11 @@ header {
   margin: 32px auto;
 }
 
+footer {
+  width: 800px;
+  margin: 32px auto;
+}
+
 #content {
   width: 800px;
   margin: 0 auto;
