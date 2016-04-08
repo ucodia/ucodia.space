@@ -6,6 +6,7 @@ body {
 
 header {
   width: 800px;
+  height: 100px;
   margin: 64px auto;
   text-align: center;
 }
@@ -20,13 +21,18 @@ footer {
   margin: 0 auto;
 }
 
+#logo-canvas {
+    height: 100%;
+    width: 100%;
+}
+
 .logo {
-    height: 100px;
-    width: 350px; /* TODO: Fix that so that its centered without specifying width*/
+    height: 100%;
     margin: 0 auto;
     background-image: url("../img/logo-diamonds.svg");
     background-repeat: no-repeat;
     background-size: contain;
+    background-position: center;
 }
 
 .gallery-item {
