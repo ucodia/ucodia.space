@@ -6,7 +6,8 @@ body {
 
 header {
   width: 800px;
-  margin: 32px auto;
+  margin: 64px auto;
+  text-align: center;
 }
 
 footer {
@@ -20,8 +21,10 @@ footer {
 }
 
 .logo {
-    height: 75px;
-    background-image: url("../img/logo.svg");
+    height: 100px;
+    width: 350px; /* TODO: Fix that so that its centered without specifying width*/
+    margin: 0 auto;
+    background-image: url("../img/logo-diamonds.svg");
     background-repeat: no-repeat;
     background-size: contain;
 }
