@@ -44,9 +44,8 @@ function draw() {
             circles(dot.x, dot.y, s, nCircles);       
     }
 
-    // animate every 2 frames
-    if (frameCount % 2 === 0)
-        dots.push(dots.shift());
+    // animate
+    dots.push(dots.shift());
 }
 
 function circles(x, y, size, n) {
