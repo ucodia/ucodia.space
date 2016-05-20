@@ -23,7 +23,7 @@ settings.capFreq = 3000;
 settings.dump = false;
 
 function setup() {
-  createCanvas(1920, 1200);
+  createCanvas(window.innerWidth, window.innerHeight);
   frameRate(60);
   colorMode(HSB, 100);
   
@@ -186,6 +186,10 @@ function Bubble(x, y) {
 ///////////////////
 // event hookups //
 ///////////////////
+
+function windowResized() {
+  resizeCanvas(window.innerWidth, window.innerHeight);
+}
 
 function keyPressed() {
   if (key === 'R')
