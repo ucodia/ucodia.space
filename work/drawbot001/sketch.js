@@ -5,7 +5,7 @@
 /////////////
 
 // globals
-var bath = [];
+var bots = [];
 var lastCap = 0;
 
 // settings
@@ -27,6 +27,7 @@ function setup() {
   frameRate(60);
   colorMode(HSB, 100);
   
+  // set parameters from URL
   var params = getURLParams();
   settings.dump =  params.dump ? JSON.parse(params.dump) : false;
   
@@ -39,78 +40,78 @@ function reset() {
   settings.opacity = randomInt(0, 100);
   settings.maxBubs = randomInt(8, 200);
   settings.minSpeed = random(0, 2);
-  settings.maxSpeed = randomInt(0, 100);
+  settings.maxSpeed = randomInt(settings.minSpeed, 100);
   settings.attDist = randomInt(10, 400);
-  settings.minSize = randomInt(10, 100);
-  settings.maxSize = randomInt(settings.minSize, 1000);
+  settings.minSize = randomInt(1, 20);
+  settings.maxSize = randomInt(settings.minSize, 100);
   settings.popFreq = randomInt(1, 20);
   settings.capFreq = randomInt(200, 1500);
   
-  // extra
-  settings.bounce = randomInt(0, 3) === 0;
-  settings.reframe = randomInt(0, 3) === 0;
+  // behaviors
+  settings.attract = rollDice(2);
+  settings.reframe = rollDice(2);
+  settings.showbot = rollDice(8);
+  settings.contrast = rollDice(12);
   
   // reset canvas
   background(settings.back);
-  bath = [];
+  bots = [];
 }
 
 function draw() {
-  //background(20);
+  // store bots to destroy after loop
+  var destroy = [];
   
-  // store bubbles to explode after loop
-  var explode = [];
-  
-  for (var i = 0; i < bath.length; i++) {
-    var bubble = bath[i];
+  for (var i = 0; i < bots.length; i++) {
+    var bot = bots[i];
     
-    if (bubble.pos.x < 0 || bubble.pos.x > width ||
-        bubble.pos.y < 0 || bubble.pos.y > height) {
-      explode.push(bubble);
+    if (bot.pos.x < 0 || bot.pos.x > width ||
+        bot.pos.y < 0 || bot.pos.y > height) {
+      destroy.push(bot);
       break;     
     }
     
+    // store neighbouring bots
     var neighbors = [];
-
-    bubble.draw();
     
-    for (var j = 0; j < bath.length; j++) {
+    for (var j = 0; j < bots.length; j++) {
       if (i !== j) {
-        var neighbor = bath[j];
-        var d = bubble.pos.dist(neighbor.pos);
+        var neighbor = bots[j];
+        var d = bot.pos.dist(neighbor.pos);
         
         // check for attraction
-        if (d < (settings.attDist + bubble.size / 2 + neighbor.size / 2))
+        if (d < (settings.attDist + bot.size / 2 + neighbor.size / 2))
           neighbors.push(neighbor);
         
         // check for merging
-        if (d < (bubble.size / 2) && bubble.size >= neighbor.size) {
-          line(bubble.pos.x, bubble.pos.y, neighbor.pos.x, neighbor.pos.y);
-          bubble.merge(neighbor);
-          explode.push(neighbor);      
+        if (d < (bot.size / 2) && bot.size >= neighbor.size) {
+          bot.merge(neighbor);
+          destroy.push(neighbor);      
         }  
       }
     }
     
-    bubble.update(neighbors);
+    bot.update(neighbors);
+    bot.draw();
     
-    // explode bubbles that reaches max size
-    if (bubble.size > settings.maxSize)
-      explode.push(bubble);
+    // destroy bots that reaches max size
+    if (bot.size > settings.maxSize)
+      destroy.push(bot);
   }
   
-  // explode big and merged bubbles
-  for (var i = 0; i < explode.length; i++) {
-    var index = bath.indexOf(explode[i]);
+  // destroy big and merged bots
+  for (var i = 0; i < destroy.length; i++) {
+    var index = bots.indexOf(destroy[i]);
     if (index !== -1)
-      bath.splice(index, 1);
+      bots.splice(index, 1);
   }
   
-  // add some bubbles to the bath
+  // add some bubbles to the bots
   // frameCount % n === 0 is for rate limiting
-  if (bath.length < settings.maxBubs && frameCount % settings.popFreq === 0)
-    bath.push(new Bubble(random(width), random(height)));
-    
+  if (bots.length < settings.maxBubs && frameCount % settings.popFreq === 0)
+    bots.push(new Bot(random(width), random(height)));
+   
+  // check for drawing completion and dump
   if ((frameCount - lastCap) % settings.capFreq === 0) {
     if (settings.dump)
       saveCanvas("frame" + getTimestamp(), "jpg");
@@ -120,42 +121,41 @@ function draw() {
   }
 }
 
-function Bubble(x, y) {
-  // physics
+function Bot(x, y) {
   this.pos = createVector(x, y);
   this.vel = createVector(random(-1, 1), random(-1, 1));
-
-  // aspect
   this.size = settings.minSize;
   this.hue = randomInt(0, 100);
+  this.neighbors = [];
   
   // helpers
   var that = this;
   var getColor = function() {
-    // map opacity to bubble size
+    // map opacity to bot size
     var opacity = map(that.size, settings.minSize, settings.maxSize, 80, 5);
-    return color(that.hue, 80, 80, settings.opacity);
+    
+    return settings.contrast ?
+      color(0, 0, map(settings.back, 0, 100, 100, 0), settings.opacity) :
+      color(that.hue, 80, 80, settings.opacity);
   }
   
   this.update = function(neighbors) {
+    this.neighbors = neighbors;
+    
     // calculate acceleration and velocity
     var acc = p5.Vector.mult(this.vel, 0.01);
     this.vel.add(acc);
     
     // apply neighbor attraction to velocity
-    for (var i = 0; i < neighbors.length; i++) {
-      var neighbor = neighbors[i];     
+    for (var i = 0; i < this.neighbors.length; i++) {
+      var neighbor = this.neighbors[i];     
       // calculate vector to neighbor
       var att = p5.Vector.sub(neighbor.pos, this.pos); 
       // bigger are attracted by smaller
       var amt = this.size > neighbor.size ? 0.01 : -0.01; 
       // steering with deceleration
-      if (settings.bounce)
+      if (settings.attract)
         this.vel.lerp(att, amt).sub(acc);
-      
-      strokeWeight(1);
-      stroke(getColor());
-      line(this.pos.x, this.pos.y, neighbor.pos.x, neighbor.pos.y);
     }
 
     // limit max speed
@@ -176,10 +176,24 @@ function Bubble(x, y) {
     this.size += merged.size * 0.5;
   }
   
-  this.draw = function() {
-    noStroke();
-    fill(getColor());
-    //ellipse(this.pos.x, this.pos.y, settings.minSize, settings.minSize);
+  this.draw = function() {  
+    // draw bot positions
+    if (settings.showbot) {
+      noStroke();
+      fill(getColor());
+      ellipse(this.pos.x, this.pos.y, this.size, this.size);
+    }
+    
+    // draw lasers between bots
+    for (var i = 0; i < this.neighbors.length; i++) {
+      var neighbor = this.neighbors[i];
+      strokeWeight(1);
+      stroke(getColor());
+      
+      // prevents drawing link to reframed neighbors
+      if (this.pos.dist(neighbor.pos) < (settings.attDist + this.size / 2 + neighbor.size / 2))
+        line(this.pos.x, this.pos.y, neighbor.pos.x, neighbor.pos.y);
+    }
   };
 }
 
@@ -202,6 +216,10 @@ function keyPressed() {
 
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function rollDice(faces) {
+	return randomInt(1, faces) === 1;
 }
 
 function reframe(val, min, max) {
