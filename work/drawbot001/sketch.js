@@ -14,7 +14,9 @@ gui.close();
 
 // settings
 var settings = {};
-settings.back = 20;
+settings.background = 20;
+settings.saturation = 80;
+settings.brightness = 80;
 settings.opacity = 5;
 settings.maxBots = 30;
 settings.popFreq = 5;
@@ -45,11 +47,17 @@ function setup() {
   frameRate(60);
   colorMode(HSB, 100);
   
+  // settings from URL
+  var params = getURLParams();
+  settings.autoRandomize = params.rand ? JSON.parse(params.rand) : false;
+  
   // define UI controls
   // graphics
   var fGraphics = gui.addFolder('Graphics');
   fGraphics.open();
-  fGraphics.add(settings, 'back', 0, 100);
+  fGraphics.add(settings, 'background', 0, 100);
+  fGraphics.add(settings, 'saturation', 0, 100);
+  fGraphics.add(settings, 'brightness', 0, 100);
   fGraphics.add(settings, 'opacity', 0, 100);
   fGraphics.add(settings, 'maxBots', 8, 200);
   fGraphics.add(settings, 'popFreq', 1, 20);
@@ -84,7 +92,9 @@ function setup() {
 
 function randomize() {
   settings.resetFreq = randomInt(200, 1500);
-  settings.back = randomInt(0, 100);
+  settings.background = randomInt(0, 100);
+  settings.saturation = randomInt(80, 100);
+  settings.brightness = randomInt(80, 100);
   settings.opacity = randomInt(0, 100);
   settings.maxBots = randomInt(8, 200);
   settings.popFreq = randomInt(1, 20);
@@ -98,11 +108,7 @@ function randomize() {
   settings.showBot = rollDice(8);
   settings.contrast = rollDice(12);
   
-  for (var f in gui.__folders) {
-    for (var c in gui.__folders[f].__controllers) {
-      gui.__folders[f].__controllers[c].updateDisplay(); 
-    }
-  }
+  gui.updateDisplay();
 }
 
 function reset() {  
@@ -111,7 +117,7 @@ function reset() {
   
   // reset canvas
   lastCap = frameCount;
-  background(settings.back);
+  background(settings.background);
   bots = [];
 }
 
@@ -194,9 +200,12 @@ function Bot(x, y) {
     // map opacity to bot size
     var opacity = map(that.size, settings.minSize, settings.maxSize, 80, 5);
     
-    return settings.contrast ?
-      color(0, 0, map(settings.back, 0, 100, 100, 0), settings.opacity) :
-      color(that.hue, 80, 80, settings.opacity);
+    if (settings.contrast) {
+      return color(0, 0, map(settings.background, 0, 100, 100, 0), settings.opacity);
+    }
+    else {
+      return color(that.hue, settings.saturation, settings.brightness, settings.opacity);
+    }
   }
   
   this.update = function(neighbors) {
@@ -267,7 +276,7 @@ function windowResized() {
 
 function keyPressed() {
   if (key === 'R')
-    saveCanvas("frame" + getTimestamp(), "png");
+    reset();
 }
 
 ///////////////
@@ -309,4 +318,22 @@ function getTimestamp() {
   return new Date().toISOString().split("-").join("")
                                  .split("T").join("-")
                                  .split(":").join("");
+}
+
+////////////////////////
+// dat.GUI extensions //
+////////////////////////
+
+dat.GUI.prototype.updateDisplay = function() {
+  // update controllers
+  for (var c in gui.__controllers) {
+    gui.__controllers[c].updateDisplay();
+  }
+
+  // update folders controllers
+  for (var f in gui.__folders) {
+    for (var fc in gui.__folders[f].__controllers) {
+      gui.__folders[f].__controllers[fc].updateDisplay(); 
+    }
+  }
 }
