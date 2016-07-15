@@ -1,4 +1,4 @@
-// thedotismoving - number 1 by lionel ringenbach @ ucodia.io
+// thedotismoving - number 1 by lionel ringenbach @ ucodia.space
 
 var dots = [
     { x: 200, y: 200 },

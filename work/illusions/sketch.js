@@ -1,4 +1,4 @@
-// illusions by lionel ringenbach @ ucodia.io
+// illusions by lionel ringenbach @ ucodia.space
 
 var n = 3;
 var shapes = [];

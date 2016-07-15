@@ -1,4 +1,4 @@
-// dizzy waves by lionel ringenbach @ ucodia.io
+// dizzy waves by lionel ringenbach @ ucodia.space
 
 // params
 var spacing = 70;

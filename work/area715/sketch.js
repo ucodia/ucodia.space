@@ -1,4 +1,4 @@
-// area 715 by lionel ringenbach @ ucodia.io
+// area 715 by lionel ringenbach @ ucodia.space
 
 var posX;
 var posY;

@@ -1,4 +1,4 @@
-// circuits by lionel ringenbach @ ucodia.io
+// circuits by lionel ringenbach @ ucodia.space
 
 // display parameters
 var scaling = 40;

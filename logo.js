@@ -1,4 +1,4 @@
-// diamonds by lionel ringenbach @ ucodia.io
+// diamonds by lionel ringenbach @ ucodia.space
 
 var n = 3;
 var start = 1;

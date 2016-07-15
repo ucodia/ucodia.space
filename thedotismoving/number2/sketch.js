@@ -1,4 +1,4 @@
-// thedotismoving - number 2 by lionel ringenbach @ ucodia.io
+// thedotismoving - number 2 by lionel ringenbach @ ucodia.space
 
 var dots = [];
 var nDots = 48;
