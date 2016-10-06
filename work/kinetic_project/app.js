@@ -11,12 +11,14 @@
     defineBackground();
   });
   
-  $('#zinnia-touch').on('click touchend',function(e) {
+  $('#zinnia-touch').on('touchstart click',function(e) {
+    e.preventDefault();
     e.stopPropagation();
     nextGradient();    
   });
 
-  $(document).on('click touchend',function(e) {
+  $(document).on('touchstart click',function(e) {
+    e.preventDefault();
     e.stopPropagation();
     nextBackground();    
   });
