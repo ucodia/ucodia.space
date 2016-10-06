@@ -7,7 +7,7 @@ body {
   min-height: 100%;
   margin: 0;
   overflow: hidden;
-  /*background-color: black;*/
+  background-color: #ffffff;
 }
 
 #content {
@@ -22,7 +22,6 @@ body {
 .zinnia {
   position: fixed;
   stroke-width: 0;
-  /*fill: white;*/
 }
 
 #zinnia1 {
@@ -37,6 +36,11 @@ body {
   animation-duration: 12s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
+}
+
+#zinnia-touch {
+  fill: transparent;
+  stroke: transparent;
 }
 
 @keyframes zinnia1anim {
