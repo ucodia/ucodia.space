@@ -2,6 +2,7 @@
 
 var donuts = [];
 var resolution = 256;
+var speed = 1;
 var inc, centerX, centerY;
 
 function setup() {
@@ -9,7 +10,7 @@ function setup() {
   layout();
   init();
 
-  inc = TWO_PI / 360;
+  inc = TWO_PI / 360 * speed;
 
   $(document).on('dblclick', function() {
     screenfull.toggle();
@@ -85,6 +86,15 @@ function getOffset() {
 
 function windowResized() {
 	layout();
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW)
+    speed += 0.5;
+  else if (keyCode === DOWN_ARROW)
+    speed -= 0.5;
+
+  inc = TWO_PI / 360 * speed;
 }
 
 function pointOnCircle(x, y, angle, radius) {
