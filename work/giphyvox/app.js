@@ -33,7 +33,7 @@
   }
 
   // detect if browser supports speech recognition
-  if('webkitSpeechRecognitiondas' in window) {
+  if ('webkitSpeechRecognition' in window) {
     var mic = new webkitSpeechRecognition();
     mic.continuous = true;
     mic.interimResults = true;
