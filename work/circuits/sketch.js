@@ -21,12 +21,12 @@ function setup() {
         dark: { backColor: color(0) },
         light: { backColor: color(255) }
     }
-    currentTheme = themes.light;
+    currentTheme = themes.dark;
     
 	// ui
 	var themeSel = createSelect();
-	themeSel.option('light');
 	themeSel.option('dark');
+	themeSel.option('light');
 	themeSel.changed(themeChanged);
 	var panel = select('#panel');
 	panel.child(themeSel);
