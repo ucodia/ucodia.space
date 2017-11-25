@@ -93,5 +93,12 @@
         </div>
       </div>
     </div>
+    <script language="javascript">
+      // shuffle gallery content
+      var contentElement = document.querySelector('#content');
+      for (var i = contentElement.children.length; i >= 0; i--) {
+        contentElement.appendChild(contentElement.children[Math.random() * i | 0]);
+      }
+    </script>
   </body>
 </html>
