@@ -7,7 +7,7 @@ body {
   min-height: 100%;
   margin: 0;
   overflow: hidden;
-  /*background-color: black;*/
+  background-color: #ffffff;
 }
 
 #content {
@@ -19,14 +19,12 @@ body {
   height: 80%;
 }
 
-.layer {
+.zinnia {
   position: fixed;
   stroke-width: 0;
-  /*fill: white;*/
 }
 
 #zinnia1 {
-  /*display: none;*/
   animation-name: zinnia1anim;
   animation-duration: 18s;
   animation-timing-function: ease-in-out;
@@ -34,30 +32,28 @@ body {
 }
 
 #zinnia2 {
-  /*display: none;*/
   animation-name: zinnia2anim;
   animation-duration: 12s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }
 
+#zinnia-touch {
+  fill: transparent;
+  stroke: transparent;
+}
+
 @keyframes zinnia1anim {
-  0% {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(-1080deg);
-  }
   100% {
-    transform: rotate(0deg);
+    transform: rotate(-1080deg);
   }
 }
 
 @keyframes zinnia2anim {
-  0% {
-    transform: rotate(0deg);
+  70% {
+    transform: rotate(720deg);
   }
   100% {
-    transform: rotate(1080deg);
+    transform: rotate(540deg);
   }
 }
