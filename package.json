@@ -1,0 +1,13 @@
+{
+  "name": "ucodia.space",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "serve ./dist"
+  },
+  "author": "Lionel Ringenbach / @ucodia",
+  "license": "MIT",
+  "homepage": "https://ucodia.space/",
+  "devDependencies": {
+    "serve": "^11.2.0"
+  }
+}
