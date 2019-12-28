@@ -13,6 +13,7 @@ const FullScreen = styled.div`
 const Title = styled.div`
   text-align: center;
   font-size: 4rem;
+  line-height: 2rem;
 `;
 
 const App = () => {
