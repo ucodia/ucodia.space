@@ -3,7 +3,7 @@
 ## Migration of previous work
 
 - p5js:
-  - [ ] diamonds
+  - [x] diamonds
   - [ ] circuits
   - [ ] area715
   - [ ] drawbot001

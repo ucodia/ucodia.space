@@ -1,6 +1,7 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import styled from "styled-components";
+import Diamonds from "./Diamonds";
 
 const FullScreen = styled.div`
   width: 100vw;
@@ -29,6 +30,15 @@ const App = () => {
               <p>SPACE</p>
               <span>🚀</span>
             </Title>
+          </FullScreen>
+        )}
+      />
+      <Route
+        exact
+        path="/diamonds"
+        component={() => (
+          <FullScreen>
+            <Diamonds />
           </FullScreen>
         )}
       />
