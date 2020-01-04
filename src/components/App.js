@@ -11,31 +11,12 @@ const FullScreen = styled.div`
   justify-content: center;
 `;
 
-const Title = styled.div`
-  text-align: center;
-  font-size: 4rem;
-  line-height: 2rem;
-`;
-
 const App = () => {
   return (
     <Switch>
       <Route
         exact
         path="/"
-        component={() => (
-          <FullScreen>
-            <Title>
-              <p>UCODIA</p>
-              <p>SPACE</p>
-              <span>🚀</span>
-            </Title>
-          </FullScreen>
-        )}
-      />
-      <Route
-        exact
-        path="/diamonds"
         component={() => (
           <FullScreen>
             <Diamonds />
