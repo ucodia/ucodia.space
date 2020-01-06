@@ -8,7 +8,7 @@ export default p5 => {
   const efficientLayout = debounce(layout, 400);
 
   p5.setup = () => {
-    p5.createCanvas();
+    p5.createCanvas(100, 100);
     p5.frameRate(30);
 
     layout();
