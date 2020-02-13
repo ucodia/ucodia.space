@@ -25,6 +25,15 @@ const App = () => {
           </FullScreen>
         )}
       />
+      <Route
+        exact
+        path="/nightshifting"
+        component={() => (
+          <FullScreen>
+            <P5Wrapper sketch={sketches.nightshifting} />
+          </FullScreen>
+        )}
+      />
     </Switch>
   );
 };
