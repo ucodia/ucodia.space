@@ -1,7 +1,8 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import styled from "styled-components";
-import Diamonds from "./Diamonds";
+import P5Wrapper from "./P5Wrapper";
+import sketches from "../sketches";
 
 const FullScreen = styled.div`
   width: 100vw;
@@ -20,7 +21,7 @@ const App = () => {
         path="/"
         component={() => (
           <FullScreen>
-            <Diamonds />
+            <P5Wrapper sketch={sketches.diamonds} />
           </FullScreen>
         )}
       />

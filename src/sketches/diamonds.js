@@ -1,5 +1,10 @@
 import { debounce } from "lodash";
 
+export const meta = {
+  name: "Diamonds",
+  year: "2014"
+};
+
 export default p5 => {
   let n = 3;
   let spaceRatio = 0.2;
