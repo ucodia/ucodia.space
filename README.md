@@ -8,7 +8,7 @@
   - [ ] area715
   - [ ] drawbot001
   - [ ] illusions
-  - [ ] dizzy waves
+  - [x] dizzy waves
   - [ ] look above
   - [ ] scales
   - [ ] vintage
