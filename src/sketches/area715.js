@@ -42,6 +42,8 @@ export default p5 => {
       capHeight = p5.height;
     }
 
+    capWidth = p5.ceil(capWidth);
+    capHeight = p5.ceil(capHeight);
     cap = p5.createImage(capWidth, capHeight);
     p5.colorMode(p5.HSB, maxColor);
   }
