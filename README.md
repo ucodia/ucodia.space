@@ -5,7 +5,7 @@
 - p5js:
   - [x] diamonds
   - [x] circuits
-  - [ ] area715
+  - [x] area715
   - [ ] drawbot001
   - [ ] illusions
   - [x] dizzy waves
