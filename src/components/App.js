@@ -27,6 +27,15 @@ const App = () => {
       />
       <Route
         exact
+        path="/circuits"
+        component={() => (
+          <FullScreen>
+            <P5Wrapper sketch={sketches.circuits} />
+          </FullScreen>
+        )}
+      />
+      <Route
+        exact
         path="/nightshifting"
         component={() => (
           <FullScreen>

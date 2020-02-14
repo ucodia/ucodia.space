@@ -4,7 +4,7 @@
 
 - p5js:
   - [x] diamonds
-  - [ ] circuits
+  - [x] circuits
   - [ ] area715
   - [ ] drawbot001
   - [ ] illusions
