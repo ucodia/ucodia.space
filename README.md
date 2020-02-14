@@ -14,4 +14,6 @@
   - [ ] vintage
 - d3/svg:
   - [ ] zukunft
+- apps:
   - [ ] kinetic
+  - [ ] giphyvox
