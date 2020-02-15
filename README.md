@@ -7,7 +7,7 @@
   - [x] circuits
   - [x] area715
   - [ ] drawbot001
-  - [ ] illusions
+  - [x] illusions
   - [x] dizzy waves
   - [ ] look above
   - [ ] scales
