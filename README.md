@@ -9,7 +9,7 @@
   - [ ] drawbot001
   - [x] illusions
   - [x] dizzy waves
-  - [ ] look above
+  - [x] look above
   - [ ] scales
   - [ ] vintage
 - d3/svg:
