@@ -11,7 +11,7 @@
   - [x] dizzy waves
   - [x] look above
   - [ ] scales
-  - [ ] vintage
+  - [x] vintage
 - d3/svg:
   - [ ] zukunft
 - apps:

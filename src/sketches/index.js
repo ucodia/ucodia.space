@@ -4,5 +4,14 @@ import dizzyWaves from "./dizzyWaves";
 import area715 from "./area715";
 import illusions from "./illusions";
 import lookAbove from "./lookAbove";
+import vintage from "./vintage";
 
-export default [diamonds, circuits, dizzyWaves, area715, illusions, lookAbove];
+export default [
+  diamonds,
+  circuits,
+  dizzyWaves,
+  area715,
+  illusions,
+  lookAbove,
+  vintage
+];
