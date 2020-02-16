@@ -240,9 +240,7 @@ export default p5 => {
     efficientLayout();
   };
 
-  p5.mousePressed = () => {
-    if (p5.mouseButton === p5.RIGHT) return;
-
+  p5.touchStarted = () => {
     currentModel = generateModel();
     drawModel(currentModel);
   };
@@ -253,15 +251,6 @@ export default p5 => {
       drawModel(currentModel);
     }
   };
-
-  //   function themeChanged(evt) {
-  //     evt.preventDefault();
-
-  //     if (evt && evt.target) {
-  //       currentTheme = themes[evt.target.value];
-  //       drawModel(currentModel);
-  //     }
-  //   }
 
   ///////////////
   // utilities //
