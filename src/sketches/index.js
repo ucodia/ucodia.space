@@ -1,4 +1,5 @@
 import React from "react";
+import { mapValues } from "lodash";
 import P5Wrapper from "../components/P5Wrapper";
 import diamonds from "./diamonds";
 import circuits from "./circuits";
@@ -10,7 +11,7 @@ import vintage from "./vintage";
 
 const withP5Wrapper = sketch => <P5Wrapper sketch={sketch} />;
 
-export default [
+const sketches = {
   diamonds,
   circuits,
   dizzyWaves,
@@ -18,4 +19,6 @@ export default [
   illusions,
   lookAbove,
   vintage
-].map(withP5Wrapper);
+};
+
+export default mapValues(sketches, withP5Wrapper);
