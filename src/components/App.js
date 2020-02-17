@@ -1,11 +1,20 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import RandomSketch from "./RandomSketch";
+import FullScreen from "./FullScreen";
+import RandomSketch from "./RandomApp";
 
 const App = () => {
   return (
     <Switch>
-      <Route exact path="/" component={RandomSketch} />
+      <Route
+        exact
+        path="/"
+        component={() => (
+          <FullScreen>
+            <RandomSketch />
+          </FullScreen>
+        )}
+      />
     </Switch>
   );
 };
