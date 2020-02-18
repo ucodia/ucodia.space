@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import SvgPath from "./SvgPath";
 import backgrounds from "./data/backgrounds";
-import gradients from "./data/gradients";
+import gradients from "../../data/gradients";
 import shapes from "./data/shapes";
 import cyclicIterator from "../../utils/cyclicIterator";
 

@@ -10,7 +10,7 @@
   - [x] illusions
   - [x] dizzy waves
   - [x] look above
-  - [ ] scales
+  - [x] scales
   - [x] vintage
 - d3/svg:
   - [ ] zukunft

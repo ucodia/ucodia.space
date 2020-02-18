@@ -8,6 +8,7 @@ import area715 from "./area715";
 import illusions from "./illusions";
 import lookAbove from "./lookAbove";
 import vintage from "./vintage";
+import scales from "./scales";
 
 const withP5Wrapper = sketch => <P5Wrapper sketch={sketch} />;
 
@@ -18,7 +19,8 @@ const sketches = {
   area715,
   illusions,
   lookAbove,
-  vintage
+  vintage,
+  scales
 };
 
 export default mapValues(sketches, withP5Wrapper);
