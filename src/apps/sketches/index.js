@@ -1,6 +1,6 @@
 import React from "react";
 import { mapValues } from "lodash";
-import P5Wrapper from "../components/P5Wrapper";
+import P5Wrapper from "../../components/P5Wrapper";
 import diamonds from "./diamonds";
 import circuits from "./circuits";
 import dizzyWaves from "./dizzyWaves";

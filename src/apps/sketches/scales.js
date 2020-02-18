@@ -1,6 +1,6 @@
 import { debounce, shuffle } from "lodash";
-import gradients from "../data/gradients";
-import cyclicIterator from "../utils/cyclicIterator";
+import gradients from "../../data/gradients";
+import cyclicIterator from "../../utils/cyclicIterator";
 const gradientIterator = cyclicIterator(shuffle(gradients));
 
 export const meta = {
