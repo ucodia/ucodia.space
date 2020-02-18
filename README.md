@@ -15,5 +15,5 @@
 - d3/svg:
   - [ ] zukunft
 - apps:
-  - [ ] kinetic
+  - [x] kinetic
   - [x] giphyvox
