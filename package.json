@@ -1,13 +1,44 @@
 {
   "name": "ucodia.space",
+  "homepage": "https://v2.ucodia.space/",
   "version": "1.0.0",
-  "scripts": {
-    "start": "serve ./dist"
-  },
   "author": "Lionel Ringenbach / @ucodia",
   "license": "MIT",
-  "homepage": "https://ucodia.space/",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --coverage --watchAll=false",
+    "watch": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "lodash": "^4.17.15",
+    "p5": "^0.10.2",
+    "prop-types": "^15.7.2",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "react-router-dom": "^5.1.2",
+    "styled-components": "^4.4.1",
+    "uuid": "^3.4.0"
+  },
   "devDependencies": {
-    "serve": "^11.2.0"
+    "react-scripts": "^3.3.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
