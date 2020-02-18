@@ -13,7 +13,7 @@
   - [x] scales
   - [x] vintage
 - d3/svg:
-  - [ ] zukunft
+  - [x] zukunft
 - apps:
   - [x] kinetic
   - [x] giphyvox
