@@ -1,9 +1,8 @@
 import { values, size, has } from "lodash";
 import { useState } from "react";
-import sketches from "../sketches";
+import apps from "../apps";
 import { useParams } from "react-router-dom";
 
-const apps = { ...sketches };
 const pickRandomApp = () =>
   values(apps)[Math.floor(Math.random() * size(apps))];
 

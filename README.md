@@ -16,4 +16,4 @@
   - [ ] zukunft
 - apps:
   - [ ] kinetic
-  - [ ] giphyvox
+  - [x] giphyvox
