@@ -9,6 +9,7 @@ import illusions from "./illusions";
 import lookAbove from "./lookAbove";
 import vintage from "./vintage";
 import scales from "./scales";
+import drawbot001 from "./drawbot001";
 
 const withP5Wrapper = sketch => <P5Wrapper sketch={sketch} />;
 
@@ -20,7 +21,8 @@ const sketches = {
   illusions,
   lookAbove,
   vintage,
-  scales
+  scales,
+  drawbot001
 };
 
 export default mapValues(sketches, withP5Wrapper);

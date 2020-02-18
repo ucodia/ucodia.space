@@ -6,7 +6,7 @@
   - [x] diamonds
   - [x] circuits
   - [x] area715
-  - [ ] drawbot001
+  - [x] drawbot001
   - [x] illusions
   - [x] dizzy waves
   - [x] look above
