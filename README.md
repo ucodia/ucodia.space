@@ -1,19 +1,10 @@
 # UCODIA.SPACE 🚀
 
-## Migration of previous work
+This is the repository for my personal website [ucodia.space](https://v2.ucodia.space)
 
-- p5js:
-  - [x] diamonds
-  - [x] circuits
-  - [x] area715
-  - [x] drawbot001
-  - [x] illusions
-  - [x] dizzy waves
-  - [x] look above
-  - [x] scales
-  - [x] vintage
-- d3/svg:
-  - [x] zukunft
-- apps:
-  - [x] kinetic
-  - [x] giphyvox
+You will find here a collection of visual and experimental software all running on the web.
+
+## Tasks
+
+- [ ] Create global navigation
+- [ ] Create a gallery page
