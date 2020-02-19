@@ -26,7 +26,7 @@ const Container = styled.div`
   }
 `;
 
-const Time = styled.div`
+const Time = styled.code`
   font-size: 3rem;
 
   @media only screen and (min-width: 768px) {
