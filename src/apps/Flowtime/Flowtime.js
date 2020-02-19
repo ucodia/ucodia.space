@@ -9,7 +9,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  -user-select: none;
+  user-select: none;
 
   animation-name: background-gradient;
   animation-duration: 10s;
