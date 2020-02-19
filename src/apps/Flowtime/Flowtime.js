@@ -45,10 +45,21 @@ const Flowtime = () => {
     setTime(realityCheck ? new Date() : fromNow().toDate());
   }, 1000);
 
+  const showReality = () => {
+    setRealityCheck(true);
+    setTime(new Date());
+  };
+  const showFlowtime = () => {
+    setRealityCheck(false);
+    setTime(fromNow().toDate());
+  };
+
   return (
     <Container
-      onTouchStart={() => setRealityCheck(true)}
-      onTouchEnd={() => setRealityCheck(false)}
+      onMouseDown={showReality}
+      onTouchStart={showReality}
+      onMouseUp={showFlowtime}
+      onTouchEnd={showFlowtime}
     >
       <Time>{time.toLocaleTimeString()}</Time>
     </Container>
