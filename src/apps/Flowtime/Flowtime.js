@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { fromNow } from "flowtime";
+import { format } from "date-fns";
 import useInterval from "../../utils/useInterval";
 
 const Container = styled.div`
@@ -33,7 +34,7 @@ const Time = styled.code`
     font-size: 5rem;
   }
 
-  @media only screen and (min-width: 1200px) {
+  @media only screen and (min-width: 1024px) {
     font-size: 7rem;
   }
 `;
@@ -61,7 +62,7 @@ const Flowtime = () => {
       onMouseUp={showFlowtime}
       onTouchEnd={showFlowtime}
     >
-      <Time>{time.toLocaleTimeString()}</Time>
+      <Time>{format(time, "pp")}</Time>
     </Container>
   );
 };
