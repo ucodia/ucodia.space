@@ -6,11 +6,22 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   flex-direction: column;
+
+  & > div {
+    width: 100%;
+    height: 30vh;
+
+    font-size: 4rem;
+    @media only screen and (min-width: 768px) {
+      font-size: 7rem;
+    }
+    @media only screen and (min-width: 1024px) {
+      font-size: 9rem;
+    }
+  }
 `;
 
-const Text = styled.div`
-  width: 100%;
-  height: 31vh;
+const Cell = styled.div`
   color: black;
   background-color: white;
   ${props => props.invert && "filter: invert(100%);"}
@@ -18,14 +29,6 @@ const Text = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-
-  font-size: 4rem;
-  @media only screen and (min-width: 768px) {
-    font-size: 7rem;
-  }
-  @media only screen and (min-width: 1024px) {
-    font-size: 9rem;
-  }
 `;
 
 const repeatItems = (items, times = 1) => {
@@ -57,13 +60,13 @@ const Conundrum = () => {
     <Container>
       {sentence.map((word, index) => {
         return (
-          <Text
+          <Cell
             key={index}
             invert={index % 2 === 0}
             onClick={() => setSentence(sentenceIterator.next())}
           >
             {word}
-          </Text>
+          </Cell>
         );
       })}
     </Container>
