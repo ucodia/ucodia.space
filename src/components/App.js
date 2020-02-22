@@ -2,12 +2,12 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import FullScreen from "./FullScreen";
 import RandomApp from "./RandomApp";
-import Conundrums from "../apps/Conundrums";
+import Conundrum from "../apps/Conundrum";
 
 const App = () => {
   return (
     <Switch>
-      <Route path="/conundrums" component={() => <Conundrums />} />
+      <Route path="/conundrum" component={() => <Conundrum />} />
       <Route
         path="/:appId?"
         component={() => (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import cyclicIterator from "../utils/cyclicIterator";
 
@@ -10,7 +10,7 @@ const Container = styled.div`
 
 const Text = styled.div`
   width: 100%;
-  height: 33vh;
+  height: 31vh;
   color: black;
   background-color: white;
   ${props => props.invert && "filter: invert(100%);"}
@@ -37,14 +37,21 @@ const repeatItems = (items, times = 1) => {
 };
 
 const sentences = [
-  repeatItems(["in", "side", "out", "side"], 25),
-  repeatItems(["the best", "at doing", "the worst", "at doing"], 25)
+  repeatItems(["the best", "at doing", "the worst", "at doing"], 25),
+  repeatItems(["in", "side", "out", "side"], 25)
 ];
 
 const sentenceIterator = cyclicIterator(sentences);
 
-const Conundrums = () => {
+const scrollToMiddle = () => {
+  const x = Math.floor(document.body.clientWidth / 2);
+  const y = Math.floor(document.body.clientHeight / 2);
+  window.scrollTo(x, y);
+};
+
+const Conundrum = () => {
   const [sentence, setSentence] = useState(sentenceIterator.peek());
+  useEffect(scrollToMiddle, []);
 
   return (
     <Container>
@@ -63,4 +70,4 @@ const Conundrums = () => {
   );
 };
 
-export default Conundrums;
+export default Conundrum;
