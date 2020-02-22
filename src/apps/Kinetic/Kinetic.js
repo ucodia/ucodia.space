@@ -77,15 +77,15 @@ const Kinetic = () => {
   const [shape, setShape] = useState(shapeIterator.peek());
   const handleBackgroundTouch = e => {
     e.stopPropagation();
-    setBackground(backgroundIterator.next().value);
+    setBackground(backgroundIterator.next());
   };
   const handleShapeTouch = e => {
     e.stopPropagation();
-    setGradient(gradientIterator.next().value);
+    setGradient(gradientIterator.next());
   };
   const handleCenterTouch = e => {
     e.stopPropagation();
-    setShape(shapeIterator.next().value);
+    setShape(shapeIterator.next());
   };
 
   return (

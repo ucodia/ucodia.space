@@ -60,7 +60,7 @@ const Conundrum = () => {
           <Text
             key={index}
             invert={index % 2 === 0}
-            onClick={() => setSentence(sentenceIterator.next().value)}
+            onClick={() => setSentence(sentenceIterator.next())}
           >
             {word}
           </Text>

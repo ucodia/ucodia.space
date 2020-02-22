@@ -63,7 +63,7 @@ export default p5 => {
   };
 
   p5.touchStarted = () => {
-    gradient = gradientIterator.next().value;
+    gradient = gradientIterator.next();
     drawScales();
   };
 
