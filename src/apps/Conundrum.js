@@ -40,7 +40,16 @@ const repeatItems = (items, times = 1) => {
 };
 
 const sentences = [
-  ["the best", "at doing", "the worst", "at doing"],
+  [
+    "the best",
+    "at doing",
+    "the worst",
+    "at doing",
+    "the worst",
+    "at doing",
+    "the best",
+    "at doing"
+  ],
   ["who", "are", "you", "are", "you", "you", "are"],
   ["in", "side", "out", "side"]
 ].map(items => repeatItems(items, 20));
