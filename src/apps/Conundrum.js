@@ -6,6 +6,8 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   flex-direction: column;
+  user-select: none;
+  cursor: pointer;
 
   & > div {
     width: 100%;
