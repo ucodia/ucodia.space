@@ -1,5 +1,5 @@
 import { GUI } from "dat.gui";
-import { debounce } from "lodash";
+import autoStretchP5 from "../../utils/autoStretchP5";
 
 export default p5 => {
   // globals
@@ -43,22 +43,10 @@ export default p5 => {
     capture: capture
   };
 
-  const efficientLayout = debounce(layout, 400);
-
-  function layout() {
-    p5.noLoop();
-    p5.resizeCanvas(window.innerWidth, window.innerHeight);
-    p5.loop();
-  }
-
   p5.setup = () => {
     p5.createCanvas(window.innerWidth, window.innerHeight);
     p5.frameRate(60);
     p5.colorMode(p5.HSB, 100);
-
-    // settings from URL
-    var params = p5.getURLParams();
-    settings.autoRandomize = params.rand ? JSON.parse(params.rand) : false;
 
     // define UI controls
     // graphics
@@ -96,6 +84,7 @@ export default p5 => {
     fActions.add(actions, "randReset");
     fActions.add(actions, "capture");
 
+    autoStretchP5(p5);
     reset();
   };
 
@@ -298,10 +287,6 @@ export default p5 => {
   ///////////////////
   // event hookups //
   ///////////////////
-
-  p5.windowResized = () => {
-    efficientLayout();
-  };
 
   p5.keyPressed = () => {
     if (p5.key === "R") reset();

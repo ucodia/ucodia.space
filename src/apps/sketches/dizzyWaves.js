@@ -1,4 +1,4 @@
-import { debounce } from "lodash";
+import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Dizzy Waves",
@@ -23,19 +23,12 @@ export default p5 => {
   var moveCursor;
   var colorCursor;
 
-  // debounced layout
-  const efficientLayout = debounce(layout, 400);
-
-  function layout() {
-    p5.resizeCanvas(window.innerWidth, window.innerHeight);
-  }
-
   p5.setup = () => {
     p5.createCanvas(100, 100);
     p5.colorMode(p5.HSB, maxColor);
     p5.noStroke();
 
-    layout();
+    autoStretchP5(p5);
 
     // setup
     columns = parseInt(p5.width / spacing) + overflow;
@@ -99,10 +92,6 @@ export default p5 => {
         grid[i][j] = pos;
       }
     }
-  };
-
-  p5.windowResized = () => {
-    efficientLayout();
   };
 
   function generateGrid(columns, rows, spacing) {

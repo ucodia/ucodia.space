@@ -1,5 +1,6 @@
-import { debounce, shuffle } from "lodash";
+import { shuffle } from "lodash";
 import gradients from "../../data/gradients";
+import autoStretchP5 from "../../utils/autoStretchP5";
 import cyclicIterator from "../../utils/cyclicIterator";
 const gradientIterator = cyclicIterator(shuffle(gradients));
 
@@ -15,18 +16,11 @@ export default p5 => {
   var vSpace = 70;
   var gradient = gradientIterator.peek();
 
-  const efficientLayout = debounce(layout, 400);
-
-  function layout() {
-    p5.resizeCanvas(window.innerWidth, window.innerHeight);
-    drawScales();
-  }
-
   p5.setup = () => {
     p5.createCanvas(100, 100);
     p5.noLoop();
 
-    layout();
+    autoStretchP5(p5, () => drawScales());
   };
 
   function drawScales() {
@@ -57,10 +51,6 @@ export default p5 => {
     p5.rect(x, y, w, mid);
     p5.arc(x + w / 2, y + mid, w, w, 0, p5.PI, p5.OPEN);
   }
-
-  p5.windowResized = () => {
-    efficientLayout();
-  };
 
   p5.touchStarted = () => {
     gradient = gradientIterator.next();

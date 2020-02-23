@@ -1,4 +1,4 @@
-import { debounce } from "lodash";
+import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Vintage",
@@ -9,18 +9,11 @@ export default p5 => {
   var t = 0;
   var n = 100;
 
-  // debounced layout
-  const efficientLayout = debounce(layout, 400);
-
-  function layout() {
-    p5.noLoop();
-    p5.resizeCanvas(window.innerWidth, window.innerHeight);
-    p5.loop();
-  }
-
   p5.setup = () => {
     p5.createCanvas(p5.windowWidth, p5.windowHeight);
     p5.colorMode(p5.HSB);
+
+    autoStretchP5(p5);
   };
 
   p5.draw = () => {
@@ -40,10 +33,6 @@ export default p5 => {
     }
 
     t += p5.map(p5.mouseX, 0, p5.width, -1, 1);
-  };
-
-  p5.windowResized = () => {
-    efficientLayout();
   };
 
   function x1(t) {

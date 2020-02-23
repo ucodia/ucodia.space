@@ -1,4 +1,4 @@
-import { debounce } from "lodash";
+import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Look Above",
@@ -14,19 +14,7 @@ export default p5 => {
     p5.noLoop();
 
     sky = new Sky();
-    layout();
-  };
-
-  // debounced layout
-  const efficientLayout = debounce(layout, 400);
-
-  function layout() {
-    p5.resizeCanvas(window.innerWidth, window.innerHeight);
-    sky.draw();
-  }
-
-  p5.windowResized = () => {
-    efficientLayout();
+    autoStretchP5(p5, () => sky.draw());
   };
 
   p5.touchStarted = () => {

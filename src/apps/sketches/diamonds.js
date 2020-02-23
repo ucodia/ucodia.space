@@ -1,4 +1,4 @@
-import { debounce } from "lodash";
+import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Diamonds",
@@ -10,18 +10,16 @@ export default p5 => {
   let spaceRatio = 0.2;
   let diams = [];
   let paused = false;
-  const efficientLayout = debounce(layout, 400);
 
   p5.setup = () => {
     p5.createCanvas(100, 100);
     p5.frameRate(30);
 
-    layout();
+    autoStretchP5(p5, layout);
   };
 
   function layout() {
     paused = true;
-    p5.resizeCanvas(window.innerWidth, window.innerHeight);
 
     const isHorizontal = p5.width >= p5.height;
 
@@ -57,10 +55,6 @@ export default p5 => {
       diams[i].draw();
       diams[i].move();
     }
-  };
-
-  p5.windowResized = () => {
-    efficientLayout();
   };
 
   function createDiamond(x, y, radius, sides, offset, inc, palette) {

@@ -1,4 +1,4 @@
-import { debounce } from "lodash";
+import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Circuits",
@@ -19,11 +19,7 @@ export default p5 => {
   // data
   var currentModel;
 
-  // debounced layout
-  const efficientLayout = debounce(layout, 400);
-
   function layout() {
-    p5.resizeCanvas(window.innerWidth, window.innerHeight);
     currentModel = generateModel();
     drawModel(currentModel);
   }
@@ -38,7 +34,7 @@ export default p5 => {
     };
     currentTheme = themes.dark;
 
-    layout();
+    autoStretchP5(p5, layout);
   };
 
   function generateModel() {
@@ -235,10 +231,6 @@ export default p5 => {
   ///////////////////
   // event hookups //
   ///////////////////
-
-  p5.windowResized = () => {
-    efficientLayout();
-  };
 
   p5.touchStarted = () => {
     currentModel = generateModel();

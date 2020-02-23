@@ -1,4 +1,4 @@
-import { debounce } from "lodash";
+import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Illusions",
@@ -15,12 +15,8 @@ export default p5 => {
   var space = 0;
   var speed = 7;
 
-  const efficientLayout = () => debounce(layout, 400);
-
   function layout() {
     p5.noLoop();
-    p5.resizeCanvas(window.innerWidth, window.innerHeight);
-
     size = p5.width * 0.1;
     space = (p5.width - size * n) / (n + 1);
 
@@ -43,7 +39,7 @@ export default p5 => {
     p5.frameRate(30);
     p5.rectMode(p5.CENTER);
 
-    layout();
+    autoStretchP5(p5, layout);
   };
 
   p5.draw = () => {
@@ -102,10 +98,6 @@ export default p5 => {
   p5.touchStarted = () => {
     invert();
     return false;
-  };
-
-  p5.windowResized = () => {
-    efficientLayout();
   };
 
   // utilities

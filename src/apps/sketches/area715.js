@@ -1,4 +1,4 @@
-import { debounce } from "lodash";
+import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Area 715",
@@ -25,12 +25,7 @@ export default p5 => {
   var capWidth;
   var capHeight;
 
-  // debounced layout
-  const efficientLayout = debounce(layout, 400);
-
   function layout() {
-    p5.resizeCanvas(window.innerWidth, window.innerHeight);
-
     if (mirror === "hv") {
       capWidth = p5.width / 2;
       capHeight = p5.height / 2;
@@ -68,7 +63,7 @@ export default p5 => {
     borderAuto = false;
     paused = false;
 
-    layout();
+    autoStretchP5(p5, layout);
   };
 
   p5.draw = () => {
@@ -179,10 +174,6 @@ export default p5 => {
   };
 
   // other stuff
-
-  p5.windowResized = () => {
-    efficientLayout();
-  };
 
   function getTimestamp() {
     return new Date()
