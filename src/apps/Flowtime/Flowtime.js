@@ -11,6 +11,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   user-select: none;
+  cursor: pointer;
 
   animation-name: background-gradient;
   animation-duration: 10s;

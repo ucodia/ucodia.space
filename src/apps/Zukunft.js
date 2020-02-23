@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const Canvas = styled.svg`
   background-color: #000;
-  pointer: none;
+  cursor: pointer;
 
   .outline {
     stroke: #222;
