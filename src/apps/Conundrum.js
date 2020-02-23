@@ -40,9 +40,10 @@ const repeatItems = (items, times = 1) => {
 };
 
 const sentences = [
-  repeatItems(["the best", "at doing", "the worst", "at doing"], 25),
-  repeatItems(["in", "side", "out", "side"], 25)
-];
+  ["the best", "at doing", "the worst", "at doing"],
+  ["who", "are", "you", "are", "you", "you", "are"],
+  ["in", "side", "out", "side"]
+].map(items => repeatItems(items, 20));
 
 const sentenceIterator = cyclicIterator(sentences);
 
