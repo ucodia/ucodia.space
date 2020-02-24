@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import cyclicIterator from "../utils/cyclicIterator";
 
@@ -8,10 +8,16 @@ const Container = styled.div`
   flex-direction: column;
   user-select: none;
   cursor: pointer;
+  overflow: scroll;
+
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   & > div {
     width: 100%;
-    height: 30vh;
+    height: 30%;
 
     font-size: 4rem;
     @media only screen and (min-width: 768px) {
@@ -53,23 +59,26 @@ const sentences = [
     "at doing"
   ],
   ["who", "are", "you", "are", "you", "you", "are"],
-  ["in", "side", "out", "side"]
+  ["in", "side", "out", "side", "in", "side", "out", "side"]
 ].map(items => repeatItems(items, 20));
 
 const sentenceIterator = cyclicIterator(sentences);
 
-const scrollToMiddle = () => {
-  const x = Math.floor(document.body.clientWidth / 2);
-  const y = Math.floor(document.body.clientHeight / 2);
-  window.scrollTo(x, y);
-};
-
 const Conundrum = () => {
+  const containerRef = useRef(null);
   const [sentence, setSentence] = useState(sentenceIterator.peek());
-  useEffect(scrollToMiddle, []);
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      // items are set to 30% of container space
+      // we need an offset of -5% above to be centered
+      const offset = -container.clientHeight * 0.05;
+      container.scrollTop = container.scrollHeight / 2 + offset;
+    }
+  }, []);
 
   return (
-    <Container>
+    <Container ref={containerRef}>
       {sentence.map((word, index) => {
         return (
           <Cell
