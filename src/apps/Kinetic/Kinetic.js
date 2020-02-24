@@ -82,7 +82,7 @@ const Kinetic = () => {
   };
   const handleShapeTouch = e => {
     e.stopPropagation();
-    setGradient(gradientIterator.next());
+    setGradient(gradientIterator.random());
   };
   const handleCenterTouch = e => {
     e.stopPropagation();
