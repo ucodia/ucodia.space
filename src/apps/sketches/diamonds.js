@@ -5,9 +5,7 @@ export const meta = {
   year: "2014"
 };
 
-export default p5 => {
-  let n = 3;
-  let spaceRatio = 0.2;
+const sketch = (p5, n = 3, spaceRatio = 0.2) => {
   let diams = [];
   let paused = false;
 
@@ -123,3 +121,6 @@ export default p5 => {
     };
   }
 };
+
+export const singleDiamond = p5 => sketch(p5, 1, 0);
+export default p5 => sketch(p5);

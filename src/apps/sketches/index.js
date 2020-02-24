@@ -16,10 +16,10 @@ const withP5Wrapper = sketch => <P5Wrapper sketch={sketch} />;
 const sketches = {
   diamonds,
   circuits,
-  dizzyWaves,
+  "dizzy-waves": dizzyWaves,
   area715,
   illusions,
-  lookAbove,
+  "look-above": lookAbove,
   vintage,
   scales,
   drawbot001
