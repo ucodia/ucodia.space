@@ -1,11 +1,11 @@
 import React from "react";
-import Zukunft from "../apps/Zukunft";
+import Kinetic from "../apps/Kinetic";
 import withFullScreen from "./decorators/withFullScreen";
 
 export default {
-  title: "Zukunft",
-  component: Zukunft,
+  title: "Kinetic",
+  component: Kinetic,
   decorators: [withFullScreen]
 };
 
-export const Showcase = () => <Zukunft />;
+export const Showcase = () => <Kinetic />;

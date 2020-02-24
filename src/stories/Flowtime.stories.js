@@ -1,11 +1,11 @@
 import React from "react";
-import Zukunft from "../apps/Zukunft";
+import Flowtime from "../apps/Flowtime";
 import withFullScreen from "./decorators/withFullScreen";
 
 export default {
-  title: "Zukunft",
-  component: Zukunft,
+  title: "Flowtime",
+  component: Flowtime,
   decorators: [withFullScreen]
 };
 
-export const Showcase = () => <Zukunft />;
+export const Showcase = () => <Flowtime />;
