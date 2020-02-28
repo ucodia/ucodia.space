@@ -59,7 +59,8 @@ const sentences = [
     "at doing"
   ],
   ["who", "are", "you", "are", "you", "you", "are"],
-  ["in", "side", "out", "side", "in", "side", "out", "side"]
+  ["in", "side", "out", "side", "in", "side", "out", "side"],
+  ["less", "is", "more", "is", "more", "is", "less", "is"]
 ].map(items => repeatItems(items, 20));
 
 const sentenceIterator = cyclicIterator(sentences);
