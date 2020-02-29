@@ -3,6 +3,10 @@ import styled from "styled-components";
 import cyclicIterator from "../../utils/cyclicIterator";
 import sentences from "./sentences";
 
+const numberOfWords = 3;
+const offsetRatio = 0.1;
+const wordRatio = (1 - offsetRatio) / numberOfWords;
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -18,7 +22,7 @@ const Container = styled.div`
 
   & > div {
     width: 100%;
-    height: 30%;
+    height: ${wordRatio * 100}%;
 
     font-size: 4rem;
     @media only screen and (min-width: 768px) {
@@ -54,10 +58,8 @@ const sentenceIterator = cyclicIterator(sentencesRepetition);
 const scrollToCenter = ref => {
   const container = ref.current;
   if (container) {
-    // items are set to 30% of container space
-    // we need an offset of -5% above to be centered
-    const offset = -container.clientHeight * 0.05;
-    container.scrollTop = container.scrollHeight / 2 + offset;
+    const marginTop = (-container.clientHeight * offsetRatio) / 2;
+    container.scrollTop = container.scrollHeight / 2 + marginTop;
   }
 };
 
