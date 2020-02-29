@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import cyclicIterator from "../utils/cyclicIterator";
+import cyclicIterator from "../../utils/cyclicIterator";
+import sentences from "./sentences";
 
 const Container = styled.div`
   width: 100%;
@@ -47,36 +48,23 @@ const repeatItems = (items, times = 1) => {
   return result;
 };
 
-const sentences = [
-  [
-    "the best",
-    "at doing",
-    "the worst",
-    "at doing",
-    "the worst",
-    "at doing",
-    "the best",
-    "at doing"
-  ],
-  ["who", "are", "you", "are", "you", "you", "are"],
-  ["in", "side", "out", "side", "in", "side", "out", "side"],
-  ["less", "is", "more", "is", "more", "is", "less", "is"]
-].map(items => repeatItems(items, 20));
+const sentencesRepetition = sentences.map(items => repeatItems(items, 20));
+const sentenceIterator = cyclicIterator(sentencesRepetition);
 
-const sentenceIterator = cyclicIterator(sentences);
+const scrollToCenter = ref => {
+  const container = ref.current;
+  if (container) {
+    // items are set to 30% of container space
+    // we need an offset of -5% above to be centered
+    const offset = -container.clientHeight * 0.05;
+    container.scrollTop = container.scrollHeight / 2 + offset;
+  }
+};
 
 const Conundrum = () => {
   const containerRef = useRef(null);
   const [sentence, setSentence] = useState(sentenceIterator.peek());
-  useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      // items are set to 30% of container space
-      // we need an offset of -5% above to be centered
-      const offset = -container.clientHeight * 0.05;
-      container.scrollTop = container.scrollHeight / 2 + offset;
-    }
-  }, []);
+  useEffect(() => scrollToCenter(containerRef), []);
 
   return (
     <Container ref={containerRef}>
