@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { shuffle } from "lodash";
 import cyclicIterator from "../../utils/cyclicIterator";
 import sentences from "./sentences";
 
@@ -52,7 +53,9 @@ const repeatItems = (items, times = 1) => {
   return result;
 };
 
-const sentencesRepetition = sentences.map(items => repeatItems(items, 20));
+const sentencesRepetition = shuffle(sentences).map(items =>
+  repeatItems(items, 20)
+);
 const sentenceIterator = cyclicIterator(sentencesRepetition);
 
 const scrollToCenter = ref => {
