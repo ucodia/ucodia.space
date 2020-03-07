@@ -24,7 +24,12 @@ const P5Wrapper = ({ sketch }) => {
     setP5Instance(newP5Instance);
 
     // cleanup when sketch changes
-    return () => newP5Instance.remove();
+    return () => {
+      newP5Instance.remove();
+      if (newP5Instance.cleanup) {
+        newP5Instance.cleanup();
+      }
+    };
   }, [sketch]);
 
   return <Container ref={containerRef} />;

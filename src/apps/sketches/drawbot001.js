@@ -336,4 +336,8 @@ export default p5 => {
       .split(":")
       .join("");
   }
+
+  p5.cleanup = () => {
+    gui.destroy();
+  };
 };
