@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 import styled from "styled-components";
+import randomInt from "../utils/randomInt";
 
 const Canvas = styled.svg`
   background-color: #000;
@@ -291,10 +292,6 @@ const zukunft = svgElement => {
         .attr("rx", settings.dotSize)
         .attr("ry", settings.dotSize);
     }
-  }
-
-  function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   return {
