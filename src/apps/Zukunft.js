@@ -198,15 +198,17 @@ const zukunft = svgElement => {
   var svg = d3.select(svgElement);
 
   // hookup events
-  window.addEventListener("resize", function() {
+  const handleResize = () => {
     layout();
     gen();
     draw();
-  });
-  document.addEventListener("click", function() {
+  };
+  const handleClick = () => {
     gen();
     draw();
-  });
+  };
+  window.addEventListener("resize", handleResize);
+  document.addEventListener("click", handleClick);
 
   // startup
   layout();
@@ -294,15 +296,21 @@ const zukunft = svgElement => {
   function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
+
+  return {
+    remove: () => {
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("click", handleClick);
+    }
+  };
 };
 
 const Zukunft = () => {
   const svgRef = useRef(null);
   useEffect(() => {
-    if (svgRef.current) {
-      zukunft(svgRef.current);
-    }
-  });
+    const { remove } = zukunft(svgRef.current);
+    return () => remove();
+  }, []);
 
   return <Canvas ref={svgRef} />;
 };
