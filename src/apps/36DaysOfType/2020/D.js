@@ -29,7 +29,7 @@ export default p5 => {
 
   p5.setup = () => {
     p5.createCanvas(100, 100);
-    p5.frameRate(60);
+    p5.frameRate(30);
     // p5.noLoop();
 
     autoStretchP5(p5, layout);
