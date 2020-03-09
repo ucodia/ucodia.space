@@ -38,6 +38,8 @@
     "@storybook/addons": "^5.3.13",
     "@storybook/preset-create-react-app": "^1.5.2",
     "@storybook/react": "^5.3.13",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.8",
     "prettier": "1.19.1",
     "react-scripts": "^3.4.0",
     "source-map-explorer": "^2.3.1"
@@ -56,5 +58,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json}": "prettier --write"
   }
 }
