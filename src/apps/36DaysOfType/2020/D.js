@@ -58,7 +58,7 @@ export default sketch => {
 
     // if (sketch.frameCount < 34) {
     //   sketch.saveCanvas(
-    //     `36days_${letter}_${sketch.frameCount.toString().padStart(6, "0")}`,
+    //     `${letter}_${sketch.frameCount.toString().padStart(4, "0")}`,
     //     "png"
     //   );
     // }
