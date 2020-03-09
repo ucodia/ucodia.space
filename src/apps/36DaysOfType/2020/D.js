@@ -6,7 +6,6 @@ import pointsToSegments from "../utils/pointsToSegments";
 export default p5 => {
   let letter = "D";
   let font;
-  let points;
   let bounds;
   let segments;
   let segmentsIterators = [];
@@ -19,8 +18,8 @@ export default p5 => {
 
   function layout() {
     const fontSize = p5.height * 0.8;
-    points = font.textToPoints(letter, 0, 0, fontSize, {
-      sampleFactor: 2
+    const points = font.textToPoints(letter, 0, 0, fontSize, {
+      sampleFactor: 1.1
     });
     bounds = font.textBounds(letter, 0, 0, fontSize);
     segments = pointsToSegments(points);
