@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { fromNow } from "flowtime";
 import { format } from "date-fns";
-import useInterval from "../../utils/useInterval";
+import useInterval from "../../hooks/useInterval";
 
 const Container = styled.div`
   width: 100%;

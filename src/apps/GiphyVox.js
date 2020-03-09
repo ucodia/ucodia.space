@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import useSpeechToText from "../utils/useSpeechToText";
+import useSpeechToText from "../hooks/useSpeechToText";
 import giphy from "../apis/giphy";
 
 const Container = styled.div`
