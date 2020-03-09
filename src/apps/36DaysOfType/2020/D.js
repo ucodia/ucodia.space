@@ -20,7 +20,7 @@ export default p5 => {
   function layout() {
     const fontSize = p5.height * 0.8;
     points = font.textToPoints(letter, 0, 0, fontSize, {
-      sampleFactor: 5
+      sampleFactor: 2
     });
     bounds = font.textBounds(letter, 0, 0, fontSize);
     segments = pointsToSegments(points);
