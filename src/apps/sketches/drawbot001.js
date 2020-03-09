@@ -1,7 +1,7 @@
 import { GUI } from "dat.gui";
 import autoStretchP5 from "../../utils/autoStretchP5";
 
-export default p5 => {
+export default sketch => {
   // globals
   var bots = [];
   var lastCap = 0;
@@ -43,10 +43,10 @@ export default p5 => {
     capture: capture
   };
 
-  p5.setup = () => {
-    p5.createCanvas(window.innerWidth, window.innerHeight);
-    p5.frameRate(60);
-    p5.colorMode(p5.HSB, 100);
+  sketch.setup = () => {
+    sketch.createCanvas(window.innerWidth, window.innerHeight);
+    sketch.frameRate(60);
+    sketch.colorMode(sketch.HSB, 100);
 
     // define UI controls
     // graphics
@@ -84,7 +84,7 @@ export default p5 => {
     fActions.add(actions, "randReset");
     fActions.add(actions, "capture");
 
-    autoStretchP5(p5);
+    autoStretchP5(sketch);
     reset();
   };
 
@@ -96,11 +96,11 @@ export default p5 => {
     settings.opacity = randomInt(0, 100);
     settings.maxBots = randomInt(8, 200);
     settings.popFreq = randomInt(1, 20);
-    settings.minSpeed = p5.random(0, 2);
-    settings.maxSpeed = p5.random(0, 100);
-    settings.minSize = p5.random(1, 20);
-    settings.maxSize = p5.random(settings.minSize, 100);
-    settings.attDist = p5.random(10, 400);
+    settings.minSpeed = sketch.random(0, 2);
+    settings.maxSpeed = sketch.random(0, 100);
+    settings.minSize = sketch.random(1, 20);
+    settings.maxSize = sketch.random(settings.minSize, 100);
+    settings.attDist = sketch.random(10, 400);
     settings.attract = rollDice(2);
     settings.reframe = rollDice(2);
     settings.showBot = rollDice(8);
@@ -113,16 +113,16 @@ export default p5 => {
     if (settings.autoRandomize) randomize();
 
     // reset canvas
-    lastCap = p5.frameCount;
-    p5.background(settings.background);
+    lastCap = sketch.frameCount;
+    sketch.background(settings.background);
     bots = [];
   }
 
   function capture() {
-    p5.saveCanvas("frame" + getTimestamp(), "jpg");
+    sketch.saveCanvas("frame" + getTimestamp(), "jpg");
   }
 
-  p5.draw = () => {
+  sketch.draw = () => {
     // store bots to destroy after loop
     var destroy = [];
 
@@ -131,9 +131,9 @@ export default p5 => {
 
       if (
         bot.pos.x < 0 ||
-        bot.pos.x > p5.width ||
+        bot.pos.x > sketch.width ||
         bot.pos.y < 0 ||
-        bot.pos.y > p5.height
+        bot.pos.y > sketch.height
       ) {
         destroy.push(bot);
         break;
@@ -176,12 +176,17 @@ export default p5 => {
     // frameCount % n === 0 is for rate limiting
     if (
       bots.length < settings.maxBots &&
-      p5.frameCount % settings.popFreq === 0
+      sketch.frameCount % settings.popFreq === 0
     )
-      bots.push(new Bot(p5.random(p5.width), p5.random(p5.height)));
+      bots.push(
+        new Bot(sketch.random(sketch.width), sketch.random(sketch.height))
+      );
 
     // check for drawing completion and dump
-    if (settings.autoReset && p5.frameCount - lastCap >= settings.resetFreq) {
+    if (
+      settings.autoReset &&
+      sketch.frameCount - lastCap >= settings.resetFreq
+    ) {
       if (settings.autoCapture) capture();
 
       reset();
@@ -189,8 +194,8 @@ export default p5 => {
   };
 
   function Bot(x, y) {
-    this.pos = p5.createVector(x, y);
-    this.vel = p5.createVector(p5.random(-1, 1), p5.random(-1, 1));
+    this.pos = sketch.createVector(x, y);
+    this.vel = sketch.createVector(sketch.random(-1, 1), sketch.random(-1, 1));
     this.size = settings.minSize;
     this.hue = randomInt(0, 100);
     this.neighbors = [];
@@ -199,14 +204,14 @@ export default p5 => {
     var that = this;
     var getColor = function() {
       if (settings.contrast) {
-        return p5.color(
+        return sketch.color(
           0,
           0,
-          p5.map(settings.background, 0, 100, 100, 0),
+          sketch.map(settings.background, 0, 100, 100, 0),
           settings.opacity
         );
       } else {
-        return p5.color(
+        return sketch.color(
           that.hue,
           settings.saturation,
           settings.brightness,
@@ -234,7 +239,7 @@ export default p5 => {
       }
 
       // limit max speed
-      var limit = p5.map(
+      var limit = sketch.map(
         this.size,
         settings.minSize,
         settings.maxSize,
@@ -251,9 +256,9 @@ export default p5 => {
     this.merge = function(merged) {
       // recolor based on size ratio
       var sRatio = merged.size / (this.size + merged.size);
-      this.hue = p5.lerp(
-        p5.max(this.hue, merged.hue),
-        p5.min(this.hue, merged.hue),
+      this.hue = sketch.lerp(
+        sketch.max(this.hue, merged.hue),
+        sketch.min(this.hue, merged.hue),
         sRatio
       );
       // grow the size by a fixed ratio
@@ -263,23 +268,23 @@ export default p5 => {
     this.draw = function() {
       // draw bot positions
       if (settings.showBot) {
-        p5.noStroke();
-        p5.fill(getColor());
-        p5.ellipse(this.pos.x, this.pos.y, this.size, this.size);
+        sketch.noStroke();
+        sketch.fill(getColor());
+        sketch.ellipse(this.pos.x, this.pos.y, this.size, this.size);
       }
 
       // draw lasers between bots
       for (let i = 0; i < this.neighbors.length; i++) {
         var neighbor = this.neighbors[i];
-        p5.strokeWeight(1);
-        p5.stroke(getColor());
+        sketch.strokeWeight(1);
+        sketch.stroke(getColor());
 
         // prevents drawing link to reframed neighbors
         if (
           this.pos.dist(neighbor.pos) <
           settings.attDist + this.size / 2 + neighbor.size / 2
         )
-          p5.line(this.pos.x, this.pos.y, neighbor.pos.x, neighbor.pos.y);
+          sketch.line(this.pos.x, this.pos.y, neighbor.pos.x, neighbor.pos.y);
       }
     };
   }
@@ -288,8 +293,8 @@ export default p5 => {
   // event hookups //
   ///////////////////
 
-  p5.keyPressed = () => {
-    if (p5.key === "R") reset();
+  sketch.keyPressed = () => {
+    if (sketch.key === "R") reset();
   };
 
   ///////////////
@@ -297,7 +302,7 @@ export default p5 => {
   ///////////////
 
   function randomInt(min, max) {
-    return p5.floor(p5.random() * (max - min + 1)) + min;
+    return sketch.floor(sketch.random() * (max - min + 1)) + min;
   }
 
   function rollDice(faces) {
@@ -306,7 +311,7 @@ export default p5 => {
 
   function reframe(val, min, max) {
     var res = val;
-    var d = p5.abs(max - min);
+    var d = sketch.abs(max - min);
 
     if (val < min) {
       const dif = min - val;
@@ -322,8 +327,8 @@ export default p5 => {
   }
 
   function reframeVector(v) {
-    v.x = reframe(v.x, 0, p5.width);
-    v.y = reframe(v.y, 0, p5.height);
+    v.x = reframe(v.x, 0, sketch.width);
+    v.y = reframe(v.y, 0, sketch.height);
   }
 
   function getTimestamp() {
@@ -337,7 +342,7 @@ export default p5 => {
       .join("");
   }
 
-  p5.cleanup = () => {
+  sketch.cleanup = () => {
     gui.destroy();
   };
 };

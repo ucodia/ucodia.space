@@ -5,7 +5,7 @@ export const meta = {
   year: "2016"
 };
 
-export default p5 => {
+export default sketch => {
   // display parameters
   var scaling = 40;
   var nodeSize = scaling * 0.45;
@@ -24,31 +24,31 @@ export default p5 => {
     drawModel(currentModel);
   }
 
-  p5.setup = () => {
-    p5.createCanvas(100, 100);
+  sketch.setup = () => {
+    sketch.createCanvas(100, 100);
 
     // defaults
     themes = {
-      dark: { backColor: p5.color(0) },
-      light: { backColor: p5.color(255) }
+      dark: { backColor: sketch.color(0) },
+      light: { backColor: sketch.color(255) }
     };
     currentTheme = themes.dark;
 
-    autoStretchP5(p5, layout);
+    autoStretchP5(sketch, layout);
   };
 
   function generateModel() {
     // generate color palette
     var nColors = randomInt(2, 4);
-    var colorOffset = p5.random(0, 1);
+    var colorOffset = sketch.random(0, 1);
     var palette = createPalette(nColors, colorOffset);
 
     // generate pad styles
     var padStyles = [regularPadStyle, padWithHoleStyle];
 
     // generate circuit
-    var cols = p5.ceil(p5.width / scaling);
-    var rows = p5.ceil(p5.height / scaling);
+    var cols = sketch.ceil(sketch.width / scaling);
+    var rows = sketch.ceil(sketch.height / scaling);
     var circuit = createCircuit(cols, rows, palette.length, padStyles.length);
 
     return {
@@ -63,7 +63,7 @@ export default p5 => {
   ///////////////////////
 
   function drawModel(model) {
-    p5.background(currentTheme.backColor);
+    sketch.background(currentTheme.backColor);
 
     for (var i = 0; i < model.circuit.paths.length; i++) {
       var path = model.circuit.paths[i];
@@ -86,12 +86,12 @@ export default p5 => {
 
   function drawTrace(nodes, color) {
     for (var i = 0; i < nodes.length - 1; i++) {
-      p5.stroke(color);
-      p5.strokeWeight(linkSize);
+      sketch.stroke(color);
+      sketch.strokeWeight(linkSize);
 
       var lPos = getPosition(nodes[i], scaling, offset);
       var rPos = getPosition(nodes[i + 1], scaling, offset);
-      p5.line(lPos.x, lPos.y, rPos.x, rPos.y);
+      sketch.line(lPos.x, lPos.y, rPos.x, rPos.y);
     }
   }
 
@@ -100,18 +100,18 @@ export default p5 => {
 
     // apply style and draw pad
     style(color);
-    p5.ellipse(pos.x, pos.y, nodeSize, nodeSize);
+    sketch.ellipse(pos.x, pos.y, nodeSize, nodeSize);
   }
 
   // pad styles
   function regularPadStyle(color) {
-    p5.noStroke();
-    p5.fill(color);
+    sketch.noStroke();
+    sketch.fill(color);
   }
   function padWithHoleStyle(color) {
-    p5.stroke(color);
-    p5.strokeWeight(linkSize);
-    p5.fill(currentTheme.backColor);
+    sketch.stroke(color);
+    sketch.strokeWeight(linkSize);
+    sketch.fill(currentTheme.backColor);
   }
 
   //////////////////////
@@ -217,13 +217,13 @@ export default p5 => {
 
     var palette = [];
 
-    p5.push();
-    p5.colorMode(p5.HSB, n, 100, 100);
+    sketch.push();
+    sketch.colorMode(sketch.HSB, n, 100, 100);
     for (var i = 0; i < n; i++) {
       var hue = (i + offset) % n;
-      palette[i] = p5.color(hue, 70, 90);
+      palette[i] = sketch.color(hue, 70, 90);
     }
-    p5.pop();
+    sketch.pop();
 
     return palette;
   }
@@ -232,13 +232,13 @@ export default p5 => {
   // event hookups //
   ///////////////////
 
-  p5.touchStarted = () => {
+  sketch.touchStarted = () => {
     currentModel = generateModel();
     drawModel(currentModel);
   };
 
-  p5.keyPressed = () => {
-    if (p5.key === " ") {
+  sketch.keyPressed = () => {
+    if (sketch.key === " ") {
       currentTheme = currentTheme === themes.dark ? themes.light : themes.dark;
       drawModel(currentModel);
     }
@@ -259,7 +259,7 @@ export default p5 => {
   }
 
   function randomInt(min, max) {
-    return p5.floor(p5.random() * (max - min + 1)) + min;
+    return sketch.floor(sketch.random() * (max - min + 1)) + min;
   }
 
   function rollDice(faces) {

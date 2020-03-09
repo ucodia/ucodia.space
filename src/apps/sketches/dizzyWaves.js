@@ -5,7 +5,7 @@ export const meta = {
   year: "201?"
 };
 
-export default p5 => {
+export default sketch => {
   // params
   var spacing = 70;
   var overflow = 4;
@@ -23,32 +23,32 @@ export default p5 => {
   var moveCursor;
   var colorCursor;
 
-  p5.setup = () => {
-    p5.createCanvas(100, 100);
-    p5.colorMode(p5.HSB, maxColor);
-    p5.noStroke();
+  sketch.setup = () => {
+    sketch.createCanvas(100, 100);
+    sketch.colorMode(sketch.HSB, maxColor);
+    sketch.noStroke();
 
-    autoStretchP5(p5);
+    autoStretchP5(sketch);
 
     // setup
-    columns = parseInt(p5.width / spacing) + overflow;
-    rows = parseInt(p5.height / spacing) + overflow;
+    columns = parseInt(sketch.width / spacing) + overflow;
+    rows = parseInt(sketch.height / spacing) + overflow;
     refGrid = generateGrid(columns, rows, spacing);
     grid = generateGrid(columns, rows, spacing);
     moveCursor = new Oscillator(-spacing, spacing);
     colorCursor = new Looper(0, maxColor);
   };
 
-  p5.draw = () => {
-    p5.background(maxColor, 0, maxColor);
-    p5.translate(-spacing, -spacing);
+  sketch.draw = () => {
+    sketch.background(maxColor, 0, maxColor);
+    sketch.translate(-spacing, -spacing);
 
-    if (p5.mouseIsPressed) {
+    if (sketch.mouseIsPressed) {
       const bounds =
-        p5.width >= p5.height
-          ? { current: p5.mouseX, max: p5.width }
-          : { current: p5.mouseY, max: p5.height };
-      nColors = p5.floor(p5.map(bounds.current, 0, bounds.max, 1, 256));
+        sketch.width >= sketch.height
+          ? { current: sketch.mouseX, max: sketch.width }
+          : { current: sketch.mouseY, max: sketch.height };
+      nColors = sketch.floor(sketch.map(bounds.current, 0, bounds.max, 1, 256));
     }
 
     // draw connections
@@ -56,7 +56,7 @@ export default p5 => {
       for (let j = 0; j < grid[i].length - 1; j++) {
         let pos = grid[i][j];
         var posBR = grid[i + 1][j + 1];
-        var posXOR = p5.createVector(0, 0);
+        var posXOR = sketch.createVector(0, 0);
 
         if ((i % 2 === 0) === (j % 2 === 0)) posXOR = grid[i + 1][j];
         else posXOR = grid[i][j + 1];
@@ -67,14 +67,14 @@ export default p5 => {
           newColor =
             (newColor + (maxColor / nColors) * (nColors - selector)) % maxColor;
 
-        p5.fill(newColor, maxColor, maxColor);
-        p5.triangle(pos.x, pos.y, posBR.x, posBR.y, posXOR.x, posXOR.y);
+        sketch.fill(newColor, maxColor, maxColor);
+        sketch.triangle(pos.x, pos.y, posBR.x, posBR.y, posXOR.x, posXOR.y);
       }
     }
 
     // generate movement
     var nextMoveValue = moveCursor.next() / amp;
-    var nextMove = p5.createVector(nextMoveValue, -nextMoveValue);
+    var nextMove = sketch.createVector(nextMoveValue, -nextMoveValue);
 
     // move grid
     for (var i = 0; i < grid.length; i++) {
@@ -83,11 +83,17 @@ export default p5 => {
         let pos;
 
         if (j % 2 === 0)
-          pos = p5.createVector(refPos.x - nextMove.x, refPos.y - nextMove.y);
-        //pos = p5.Vector.sub(refPos, nextMove);
+          pos = sketch.createVector(
+            refPos.x - nextMove.x,
+            refPos.y - nextMove.y
+          );
+        //pos = sketch.Vector.sub(refPos, nextMove);
         else
-          pos = p5.createVector(refPos.x + nextMove.x, refPos.y + nextMove.y);
-        //pos = p5.Vector.add(refPos, nextMove);
+          pos = sketch.createVector(
+            refPos.x + nextMove.x,
+            refPos.y + nextMove.y
+          );
+        //pos = sketch.Vector.add(refPos, nextMove);
 
         grid[i][j] = pos;
       }
@@ -101,7 +107,7 @@ export default p5 => {
       grid[i] = [];
 
       for (var j = 0; j < rows; j++) {
-        grid[i][j] = p5.createVector(i * spacing, j * spacing);
+        grid[i][j] = sketch.createVector(i * spacing, j * spacing);
       }
     }
 

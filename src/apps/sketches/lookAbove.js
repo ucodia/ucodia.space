@@ -5,19 +5,19 @@ export const meta = {
   year: "201?"
 };
 
-export default p5 => {
+export default sketch => {
   var sky;
 
-  p5.setup = () => {
-    p5.createCanvas(100, 100);
-    p5.noStroke();
-    p5.noLoop();
+  sketch.setup = () => {
+    sketch.createCanvas(100, 100);
+    sketch.noStroke();
+    sketch.noLoop();
 
     sky = new Sky();
-    autoStretchP5(p5, () => sky.draw());
+    autoStretchP5(sketch, () => sky.draw());
   };
 
-  p5.touchStarted = () => {
+  sketch.touchStarted = () => {
     sky.rebirth();
     sky.draw();
   };
@@ -25,7 +25,7 @@ export default p5 => {
   // objects
 
   function Sky() {
-    this.color = p5.color(0, 12, 26);
+    this.color = sketch.color(0, 12, 26);
     this.density = 0;
 
     // star size generator
@@ -37,8 +37,8 @@ export default p5 => {
     this.rand.add(0, 3, 1);
 
     this.rebirth = function() {
-      this.density = p5.random(0.02, 0.1) / 1000;
-      var n = p5.displayWidth * p5.displayHeight * this.density;
+      this.density = sketch.random(0.02, 0.1) / 1000;
+      var n = sketch.displayWidth * sketch.displayHeight * this.density;
 
       this.stars = [];
       for (var i = 0; i < n; i++) {
@@ -47,7 +47,7 @@ export default p5 => {
     };
 
     this.draw = function() {
-      p5.background(this.color);
+      sketch.background(this.color);
 
       for (var i = 0; i < this.stars.length; i++) {
         this.stars[i].draw();
@@ -58,19 +58,19 @@ export default p5 => {
   }
 
   function Star(size) {
-    this.color = p5.color(255);
+    this.color = sketch.color(255);
     this.x = 0;
     this.y = 0;
     this.size = size;
 
     this.rebirth = function() {
-      this.x = p5.random(p5.displayWidth);
-      this.y = p5.random(p5.displayHeight);
+      this.x = sketch.random(sketch.displayWidth);
+      this.y = sketch.random(sketch.displayHeight);
     };
 
     this.draw = function() {
-      p5.fill(this.color);
-      p5.ellipse(this.x, this.y, this.size, this.size);
+      sketch.fill(this.color);
+      sketch.ellipse(this.x, this.y, this.size, this.size);
     };
 
     this.rebirth();
@@ -92,13 +92,13 @@ export default p5 => {
         var r = this.ranges[i];
 
         if (randomInt(0, r.p - 1) === 0) {
-          return p5.random(r.min, r.max);
+          return sketch.random(r.min, r.max);
         }
       }
     };
   }
 
   function randomInt(min, max) {
-    return p5.floor(p5.random(min, max + 1));
+    return sketch.floor(sketch.random(min, max + 1));
   }
 };

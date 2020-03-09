@@ -5,7 +5,7 @@ export const meta = {
   year: "201?"
 };
 
-export default p5 => {
+export default sketch => {
   var n = 3;
   var shapes = [];
   var bands = [];
@@ -16,11 +16,11 @@ export default p5 => {
   var speed = 7;
 
   function layout() {
-    p5.noLoop();
-    size = p5.width * 0.1;
-    space = (p5.width - size * n) / (n + 1);
+    sketch.noLoop();
+    size = sketch.width * 0.1;
+    space = (sketch.width - size * n) / (n + 1);
 
-    var baseY = p5.height / 2;
+    var baseY = sketch.height / 2;
 
     for (let i = 0; i < n; i++) {
       const baseX = (space + size) * (i + 1) - size / 2;
@@ -31,39 +31,39 @@ export default p5 => {
       const baseX = (space + size) * i - space / 2 - size;
       bands[i] = { x: baseX, y: baseY };
     }
-    p5.loop();
+    sketch.loop();
   }
 
-  p5.setup = () => {
-    p5.createCanvas(100, 100);
-    p5.frameRate(30);
-    p5.rectMode(p5.CENTER);
+  sketch.setup = () => {
+    sketch.createCanvas(100, 100);
+    sketch.frameRate(30);
+    sketch.rectMode(sketch.CENTER);
 
-    autoStretchP5(p5, layout);
+    autoStretchP5(sketch, layout);
   };
 
-  p5.draw = () => {
-    p5.background(backColor);
+  sketch.draw = () => {
+    sketch.background(backColor);
 
     // draw bands
     for (let i = 0; i < bands.length; i++) {
       const band = bands[i];
 
-      p5.noStroke();
-      p5.fill(foreColor);
-      p5.rect(band.x, band.y, size * 0.7, p5.height);
+      sketch.noStroke();
+      sketch.fill(foreColor);
+      sketch.rect(band.x, band.y, size * 0.7, sketch.height);
     }
 
     // draw shapes
     for (let i = 0; i < shapes.length; i++) {
       var shape = shapes[i];
 
-      p5.strokeWeight(size * 0.15);
-      p5.stroke(backColor);
-      p5.noFill();
+      sketch.strokeWeight(size * 0.15);
+      sketch.stroke(backColor);
+      sketch.noFill();
 
-      if (shape.form === 0) p5.rect(shape.x, shape.y, size, size);
-      else if (shape.form === 1) p5.ellipse(shape.x, shape.y, size, size);
+      if (shape.form === 0) sketch.rect(shape.x, shape.y, size, size);
+      else if (shape.form === 1) sketch.ellipse(shape.x, shape.y, size, size);
       else if (shape.form === 2) equi(shape.x, shape.y, size, 1);
     }
 
@@ -73,7 +73,7 @@ export default p5 => {
 
       band.x += speed;
 
-      if (band.x >= p5.width + size + space / 2) {
+      if (band.x >= sketch.width + size + space / 2) {
         band.x = -(size + space / 2);
         shiftShapes();
       }
@@ -95,7 +95,7 @@ export default p5 => {
 
   // event hooks
 
-  p5.touchStarted = () => {
+  sketch.touchStarted = () => {
     invert();
     return false;
   };
@@ -123,10 +123,10 @@ export default p5 => {
       y3 = y + h / 2;
     }
 
-    p5.triangle(x1, y1, x2, y2, x3, y3);
+    sketch.triangle(x1, y1, x2, y2, x3, y3);
   }
 
   function triHeight(hypo, a) {
-    return p5.sqrt(p5.pow(hypo, 2) - p5.pow(a, 2));
+    return sketch.sqrt(sketch.pow(hypo, 2) - sketch.pow(a, 2));
   }
 };

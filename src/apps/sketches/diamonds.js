@@ -5,34 +5,34 @@ export const meta = {
   year: "2014"
 };
 
-const sketch = (p5, n = 3, spaceRatio = 0.2) => {
+const sketchFn = (sketch, n = 3, spaceRatio = 0.2) => {
   let diams = [];
   let paused = false;
 
-  p5.setup = () => {
-    p5.createCanvas(100, 100);
-    p5.frameRate(30);
+  sketch.setup = () => {
+    sketch.createCanvas(100, 100);
+    sketch.frameRate(30);
 
-    autoStretchP5(p5, layout);
+    autoStretchP5(sketch, layout);
   };
 
   function layout() {
     paused = true;
 
-    const isHorizontal = p5.width >= p5.height;
+    const isHorizontal = sketch.width >= sketch.height;
 
     let spacing = isHorizontal
-      ? (p5.width * spaceRatio) / (n + 1)
-      : (p5.height * spaceRatio) / (n + 1);
+      ? (sketch.width * spaceRatio) / (n + 1)
+      : (sketch.height * spaceRatio) / (n + 1);
     let r = isHorizontal
-      ? (p5.width * (1 - spaceRatio)) / (n * 2)
-      : (p5.height * (1 - spaceRatio)) / (n * 2);
+      ? (sketch.width * (1 - spaceRatio)) / (n * 2)
+      : (sketch.height * (1 - spaceRatio)) / (n * 2);
 
     for (let i = 0; i < n; i++) {
       let c1 = (i + 1) * spacing;
       let c2 = 2 * r * i + r;
-      let baseX = isHorizontal ? c1 + c2 : p5.width / 2;
-      let baseY = isHorizontal ? p5.height / 2 : c1 + c2;
+      let baseX = isHorizontal ? c1 + c2 : sketch.width / 2;
+      let baseY = isHorizontal ? sketch.height / 2 : c1 + c2;
 
       let offset = (i + 1) * 0.25;
       if (diams[i]) offset = diams[i].pos();
@@ -43,11 +43,11 @@ const sketch = (p5, n = 3, spaceRatio = 0.2) => {
     paused = false;
   }
 
-  p5.draw = () => {
+  sketch.draw = () => {
     if (paused) return;
 
-    p5.background(255);
-    p5.noStroke();
+    sketch.background(255);
+    sketch.noStroke();
 
     for (let i = 0; i < n; ++i) {
       diams[i].draw();
@@ -63,14 +63,14 @@ const sketch = (p5, n = 3, spaceRatio = 0.2) => {
     if (!offset) offset = 0;
     if (!palette) {
       palette = [
-        p5.color(0, 174, 239, 50), // cyan
-        p5.color(255, 242, 0, 50), // yellow
-        p5.color(236, 0, 140, 50) // magenta
+        sketch.color(0, 174, 239, 50), // cyan
+        sketch.color(255, 242, 0, 50), // yellow
+        sketch.color(236, 0, 140, 50) // magenta
       ];
     }
     if (!inc) inc = 1 / 1000;
 
-    let position = p5.constrain(offset, 0, 1);
+    let position = sketch.constrain(offset, 0, 1);
 
     return {
       draw: function() {
@@ -91,10 +91,10 @@ const sketch = (p5, n = 3, spaceRatio = 0.2) => {
     let points = [];
 
     // map percentage to radian
-    const baseAngle = p5.map(offset, 0, 1, 0, p5.TWO_PI);
+    const baseAngle = sketch.map(offset, 0, 1, 0, sketch.TWO_PI);
 
     for (let i = 0; i < sides; i++) {
-      let startAngle = baseAngle + (p5.TWO_PI / sides) * i;
+      let startAngle = baseAngle + (sketch.TWO_PI / sides) * i;
       let addedAngle = i % 2 === 0 ? 0 : baseAngle;
       points[i] = pointOnCircle(x, y, startAngle + addedAngle, radius);
     }
@@ -102,13 +102,13 @@ const sketch = (p5, n = 3, spaceRatio = 0.2) => {
     for (let i = 0; i < points.length; i++) {
       // select color from palette
       let sel = i % palette.length;
-      p5.fill(palette[sel]);
+      sketch.fill(palette[sel]);
 
       for (let j = 0; j < points.length; j++) {
         if (i !== j) {
           let p1 = points[i];
           let p2 = points[j];
-          p5.triangle(x, y, p1.x, p1.y, p2.x, p2.y);
+          sketch.triangle(x, y, p1.x, p1.y, p2.x, p2.y);
         }
       }
     }
@@ -116,11 +116,11 @@ const sketch = (p5, n = 3, spaceRatio = 0.2) => {
 
   function pointOnCircle(x, y, angle, radius) {
     return {
-      x: radius * p5.cos(angle) + x,
-      y: radius * p5.sin(angle) + y
+      x: radius * sketch.cos(angle) + x,
+      y: radius * sketch.sin(angle) + y
     };
   }
 };
 
-export const singleDiamond = p5 => sketch(p5, 1, 0);
-export default p5 => sketch(p5);
+export const singleDiamond = sketch => sketchFn(sketch, 1, 0);
+export default sketch => sketchFn(sketch);

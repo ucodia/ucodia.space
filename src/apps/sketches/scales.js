@@ -9,26 +9,26 @@ export const meta = {
   year: "201?"
 };
 
-export default p5 => {
+export default sketch => {
   var scaleW = 100;
   var scaleH = 120;
   var hSpace = 100;
   var vSpace = 70;
   var gradient = gradientIterator.peek();
 
-  p5.setup = () => {
-    p5.createCanvas(100, 100);
-    p5.noLoop();
+  sketch.setup = () => {
+    sketch.createCanvas(100, 100);
+    sketch.noLoop();
 
-    autoStretchP5(p5, () => drawScales());
+    autoStretchP5(sketch, () => drawScales());
   };
 
   function drawScales() {
-    p5.background(255);
+    sketch.background(255);
 
-    var cols = Math.ceil(p5.width / hSpace) + 1;
-    var rows = Math.ceil(p5.height / vSpace);
-    var xOffset = (p5.width - cols * hSpace) / 2;
+    var cols = Math.ceil(sketch.width / hSpace) + 1;
+    var rows = Math.ceil(sketch.height / vSpace);
+    var xOffset = (sketch.width - cols * hSpace) / 2;
 
     for (var i = 0; i < rows; i++) {
       var y = (rows - i - 1) * vSpace;
@@ -39,8 +39,8 @@ export default p5 => {
 
         if (i % 2 !== 0) x += hSpace / 2;
 
-        p5.noStroke();
-        p5.fill(c);
+        sketch.noStroke();
+        sketch.fill(c);
         fishscale(x, y, scaleW, scaleH);
       }
     }
@@ -48,11 +48,11 @@ export default p5 => {
 
   function fishscale(x, y, w, h) {
     var mid = h - w / 2;
-    p5.rect(x, y, w, mid);
-    p5.arc(x + w / 2, y + mid, w, w, 0, p5.PI, p5.OPEN);
+    sketch.rect(x, y, w, mid);
+    sketch.arc(x + w / 2, y + mid, w, w, 0, sketch.PI, sketch.OPEN);
   }
 
-  p5.touchStarted = () => {
+  sketch.touchStarted = () => {
     gradient = gradientIterator.next();
     drawScales();
   };
@@ -61,9 +61,9 @@ export default p5 => {
 
   function lerpGradient(gradient, amt) {
     if (gradient.colors.length === 2)
-      return p5.lerpColor(
-        p5.color(gradient.colors[0]),
-        p5.color(gradient.colors[1]),
+      return sketch.lerpColor(
+        sketch.color(gradient.colors[0]),
+        sketch.color(gradient.colors[1]),
         amt
       );
 
@@ -71,11 +71,11 @@ export default p5 => {
     var b = a + 1;
     var low = a / gradient.colors.length;
     var high = b / gradient.colors.length;
-    var pos = p5.map(amt, low, high, 0, 1);
+    var pos = sketch.map(amt, low, high, 0, 1);
 
-    return p5.lerpColor(
-      p5.color(gradient.colors[a]),
-      p5.color(gradient.colors[b]),
+    return sketch.lerpColor(
+      sketch.color(gradient.colors[a]),
+      sketch.color(gradient.colors[b]),
       pos
     );
   }

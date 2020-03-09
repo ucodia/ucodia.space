@@ -5,7 +5,7 @@ export const meta = {
   year: "2015"
 };
 
-export default p5 => {
+export default sketch => {
   var posX;
   var posY;
   var capRotation;
@@ -27,31 +27,31 @@ export default p5 => {
 
   function layout() {
     if (mirror === "hv") {
-      capWidth = p5.width / 2;
-      capHeight = p5.height / 2;
+      capWidth = sketch.width / 2;
+      capHeight = sketch.height / 2;
     } else if (mirror === "h") {
-      capWidth = p5.width;
-      capHeight = p5.height / 2;
+      capWidth = sketch.width;
+      capHeight = sketch.height / 2;
     } else if (mirror === "v") {
-      capWidth = p5.width / 2;
-      capHeight = p5.height;
+      capWidth = sketch.width / 2;
+      capHeight = sketch.height;
     }
 
-    capWidth = p5.ceil(capWidth);
-    capHeight = p5.ceil(capHeight);
-    cap = p5.createImage(capWidth, capHeight);
-    p5.colorMode(p5.HSB, maxColor);
+    capWidth = sketch.ceil(capWidth);
+    capHeight = sketch.ceil(capHeight);
+    cap = sketch.createImage(capWidth, capHeight);
+    sketch.colorMode(sketch.HSB, maxColor);
   }
 
-  p5.setup = () => {
-    p5.createCanvas(100, 100);
-    p5.frameRate(30);
+  sketch.setup = () => {
+    sketch.createCanvas(100, 100);
+    sketch.frameRate(30);
 
     // defaults
     posX = 0;
     posY = 0;
     capRotation = 0;
-    rotationInc = p5.TWO_PI / 180;
+    rotationInc = sketch.TWO_PI / 180;
     borderWeight = 3;
     weightInc = 0.5;
     maxColor = 100;
@@ -63,11 +63,11 @@ export default p5 => {
     borderAuto = false;
     paused = false;
 
-    autoStretchP5(p5, layout);
+    autoStretchP5(sketch, layout);
   };
 
-  p5.draw = () => {
-    p5.background(0);
+  sketch.draw = () => {
+    sketch.background(0);
 
     project();
     input();
@@ -79,95 +79,96 @@ export default p5 => {
   };
 
   function project() {
-    p5.image(cap, 0, 0);
+    sketch.image(cap, 0, 0);
 
-    p5.push();
+    sketch.push();
 
     if (mirror === "hv") {
-      p5.translate(p5.width, 0);
-      p5.scale(-1, 1);
-      p5.image(cap, 0, 0);
+      sketch.translate(sketch.width, 0);
+      sketch.scale(-1, 1);
+      sketch.image(cap, 0, 0);
 
-      p5.translate(0, p5.height);
-      p5.scale(1, -1);
-      p5.image(cap, 0, 0);
+      sketch.translate(0, sketch.height);
+      sketch.scale(1, -1);
+      sketch.image(cap, 0, 0);
 
-      p5.translate(p5.width, 0);
-      p5.scale(-1, 1);
-      p5.image(cap, 0, 0);
+      sketch.translate(sketch.width, 0);
+      sketch.scale(-1, 1);
+      sketch.image(cap, 0, 0);
     } else if (mirror === "h") {
-      p5.translate(0, p5.height);
-      p5.scale(1, -1);
-      p5.image(cap, 0, 0);
+      sketch.translate(0, sketch.height);
+      sketch.scale(1, -1);
+      sketch.image(cap, 0, 0);
     } else if (mirror === "v") {
-      p5.translate(p5.width, 0);
-      p5.scale(-1, 1);
-      p5.image(cap, 0, 0);
+      sketch.translate(sketch.width, 0);
+      sketch.scale(-1, 1);
+      sketch.image(cap, 0, 0);
     }
 
-    p5.pop();
+    sketch.pop();
   }
 
   function capture() {
     var capX = posX - capWidth / 2;
     var capY = posY - capHeight / 2;
-    cap = p5.get(capX, capY, capWidth, capHeight);
+    cap = sketch.get(capX, capY, capWidth, capHeight);
   }
 
   function graphics() {
-    p5.push();
+    sketch.push();
 
-    p5.translate(posX, posY);
-    p5.rotate(capRotation);
-    p5.translate(-posX, -posY);
+    sketch.translate(posX, posY);
+    sketch.rotate(capRotation);
+    sketch.translate(-posX, -posY);
 
-    p5.stroke(colorCursor.next(), maxColor * 0.6, maxColor * 0.8);
-    p5.strokeWeight(borderAuto ? borderCursor.next() / 10 : borderWeight);
-    p5.noFill();
+    sketch.stroke(colorCursor.next(), maxColor * 0.6, maxColor * 0.8);
+    sketch.strokeWeight(borderAuto ? borderCursor.next() / 10 : borderWeight);
+    sketch.noFill();
 
     if (overlay === "rect") {
-      p5.rectMode(p5.CENTER);
-      p5.rect(posX, posY, capWidth, capHeight);
+      sketch.rectMode(sketch.CENTER);
+      sketch.rect(posX, posY, capWidth, capHeight);
     } else if (overlay === "equi") {
-      equi(posX, posY, (p5.height / 2) * 0.8);
+      equi(posX, posY, (sketch.height / 2) * 0.8);
     } else if (overlay === "circ") {
-      p5.ellipse(posX, posY, capHeight, capHeight);
+      sketch.ellipse(posX, posY, capHeight, capHeight);
     }
 
-    p5.pop();
+    sketch.pop();
   }
 
   // input hooks
 
   function input() {
     if (!posLock) {
-      posX = p5.mouseX;
-      posY = p5.mouseY;
+      posX = sketch.mouseX;
+      posY = sketch.mouseY;
     }
 
-    if (p5.mouseIsPressed) {
-      if (p5.mouseButton === p5.LEFT) capRotation -= rotationInc;
+    if (sketch.mouseIsPressed) {
+      if (sketch.mouseButton === sketch.LEFT) capRotation -= rotationInc;
       else capRotation += rotationInc;
 
-      if (capRotation < 0) capRotation = p5.TWO_PI + capRotation;
-      else if (capRotation > p5.TWO_PI) capRotation = p5.TWO_PI - capRotation;
+      if (capRotation < 0) capRotation = sketch.TWO_PI + capRotation;
+      else if (capRotation > sketch.TWO_PI)
+        capRotation = sketch.TWO_PI - capRotation;
     }
 
-    if (p5.keyPressed) {
-      if (p5.key.toLowerCase() === "r")
-        p5.saveCanvas("capture-" + getTimestamp(), "png");
+    if (sketch.keyPressed) {
+      if (sketch.key.toLowerCase() === "r")
+        sketch.saveCanvas("capture-" + getTimestamp(), "png");
     }
   }
 
-  p5.keyPressed = () => {
-    var k = p5.key.toLowerCase();
+  sketch.keyPressed = () => {
+    var k = sketch.key.toLowerCase();
 
     if (k === "w") borderAuto = !borderAuto;
     else if (k === "l") posLock = !posLock;
     else if (k === " ") paused = !paused;
   };
 
-  p5.mouseWheel = event => {
+  sketch.mouseWheel = event => {
     borderWeight += event.delta * weightInc;
 
     if (borderWeight < 0) borderWeight = 0;
@@ -239,6 +240,6 @@ export default p5 => {
   }
 
   function triHeight(hypo, a) {
-    return p5.sqrt(p5.pow(hypo, 2) - p5.pow(a, 2));
+    return sketch.sqrt(sketch.pow(hypo, 2) - sketch.pow(a, 2));
   }
 };
