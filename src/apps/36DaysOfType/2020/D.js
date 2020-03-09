@@ -1,74 +1,71 @@
-import { debounce } from "lodash";
 import autoStretchP5 from "../../../utils/autoStretchP5";
-import cyclicIterator from "../../../utils/cyclicIterator";
 import pointsToSegments from "../utils/pointsToSegments";
+import cyclicIterator from "../../../utils/cyclicIterator";
 
-export default p5 => {
+export default sketch => {
   let letter = "D";
   let font;
-  let bounds;
+  let points;
   let segments;
   let segmentsIterators = [];
+  let xoff;
+  let yoff;
 
-  p5.preload = () => {
-    font = p5.loadFont("fonts/Righteous-Regular.ttf");
+  sketch.preload = () => {
+    font = sketch.loadFont("fonts/Righteous-Regular.ttf");
   };
-
-  const efficientLayout = debounce(layout, 400);
 
   function layout() {
-    const fontSize = p5.height * 0.8;
-    const points = font.textToPoints(letter, 0, 0, fontSize, {
-      sampleFactor: 1.1
+    const fontSize = sketch.height * 1;
+    points = font.textToPoints(letter, 0, 0, fontSize, {
+      sampleFactor: 1 / 2
     });
-    bounds = font.textBounds(letter, 0, 0, fontSize);
-    segments = pointsToSegments(points);
+    segments = pointsToSegments(points, 20);
     segmentsIterators = segments.map(cyclicIterator);
+
+    // compute offset to center letter on screen
+    const bounds = font.textBounds(letter, 0, 0, fontSize);
+    xoff = -bounds.x - bounds.w / 2 + sketch.width / 2;
+    yoff = -bounds.y - bounds.h / 2 + sketch.height / 2;
   }
 
-  p5.setup = () => {
-    p5.createCanvas(100, 100);
-    p5.frameRate(30);
-    // p5.noLoop();
+  sketch.setup = () => {
+    sketch.createCanvas(100, 100);
+    sketch.frameRate(30);
 
-    autoStretchP5(p5, layout);
-    p5.draw();
+    autoStretchP5(sketch, layout);
   };
 
-  p5.draw = () => {
-    p5.background("#0F146A");
-    p5.fill("#FFBE03");
-    p5.noStroke();
+  sketch.draw = () => {
+    sketch.background("#0F146A");
+    sketch.stroke("#FFBE03");
+    sketch.strokeWeight(10);
 
-    // TODO: Fix the translation to always be centered automatically!
-    //       This currently uses fixed offset that need to be changed
-    //       and manually aligned based on container size...
-    p5.translate(p5.width / 2 - bounds.w / 2 - 20, p5.width / 2 + bounds.h / 2);
+    sketch.translate(xoff, yoff);
 
-    segmentsIterators.forEach(iterator => {
-      // speed of movement
-      iterator.cycle(Math.floor(iterator.items.length * 0.03));
-      const points = iterator.items.slice(
-        0,
-        Math.floor(iterator.items.length / 2)
-      );
-      points.forEach(point => {
-        p5.ellipse(point.x, point.y, 10, 10);
-      });
-    });
+    for (const it of segmentsIterators) {
+      const speed = Math.floor(it.items.length * 0.03);
+      it.cycle(speed);
 
-    // let capture = true;
-    // let lastFrame = 34;
-    // if (capture && p5.frameCount < lastFrame) {
-    //   p5.saveCanvas(
-    //     `36days_${letter}_${p5.frameCount.toString().padStart(6, "0")}`,
+      const segmentPoints = it.items.slice(0, Math.floor(it.items.length / 2));
+
+      for (let i = 0; i < segmentPoints.length - 1; i++) {
+        const p = segmentPoints[i];
+        const pnext = segmentPoints[i + 1];
+        sketch.line(p.x, p.y, pnext.x, pnext.y);
+      }
+    }
+
+    // if (sketch.frameCount < 34) {
+    //   sketch.saveCanvas(
+    //     `36days_${letter}_${sketch.frameCount.toString().padStart(6, "0")}`,
     //     "png"
     //   );
     // }
   };
 
-  p5.keyTyped = () => {
-    letter = p5.key;
-    efficientLayout();
+  sketch.keyTyped = () => {
+    letter = sketch.key;
+    layout();
   };
 };
