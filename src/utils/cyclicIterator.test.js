@@ -3,6 +3,11 @@ import cyclicIterator from "./cyclicIterator";
 const items = [0, 1, 2, 3, 4, 5, 6, 7];
 
 describe("cyclicIterator", () => {
+  it("should return the length", () => {
+    const iterator = cyclicIterator(items);
+    expect(iterator.length()).toEqual(8);
+  });
+
   it("should return the first item", () => {
     const iterator = cyclicIterator(items);
     expect(iterator.peek()).toEqual(0);
