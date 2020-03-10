@@ -21,6 +21,8 @@ export default items => {
       } else {
         this.index = signedIndex;
       }
+
+      return this;
     },
     take: function(n) {
       if (n < 0) throw new Error("n must be positive.");

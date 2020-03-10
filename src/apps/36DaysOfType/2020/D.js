@@ -45,8 +45,7 @@ export default sketch => {
 
     for (const it of segmentsIterators) {
       const speed = Math.floor(it.length() * 0.03);
-      it.cycle(speed);
-      const segmentPoints = it.take(Math.floor(it.length() / 2));
+      const segmentPoints = it.cycle(speed).take(Math.floor(it.length() / 2));
 
       for (let i = 0; i < segmentPoints.length - 1; i++) {
         const p = segmentPoints[i];
