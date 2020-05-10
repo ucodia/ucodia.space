@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/ucodia
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://ucodia.space
+  * I am ucodia (https://keybase.io/ucodia) on keybase.
+  * I have a public key ASCO-Q9zJyf7f33O7DSYsFw-yvnAYsK35sFZProsAR8NiAo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01208ef90f732727fb7f7dceec3498b05c3ecaf9c062c2b7e6c1593eba2c011f0d880a",
+      "host": "keybase.io",
+      "kid": "01208ef90f732727fb7f7dceec3498b05c3ecaf9c062c2b7e6c1593eba2c011f0d880a",
+      "uid": "42eb1f08c3e149a1f7a4d2cc4c356f19",
+      "username": "ucodia"
+    },
+    "merkle_root": {
+      "ctime": 1589149722,
+      "hash": "543dd997b38ad560fa9dd2de040f16af49e4889e5de361f4beddb1febdb312912f584ba9e183d8462855892b7b4a101ad02c99f661ed987e59b972861d4cff28",
+      "hash_meta": "5e07a666beac6a9c22c94313e74dfea90b7394db1814b888dbabf367c9a96817",
+      "seqno": 16245446
+    },
+    "service": {
+      "entropy": "1EGQyrSxuZTdlcboN7Ya+Gfu",
+      "hostname": "ucodia.space",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "5.4.2"
+  },
+  "ctime": 1589149734,
+  "expire_in": 504576000,
+  "prev": "a09619f55e5209895ba02bda5a983db5badb7599d6aa4ac7f02417d92048525a",
+  "seqno": 8,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgjvkPcycn+399zuw0mLBcPsr5wGLCt+bBWT66LAEfDYgKp3BheWxvYWTESpcCCMQgoJYZ9V5SCYlboCvaWpg9tbrbdZnWqkrH8CQX2SBIUlrEIK78syioojSBTV+rNR4njY6K/UoScHzwhiQabYVg4OQoAgHCo3NpZ8RAH9mPH1+SzuXW6zYfBeAq0iRKuUKmpT+a+5NQel7J8tQbwq2PdMAhdABvU2atK+f8zje7FvwWIs5SBKmGjQcOC6hzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIDUCcpZI/z0QwoH02Gzks7R8d1OsapV7wwv8jXrLaqqro3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/ucodia
+
+==================================================================
