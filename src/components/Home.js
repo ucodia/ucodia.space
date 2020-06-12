@@ -6,9 +6,15 @@ import { singleDiamond } from "../apps/sketches/diamonds";
 import apps from "../apps";
 import P5Wrapper from "./P5Wrapper";
 
-const Container = styled.div``;
+const Container = styled.div`
+  padding: 50px 0;
+
+  background-color: white;
+  @media (prefers-color-scheme: dark) {
+    background-color: black;
+  }
+`;
 const Heading = styled.div`
-  margin: 50px 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -27,6 +33,12 @@ const Sketch = styled.div`
 `;
 const Logo = styled(LogoSvg)`
   height: 100px;
+
+  fill: black;
+  @media (prefers-color-scheme: dark) {
+    fill: white;
+  }
+
   @media only screen and (max-width: 425px) {
     height: 50px;
   }
@@ -55,7 +67,7 @@ const Home = ({ appsByName = apps }) => {
         <Sketch>
           <P5Wrapper sketch={singleDiamond} />
         </Sketch>
-        <Logo height={100} />
+        <Logo />
       </Heading>
       <List>
         {Object.keys(appsByName)

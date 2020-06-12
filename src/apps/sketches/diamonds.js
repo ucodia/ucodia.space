@@ -46,7 +46,7 @@ const sketchFn = (sketch, n = 3, spaceRatio = 0.2) => {
   sketch.draw = () => {
     if (paused) return;
 
-    sketch.background(255);
+    sketch.clear();
     sketch.noStroke();
 
     for (let i = 0; i < n; ++i) {
