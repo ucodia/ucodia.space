@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiKey = "O6c8raeYgoJuSnAU9oU9Cw19G3UZp0cC";
+const apiKey = process.env.REACT_APP_GIPHY_API_KEY;
 const searchUrl = "https://api.giphy.com/v1/gifs/search";
 
 const search = async query => {
