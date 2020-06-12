@@ -9,9 +9,9 @@ import P5Wrapper from "./P5Wrapper";
 const Container = styled.div`
   padding: 50px 0;
 
-  background-color: white;
+  background-color: #ffffff;
   @media (prefers-color-scheme: dark) {
-    background-color: black;
+    background-color: #121212;
   }
 `;
 const Heading = styled.div`
@@ -34,9 +34,9 @@ const Sketch = styled.div`
 const Logo = styled(LogoSvg)`
   height: 100px;
 
-  fill: black;
+  fill: #121212;
   @media (prefers-color-scheme: dark) {
-    fill: white;
+    fill: #ffffff;
   }
 
   @media only screen and (max-width: 425px) {
