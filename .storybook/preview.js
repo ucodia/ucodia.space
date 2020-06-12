@@ -5,10 +5,10 @@ import { ThemeContext } from "styled-components";
 import AppContext from "../src/components/AppContext";
 import { defaultTheme, darkTheme } from "../src/themes";
 
-const ThemeWrapper = props => {
+const ThemeWrapper = ({ children }) => {
   return (
     <ThemeContext.Provider value={useDarkMode() ? darkTheme : defaultTheme}>
-      {props.children}
+      {children}
     </ThemeContext.Provider>
   );
 };
