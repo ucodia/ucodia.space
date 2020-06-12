@@ -1,14 +1,15 @@
-import { light, dark } from "../themes";
+import { defaultTheme, darkTheme } from "../themes";
 import { useState, useEffect } from "react";
 
 const isDarkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-const darkIfTrue = isDark => (isDark ? dark : light);
 
 export default () => {
-  const [theme, setTheme] = useState(darkIfTrue(isDarkModeQuery.matches));
+  const [theme, setTheme] = useState(
+    isDarkModeQuery.matches ? darkTheme : defaultTheme
+  );
   useEffect(() => {
     const handleColorScheme = ({ matches }) => {
-      setTheme(darkIfTrue(matches));
+      setTheme(matches ? darkTheme : defaultTheme);
     };
     isDarkModeQuery.addListener(handleColorScheme);
 
