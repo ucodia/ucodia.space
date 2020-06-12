@@ -13,7 +13,7 @@ const AppContext = ({ children }) => {
 
   return (
     <Router>
-      <RouterAnalytics gaMeasurementId="G-EDLD5QYYPN">
+      <RouterAnalytics gaTrackingId="G-EDLD5QYYPN">
         <ThemeProvider theme={theme}>{children}</ThemeProvider>
       </RouterAnalytics>
     </Router>
