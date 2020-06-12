@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme, darkTheme } from "../themes";
 import usePrefersDarkMode from "../hooks/usePrefersDarkMode";
+import RouterAnalytics from "./RouterAnalytics";
 
 const AppContext = ({ children }) => {
   const isDarkMode = usePrefersDarkMode();
@@ -12,7 +13,9 @@ const AppContext = ({ children }) => {
 
   return (
     <Router>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <RouterAnalytics gaMeasurementId="G-EDLD5QYYPN">
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      </RouterAnalytics>
     </Router>
   );
 };
