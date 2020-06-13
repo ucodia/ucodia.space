@@ -7,9 +7,9 @@ import RouterAnalytics from "./RouterAnalytics";
 import { IS_PROD } from "../utils/constants";
 
 const AppContext = ({ children }) => {
-  const isDarkMode = usePrefersDarkMode();
-  const theme = useMemo(() => (isDarkMode ? darkTheme : defaultTheme), [
-    isDarkMode
+  const prefersDarkMode = usePrefersDarkMode();
+  const theme = useMemo(() => (prefersDarkMode ? darkTheme : defaultTheme), [
+    prefersDarkMode
   ]);
 
   return (
