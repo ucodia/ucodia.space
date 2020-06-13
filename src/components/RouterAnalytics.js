@@ -1,19 +1,19 @@
 import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import ReactGA from "react-ga";
 
 const RouterAnalytics = ({ gaTrackingId, children }) => {
-  const { listen } = useHistory();
-  useEffect(() => {
-    if (process.env.NODE_ENV === "development") return;
+  const location = useLocation();
 
+  useEffect(() => {
+    console.log("ReactGA.initialize", gaTrackingId);
     ReactGA.initialize(gaTrackingId);
-    ReactGA.pageview(window.location.pathname + window.location.search);
-    const unlisten = listen(location => {
-      ReactGA.pageview(location.pathname + location.search);
-    });
-    return unlisten;
-  });
+  }, [gaTrackingId]);
+
+  useEffect(() => {
+    console.log("ReactGA.pageview", location);
+    ReactGA.pageview(location.pathname + location.search);
+  }, [location]);
 
   return children;
 };
