@@ -5,6 +5,7 @@ import backgrounds from "./data/backgrounds";
 import gradients from "../../data/gradients";
 import shapes from "./data/shapes";
 import cyclicIterator from "../../utils/cyclicIterator";
+import { emitInteraction } from "../../utils/metrics";
 
 const Container = styled.div`
   width: 100%;
@@ -77,14 +78,17 @@ const Kinetic = () => {
   const [gradient, setGradient] = useState(gradientIterator.peek());
   const [shape, setShape] = useState(shapeIterator.peek());
   const handleBackgroundTouch = e => {
+    emitInteraction("set-background-color");
     e.stopPropagation();
     setBackground(backgroundIterator.next());
   };
   const handleShapeTouch = e => {
+    emitInteraction("set-shape-color");
     e.stopPropagation();
     setGradient(gradientIterator.random());
   };
   const handleCenterTouch = e => {
+    emitInteraction("set-shape");
     e.stopPropagation();
     setShape(shapeIterator.next());
   };
