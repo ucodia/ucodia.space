@@ -32,7 +32,6 @@
     "react-dom": "^16.13.1",
     "react-ga": "^3.0.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
     "styled-components": "^4.4.1",
     "uuid": "^3.4.0"
   },
@@ -46,7 +45,7 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.9",
     "prettier": "^1.19.1",
-    "react-scripts": "^3.4.0",
+    "react-scripts": "^3.4.3",
     "source-map-explorer": "^2.4.2",
     "storybook-dark-mode": "^0.6.1"
   },
