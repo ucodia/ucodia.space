@@ -1,6 +1,6 @@
 {
   "name": "ucodia.space",
-  "homepage": "https://v2.ucodia.space/",
+  "homepage": "https://ucodia.space/",
   "version": "1.0.0",
   "author": "Lionel Ringenbach / @ucodia",
   "license": "MIT",
@@ -17,9 +17,9 @@
     "build-storybook": "build-storybook -s public"
   },
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
+    "@testing-library/user-event": "^12.5.0",
     "axios": "^0.19.2",
     "d3": "^5.16.0",
     "dat.gui": "^0.7.7",
@@ -28,12 +28,14 @@
     "lodash": "^4.17.15",
     "p5": "^0.10.2",
     "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-ga": "^3.0.0",
     "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.1",
     "styled-components": "^4.4.1",
-    "uuid": "^3.4.0"
+    "uuid": "^3.4.0",
+    "web-vitals": "^0.2.4"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^5.3.19",
@@ -42,15 +44,15 @@
     "@storybook/addons": "^5.3.19",
     "@storybook/preset-create-react-app": "^1.5.2",
     "@storybook/react": "^5.3.19",
-    "husky": "^4.2.5",
-    "lint-staged": "^10.2.9",
     "prettier": "^1.19.1",
-    "react-scripts": "^3.4.3",
     "source-map-explorer": "^2.4.2",
     "storybook-dark-mode": "^0.6.1"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -63,13 +65,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,json}": "prettier --write"
   }
 }
