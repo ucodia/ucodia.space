@@ -1,20 +1,36 @@
 import React from "react";
 import PropTypes from "prop-types";
+import mapToRange from "../../utils/mapToRange";
+
+const getGradientStops = colors => {
+  return colors.map((color, index) => {
+    return (
+      <stop
+        key={index}
+        offset={mapToRange(index, 0, colors.length - 1, 0, 1)}
+        stopColor={color}
+      />
+    );
+  });
+};
 
 const SvgGradient = ({ colors, type = "radial", id }) => {
-  const step = colors.length === 2 ? 1 : 1 / colors.length - 1;
-
-  if (type === "radial") {
-    return (
-      <radialGradient id={id} gradientUnits="userSpaceOnUse">
-        {colors.map((color, index) => {
-          return <stop key={index} offset={index * step} stopColor={color} />;
-        })}
-      </radialGradient>
-    );
+  switch (type) {
+    case "linear":
+      return (
+        <linearGradient id={id} gradientUnits="userSpaceOnUse">
+          {getGradientStops(colors)}
+        </linearGradient>
+      );
+    case "radial":
+      return (
+        <radialGradient id={id} gradientUnits="userSpaceOnUse">
+          {getGradientStops(colors)}
+        </radialGradient>
+      );
+    default:
+      return null;
   }
-
-  return null;
 };
 
 SvgGradient.propTypes = {
