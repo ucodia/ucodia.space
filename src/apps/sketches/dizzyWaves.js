@@ -2,10 +2,10 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Dizzy Waves",
-  year: "201?"
+  year: "201?",
 };
 
-export default sketch => {
+const dizzyWaves = (sketch) => {
   // params
   var spacing = 70;
   var overflow = 4;
@@ -166,3 +166,5 @@ export default sketch => {
     };
   }
 };
+
+export default dizzyWaves;

@@ -1,4 +1,4 @@
-export default items => {
+const cyclicIterator = (items) => {
   return {
     index: 0,
     length: function() {
@@ -41,6 +41,8 @@ export default items => {
     random: function() {
       const index = Math.floor(Math.random() * items.length);
       return items[index];
-    }
+    },
   };
 };
+
+export default cyclicIterator;

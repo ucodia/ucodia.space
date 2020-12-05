@@ -2,10 +2,10 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Look Above",
-  year: "201?"
+  year: "201?",
 };
 
-export default sketch => {
+const lookAbove = (sketch) => {
   var sky;
 
   sketch.setup = () => {
@@ -102,3 +102,5 @@ export default sketch => {
     return sketch.floor(sketch.random(min, max + 1));
   }
 };
+
+export default lookAbove;

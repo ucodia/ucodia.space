@@ -2,10 +2,10 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Illusions",
-  year: "201?"
+  year: "201?",
 };
 
-export default sketch => {
+const illusions = (sketch) => {
   var n = 3;
   var shapes = [];
   var bands = [];
@@ -130,3 +130,5 @@ export default sketch => {
     return sketch.sqrt(sketch.pow(hypo, 2) - sketch.pow(a, 2));
   }
 };
+
+export default illusions;

@@ -10,8 +10,10 @@ const stretchCanvas = (p5, onResized = noop) => {
   onResized();
 };
 
-export default (p5, onResized) => {
+const autoStretchP5 = (p5, onResized) => {
   const stretch = () => stretchCanvas(p5, onResized);
   p5.windowResized = debounce(stretch, 400);
   stretch();
 };
+
+export default autoStretchP5;

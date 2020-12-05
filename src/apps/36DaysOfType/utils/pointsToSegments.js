@@ -6,10 +6,10 @@ const dist = (pointA, pointB) =>
  * @param {*} points
  * @param {*} distanceThreshold
  */
-export default (points, distanceThreshold = 1) => {
+const pointsToSegments = (points, distanceThreshold = 1) => {
   const segments = [[]];
 
-  points.forEach(point => {
+  points.forEach((point) => {
     const currentSegment = segments[segments.length - 1];
     if (currentSegment.length === 0) {
       currentSegment.push(point);
@@ -26,3 +26,5 @@ export default (points, distanceThreshold = 1) => {
 
   return segments;
 };
+
+export default pointsToSegments;

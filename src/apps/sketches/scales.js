@@ -6,10 +6,10 @@ const gradientIterator = cyclicIterator(shuffle(gradients));
 
 export const meta = {
   name: "Scales",
-  year: "201?"
+  year: "201?",
 };
 
-export default sketch => {
+const scales = (sketch) => {
   var scaleW = 100;
   var scaleH = 120;
   var hSpace = 100;
@@ -80,3 +80,5 @@ export default sketch => {
     );
   }
 };
+
+export default scales;

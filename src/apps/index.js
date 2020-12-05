@@ -7,12 +7,14 @@ import Conundrum from "./Conundrum";
 import sketches from "./sketches";
 import ThirtySixDaysOfType from "./36DaysOfType";
 
-export default {
+const apps = {
   "giphy-vox": <GiphyVox />,
   kinetic: <Kinetic />,
   zukunft: <Zukunft />,
   flowtime: <Flowtime />,
   conundrum: <Conundrum />,
   "36daysoftype": <ThirtySixDaysOfType />,
-  ...sketches
+  ...sketches,
 };
+
+export default apps;

@@ -1,7 +1,7 @@
 import { GUI } from "dat.gui";
 import autoStretchP5 from "../../utils/autoStretchP5";
 
-export default sketch => {
+const drawbot001 = (sketch) => {
   // globals
   var bots = [];
   var lastCap = 0;
@@ -40,7 +40,7 @@ export default sketch => {
       this.randomize();
       this.reset();
     },
-    capture: capture
+    capture: capture,
   };
 
   sketch.setup = () => {
@@ -346,3 +346,5 @@ export default sketch => {
     gui.destroy();
   };
 };
+
+export default drawbot001;

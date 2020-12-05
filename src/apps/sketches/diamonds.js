@@ -2,10 +2,10 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Diamonds",
-  year: "2014"
+  year: "2014",
 };
 
-const sketchFn = (sketch, n = 3, spaceRatio = 0.2) => {
+const diamonds = (sketch, n = 3, spaceRatio = 0.2) => {
   let diams = [];
   let paused = false;
 
@@ -65,7 +65,7 @@ const sketchFn = (sketch, n = 3, spaceRatio = 0.2) => {
       palette = [
         sketch.color(0, 174, 239, 50), // cyan
         sketch.color(255, 242, 0, 50), // yellow
-        sketch.color(236, 0, 140, 50) // magenta
+        sketch.color(236, 0, 140, 50), // magenta
       ];
     }
     if (!inc) inc = 1 / 1000;
@@ -82,7 +82,7 @@ const sketchFn = (sketch, n = 3, spaceRatio = 0.2) => {
       },
       pos() {
         return position;
-      }
+      },
     };
   }
 
@@ -117,10 +117,10 @@ const sketchFn = (sketch, n = 3, spaceRatio = 0.2) => {
   function pointOnCircle(x, y, angle, radius) {
     return {
       x: radius * sketch.cos(angle) + x,
-      y: radius * sketch.sin(angle) + y
+      y: radius * sketch.sin(angle) + y,
     };
   }
 };
 
-export const singleDiamond = sketch => sketchFn(sketch, 1, 0);
-export default sketch => sketchFn(sketch);
+export const singleDiamond = (sketch) => diamonds(sketch, 1, 0);
+export default diamonds;

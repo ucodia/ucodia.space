@@ -3,7 +3,7 @@ import axios from "axios";
 const apiKey = process.env.REACT_APP_GIPHY_API_KEY;
 const searchUrl = "https://api.giphy.com/v1/gifs/search";
 
-const search = async query => {
+const search = async (query) => {
   try {
     const response = await axios.get(searchUrl, {
       params: {
@@ -12,8 +12,8 @@ const search = async query => {
         offset: 0,
         rating: "G",
         lang: "en",
-        q: query
-      }
+        q: query,
+      },
     });
 
     return response.data;
@@ -22,6 +22,6 @@ const search = async query => {
   }
 };
 
-export default {
-  search
-};
+const giphy = { search };
+
+export default giphy;

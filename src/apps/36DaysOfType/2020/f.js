@@ -3,7 +3,7 @@ import pointOnCircle from "../../../utils/pointOnCircle";
 import autoStretchP5 from "../../../utils/autoStretchP5";
 import pointsToSegments from "../utils/pointsToSegments";
 
-export default sketch => {
+const f = (sketch) => {
   let letter = "f";
   let font;
   let points;
@@ -14,7 +14,7 @@ export default sketch => {
   let colors = [
     sketch.color(0, 174, 239, 30), // cyan
     sketch.color(255, 242, 0, 30), // yellow
-    sketch.color(236, 0, 140, 30) // magenta
+    sketch.color(236, 0, 140, 30), // magenta
   ];
 
   sketch.preload = () => {
@@ -31,7 +31,7 @@ export default sketch => {
   function layout() {
     const fontSize = sketch.height * 0.8;
     points = font.textToPoints(letter, 0, 0, fontSize, {
-      sampleFactor: 1 / 2
+      sampleFactor: 1 / 2,
     });
     segments = pointsToSegments(points, 20);
 
@@ -61,7 +61,7 @@ export default sketch => {
           speed,
           iterator,
           length,
-          offset
+          offset,
         });
       }
     }
@@ -103,3 +103,5 @@ export default sketch => {
     layout();
   };
 };
+
+export default f;

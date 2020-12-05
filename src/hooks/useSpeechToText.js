@@ -21,7 +21,7 @@ const createSpeechRecognition = () => {
   return recognition;
 };
 
-export default () => {
+const useSpeechToText = () => {
   const [speech] = useState(createSpeechRecognition());
   const [transcript, setTranscript] = useState("");
   useEffect(() => {
@@ -41,3 +41,5 @@ export default () => {
 
   return [transcript, speech];
 };
+
+export default useSpeechToText;

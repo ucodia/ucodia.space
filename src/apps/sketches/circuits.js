@@ -2,10 +2,10 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Circuits",
-  year: "2016"
+  year: "2016",
 };
 
-export default sketch => {
+const circuits = (sketch) => {
   // display parameters
   var scaling = 40;
   var nodeSize = scaling * 0.45;
@@ -30,7 +30,7 @@ export default sketch => {
     // defaults
     themes = {
       dark: { backColor: sketch.color(0) },
-      light: { backColor: sketch.color(255) }
+      light: { backColor: sketch.color(255) },
     };
     currentTheme = themes.dark;
 
@@ -54,7 +54,7 @@ export default sketch => {
     return {
       circuit: circuit,
       palette: palette,
-      padStyles: padStyles
+      padStyles: padStyles,
     };
   }
 
@@ -189,14 +189,14 @@ export default sketch => {
     return {
       cols: cols,
       rows: rows,
-      paths: paths
+      paths: paths,
     };
   }
 
   function createNode(x, y) {
     return {
       x: x,
-      y: y
+      y: y,
     };
   }
 
@@ -208,7 +208,7 @@ export default sketch => {
     return {
       nodes: nodes,
       color: color,
-      padStyle: padStyle
+      padStyle: padStyle,
     };
   }
 
@@ -254,7 +254,7 @@ export default sketch => {
 
     return {
       x: pos.x * scale + offset.x,
-      y: pos.y * scale + offset.y
+      y: pos.y * scale + offset.y,
     };
   }
 
@@ -266,3 +266,5 @@ export default sketch => {
     return randomInt(1, faces) === 1;
   }
 };
+
+export default circuits;

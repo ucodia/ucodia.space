@@ -2,10 +2,10 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Area 715",
-  year: "2015"
+  year: "2015",
 };
 
-export default sketch => {
+const area715 = (sketch) => {
   var posX;
   var posY;
   var capRotation;
@@ -168,7 +168,7 @@ export default sketch => {
     else if (k === " ") paused = !paused;
   };
 
-  sketch.mouseWheel = event => {
+  sketch.mouseWheel = (event) => {
     borderWeight += event.delta * weightInc;
 
     if (borderWeight < 0) borderWeight = 0;
@@ -243,3 +243,5 @@ export default sketch => {
     return sketch.sqrt(sketch.pow(hypo, 2) - sketch.pow(a, 2));
   }
 };
+
+export default area715;

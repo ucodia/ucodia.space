@@ -2,10 +2,10 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Vintage",
-  year: "201?"
+  year: "201?",
 };
 
-export default sketch => {
+const vintage = (sketch) => {
   var t = 0;
   var n = 100;
 
@@ -67,3 +67,5 @@ export default sketch => {
     return sketch.cos(t / 20) * 100 + sketch.cos(t / 19) * 200;
   }
 };
+
+export default vintage;

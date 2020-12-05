@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 const prefersDarkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-export default () => {
+const usePrefersDarkMode = () => {
   const [prefersDarkMode, setPrefersDarkMode] = useState(
     prefersDarkModeQuery.matches
   );
@@ -15,3 +15,5 @@ export default () => {
 
   return prefersDarkMode;
 };
+
+export default usePrefersDarkMode;
