@@ -2,7 +2,7 @@ import autoStretchP5 from "../../../utils/autoStretchP5";
 import pointsToSegments from "../utils/pointsToSegments";
 import cyclicIterator from "../../../utils/cyclicIterator";
 
-export default sketch => {
+export default (sketch) => {
   let letter = "D";
   let font;
   let points;
@@ -18,7 +18,7 @@ export default sketch => {
   function layout() {
     const fontSize = sketch.height * 1;
     points = font.textToPoints(letter, 0, 0, fontSize, {
-      sampleFactor: 1 / 2
+      sampleFactor: 1 / 2,
     });
     segments = pointsToSegments(points, 20);
     segmentsIterators = segments.map(cyclicIterator);

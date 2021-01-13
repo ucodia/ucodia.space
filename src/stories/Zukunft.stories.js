@@ -5,7 +5,7 @@ import withFullScreen from "./decorators/withFullScreen";
 export default {
   title: "Zukunft",
   component: Zukunft,
-  decorators: [withFullScreen]
+  decorators: [withFullScreen],
 };
 
 export const Showcase = () => <Zukunft />;

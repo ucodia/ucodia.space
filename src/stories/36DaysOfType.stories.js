@@ -5,7 +5,7 @@ import withFullScreen from "./decorators/withFullScreen";
 export default {
   title: "36DaysOfType",
   component: ThirthySixDaysOfType,
-  decorators: [withFullScreen]
+  decorators: [withFullScreen],
 };
 
 export const Showcase = () => <ThirthySixDaysOfType />;

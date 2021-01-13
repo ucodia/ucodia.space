@@ -10,7 +10,7 @@ import { emitInteraction } from "../../utils/metrics";
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  background-color: ${props => props.background};
+  background-color: ${(props) => props.background};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,17 +77,17 @@ const Kinetic = () => {
   const [background, setBackground] = useState(backgroundIterator.peek());
   const [gradient, setGradient] = useState(gradientIterator.peek());
   const [shape, setShape] = useState(shapeIterator.peek());
-  const handleBackgroundTouch = e => {
+  const handleBackgroundTouch = (e) => {
     emitInteraction("set-background-color");
     e.stopPropagation();
     setBackground(backgroundIterator.next());
   };
-  const handleShapeTouch = e => {
+  const handleShapeTouch = (e) => {
     emitInteraction("set-shape-color");
     e.stopPropagation();
     setGradient(gradientIterator.random());
   };
-  const handleCenterTouch = e => {
+  const handleCenterTouch = (e) => {
     emitInteraction("set-shape");
     e.stopPropagation();
     setShape(shapeIterator.next());

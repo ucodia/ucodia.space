@@ -38,7 +38,7 @@ const Container = styled.div`
 const Cell = styled.div`
   color: black;
   background-color: white;
-  ${props => props.invert && "filter: invert(100%);"}
+  ${(props) => props.invert && "filter: invert(100%);"}
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,12 +53,12 @@ const repeatItems = (items, times = 1) => {
   return result;
 };
 
-const sentencesRepetition = shuffle(sentences).map(items =>
+const sentencesRepetition = shuffle(sentences).map((items) =>
   repeatItems(items, 20)
 );
 const sentenceIterator = cyclicIterator(sentencesRepetition);
 
-const scrollToCenter = ref => {
+const scrollToCenter = (ref) => {
   const container = ref.current;
   if (container) {
     const marginTop = (-container.clientHeight * offsetRatio) / 2;

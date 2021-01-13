@@ -9,7 +9,7 @@ import { IS_PROD } from "../utils/constants";
 const AppContext = ({ children }) => {
   const prefersDarkMode = usePrefersDarkMode();
   const theme = useMemo(() => (prefersDarkMode ? darkTheme : defaultTheme), [
-    prefersDarkMode
+    prefersDarkMode,
   ]);
 
   return (

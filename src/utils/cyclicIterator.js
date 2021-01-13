@@ -1,17 +1,17 @@
 const cyclicIterator = (items) => {
   return {
     index: 0,
-    length: function() {
+    length: function () {
       return items.length;
     },
-    peek: function() {
+    peek: function () {
       return items[this.index];
     },
-    next: function() {
+    next: function () {
       this.cycle(1);
       return this.peek();
     },
-    cycle: function(offset) {
+    cycle: function (offset) {
       // compute the signed index (could be negative)
       const signedIndex = (this.index + offset) % items.length;
 
@@ -24,7 +24,7 @@ const cyclicIterator = (items) => {
 
       return this;
     },
-    take: function(n) {
+    take: function (n) {
       if (n < 0) throw new Error("n must be positive.");
       if (n > items.length)
         throw new Error("n must be lesser than items length");
@@ -38,7 +38,7 @@ const cyclicIterator = (items) => {
 
       return [...items.slice(this.index), ...items.slice(0, n - indexToEnd)];
     },
-    random: function() {
+    random: function () {
       const index = Math.floor(Math.random() * items.length);
       return items[index];
     },

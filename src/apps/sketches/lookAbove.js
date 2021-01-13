@@ -36,7 +36,7 @@ const lookAbove = (sketch) => {
     this.rand.add(3, 4, 10);
     this.rand.add(0, 3, 1);
 
-    this.rebirth = function() {
+    this.rebirth = function () {
       this.density = sketch.random(0.02, 0.1) / 1000;
       var n = sketch.displayWidth * sketch.displayHeight * this.density;
 
@@ -46,7 +46,7 @@ const lookAbove = (sketch) => {
       }
     };
 
-    this.draw = function() {
+    this.draw = function () {
       sketch.background(this.color);
 
       for (var i = 0; i < this.stars.length; i++) {
@@ -63,12 +63,12 @@ const lookAbove = (sketch) => {
     this.y = 0;
     this.size = size;
 
-    this.rebirth = function() {
+    this.rebirth = function () {
       this.x = sketch.random(sketch.displayWidth);
       this.y = sketch.random(sketch.displayHeight);
     };
 
-    this.draw = function() {
+    this.draw = function () {
       sketch.fill(this.color);
       sketch.ellipse(this.x, this.y, this.size, this.size);
     };
@@ -82,12 +82,12 @@ const lookAbove = (sketch) => {
     this.ranges = [];
     this.n = 0;
 
-    this.add = function(min, max, p) {
+    this.add = function (min, max, p) {
       this.ranges[this.n] = { min: min, max: max, p: p };
       this.n++;
     };
 
-    this.next = function() {
+    this.next = function () {
       for (var i = 0; i < this.ranges.length; i++) {
         var r = this.ranges[i];
 

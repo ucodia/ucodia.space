@@ -55,7 +55,7 @@ const GiphyVox = () => {
 
 export const meta = {
   name: "Giphy Vox",
-  year: "201?"
+  year: "201?",
 };
 
 export default GiphyVox;

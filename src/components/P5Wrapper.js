@@ -14,9 +14,9 @@ const P5Wrapper = ({ sketch }) => {
   useEffect(() => {
     const container = containerRef.current;
     // prevent scrolling on mobile
-    const preventScrolling = event => event.preventDefault();
+    const preventScrolling = (event) => event.preventDefault();
     container.addEventListener("touchmove", preventScrolling, {
-      passive: true
+      passive: true,
     });
     return () => container.removeEventListener("touchmove", preventScrolling);
   }, []);

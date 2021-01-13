@@ -1,7 +1,7 @@
 import autoStretchP5 from "../../../utils/autoStretchP5";
 import pointsToSegments from "../utils/pointsToSegments";
 
-export default sketch => {
+export default (sketch) => {
   let letter = "e";
   let font;
   let points;
@@ -22,7 +22,7 @@ export default sketch => {
   function layout() {
     const fontSize = sketch.height * 1;
     points = font.textToPoints(letter, 0, 0, fontSize, {
-      sampleFactor: 2
+      sampleFactor: 2,
     });
     segments = pointsToSegments(points, 5);
 
@@ -40,7 +40,7 @@ export default sketch => {
       for (let j = 0; j < segments[i].length; j++) {
         segmentsOffsets[i].push({
           x: sketch.noise(noisePos[i]),
-          y: sketch.noise(noisePos[i] + 1000)
+          y: sketch.noise(noisePos[i] + 1000),
         });
         noisePos[i] += noiseInc;
       }

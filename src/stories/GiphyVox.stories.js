@@ -5,7 +5,7 @@ import withFullScreen from "./decorators/withFullScreen";
 export default {
   title: "GiphyVox",
   component: GiphyVox,
-  decorators: [withFullScreen]
+  decorators: [withFullScreen],
 };
 
 export const Showcase = () => <GiphyVox />;

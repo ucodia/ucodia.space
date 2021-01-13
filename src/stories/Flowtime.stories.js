@@ -5,7 +5,7 @@ import withFullScreen from "./decorators/withFullScreen";
 export default {
   title: "Flowtime",
   component: Flowtime,
-  decorators: [withFullScreen]
+  decorators: [withFullScreen],
 };
 
 export const Showcase = () => <Flowtime />;

@@ -2,10 +2,10 @@ import { debounce } from "lodash";
 
 export const meta = {
   name: "Nightshifting",
-  year: "2020"
+  year: "2020",
 };
 
-export default sketch => {
+export default (sketch) => {
   const efficientLayout = debounce(layout, 400);
   const n = 10;
   const size = 50;

@@ -5,7 +5,7 @@ import withFullScreen from "./decorators/withFullScreen";
 export default {
   title: "Conundrum",
   component: Conundrum,
-  decorators: [withFullScreen]
+  decorators: [withFullScreen],
 };
 
 export const Showcase = () => <Conundrum />;

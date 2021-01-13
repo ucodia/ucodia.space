@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import mapToRange from "../../utils/mapToRange";
 
-const getGradientStops = colors => {
+const getGradientStops = (colors) => {
   return colors.map((color, index) => {
     return (
       <stop
@@ -36,7 +36,7 @@ const SvgGradient = ({ colors, type = "radial", id }) => {
 SvgGradient.propTypes = {
   colors: PropTypes.arrayOf(PropTypes.string).isRequired,
   type: PropTypes.string,
-  id: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
 };
 
 export default SvgGradient;

@@ -73,10 +73,10 @@ const diamonds = (sketch, n = 3, spaceRatio = 0.2) => {
     let position = sketch.constrain(offset, 0, 1);
 
     return {
-      draw: function() {
+      draw: function () {
         diamond(x, y, radius, sides, position, palette);
       },
-      move: function() {
+      move: function () {
         position += inc;
         if (position > 1) position = position % 1;
       },

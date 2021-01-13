@@ -185,7 +185,7 @@ const Canvas = styled.svg`
   }
 `;
 
-const zukunft = svgElement => {
+const zukunft = (svgElement) => {
   // app settings
   var settings = {};
   settings.diceSize = 30;
@@ -235,7 +235,7 @@ const zukunft = svgElement => {
     for (var i = 0; i < count; i++) {
       dataset[i] = {
         value: randomInt(1, 6),
-        orientation: randomInt(0, 1)
+        orientation: randomInt(0, 1),
       };
     }
   }
@@ -245,26 +245,25 @@ const zukunft = svgElement => {
     var dices = svg.selectAll(".dice").data(dataset);
 
     // add new elements
-    var entering = dices
-      .enter()
-      .append("g")
-      .attr("class", "dice");
+    var entering = dices.enter().append("g").attr("class", "dice");
 
     appendDiceTo(entering);
 
     // update elements
     dices
-      .attr("class", function(d, i) {
+      .attr("class", function (d, i) {
         return "dice dice" + d.value;
       })
-      .attr("transform", function(d, i) {
+      .attr("transform", function (d, i) {
         var col = i % settings.columns;
         var row = Math.floor(i / settings.columns);
 
-        const translate = `translate(${col * settings.diceSize}, ${row *
-          settings.diceSize})`;
-        const rotate = `rotate(${d.orientation * 90}, ${settings.diceSize /
-          2}, ${settings.diceSize / 2})`;
+        const translate = `translate(${col * settings.diceSize}, ${
+          row * settings.diceSize
+        })`;
+        const rotate = `rotate(${d.orientation * 90}, ${
+          settings.diceSize / 2
+        }, ${settings.diceSize / 2})`;
 
         return `${translate} ${rotate}`;
       });
@@ -298,7 +297,7 @@ const zukunft = svgElement => {
     remove: () => {
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("click", handleClick);
-    }
+    },
   };
 };
 

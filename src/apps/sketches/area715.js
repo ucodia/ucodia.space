@@ -193,11 +193,11 @@ const area715 = (sketch) => {
     this.current = start;
     this.inc = start < end ? 1 : -1;
 
-    this.peek = function() {
+    this.peek = function () {
       return this.current;
     };
 
-    this.next = function() {
+    this.next = function () {
       this.current += this.inc;
 
       if (this.current === this.start || this.current === this.end) {
@@ -207,7 +207,7 @@ const area715 = (sketch) => {
       return this.current;
     };
 
-    this.reset = function() {
+    this.reset = function () {
       this.current = this.start;
     };
   }

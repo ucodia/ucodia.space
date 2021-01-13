@@ -46,7 +46,7 @@ const List = styled.div`
 const StyledLink = styled(Link)`
   padding: 10px;
   text-decoration: none;
-  color: ${props => props.color};
+  color: ${(props) => props.color};
   font-size: 3rem;
   @media only screen and (max-width: 425px) {
     font-size: 2rem;

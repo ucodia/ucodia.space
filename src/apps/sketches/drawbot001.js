@@ -36,7 +36,7 @@ const drawbot001 = (sketch) => {
   var actions = {
     randomize: randomize,
     reset: reset,
-    randReset: function() {
+    randReset: function () {
       this.randomize();
       this.reset();
     },
@@ -202,7 +202,7 @@ const drawbot001 = (sketch) => {
 
     // helpers
     var that = this;
-    var getColor = function() {
+    var getColor = function () {
       if (settings.contrast) {
         return sketch.color(
           0,
@@ -220,7 +220,7 @@ const drawbot001 = (sketch) => {
       }
     };
 
-    this.update = function(neighbors) {
+    this.update = function (neighbors) {
       this.neighbors = neighbors;
 
       // calculate acceleration and velocity
@@ -253,7 +253,7 @@ const drawbot001 = (sketch) => {
       if (settings.reframe) reframeVector(this.pos);
     };
 
-    this.merge = function(merged) {
+    this.merge = function (merged) {
       // recolor based on size ratio
       var sRatio = merged.size / (this.size + merged.size);
       this.hue = sketch.lerp(
@@ -265,7 +265,7 @@ const drawbot001 = (sketch) => {
       this.size += merged.size * 0.5;
     };
 
-    this.draw = function() {
+    this.draw = function () {
       // draw bot positions
       if (settings.showBot) {
         sketch.noStroke();

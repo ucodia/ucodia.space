@@ -27,9 +27,9 @@ SvgPath.propTypes = {
   viewBox: PropTypes.string.isRequired,
   data: PropTypes.string.isRequired,
   gradient: PropTypes.shape({
-    colors: PropTypes.arrayOf(PropTypes.string).isRequired
+    colors: PropTypes.arrayOf(PropTypes.string).isRequired,
   }),
-  flipped: PropTypes.bool
+  flipped: PropTypes.bool,
 };
 
 export default SvgPath;
