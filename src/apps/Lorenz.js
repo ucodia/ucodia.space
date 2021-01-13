@@ -1,5 +1,8 @@
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
+import { lorenz } from "../utils/attractors";
+import { getBounds, getBoundsOfBounds } from "../utils/boundaries";
+import getPathData from "../utils/getPathData";
 
 const Container = styled.div`
   width: 100%;
@@ -11,18 +14,7 @@ const Plot = styled.svg`
   height: 100%;
 `;
 
-const lorenz = (params) => {
-  const { x, y, z, a, b, c } = params;
-  const dt = 0.01;
-
-  return {
-    x: x + a * (y - x) * dt,
-    y: y + (x * (b - z) - y) * dt,
-    z: z + (x * y - c * z) * dt,
-  };
-};
-
-const getN = (fn, n, params) => {
+const getPoints = (fn, n, params) => {
   const points = [];
   let currentParams = { ...params };
 
@@ -34,42 +26,66 @@ const getN = (fn, n, params) => {
 
   return points;
 };
+const pointsCount = 6000;
+const projection = { x: "x", y: "z" };
 
 const Attractors = () => {
-  const [points] = useState(
-    getN(lorenz, 100000, {
-      x: 0.01,
+  const [pointsSet] = useState([
+    getPoints(lorenz, pointsCount, {
+      x: 0.1,
       y: 0,
       z: 0,
       a: 10,
       b: 28,
       c: 8.0 / 3.0,
-    })
-  );
+      dt: 0.01,
+    }),
+    getPoints(lorenz, pointsCount, {
+      x: 0.1,
+      y: 0,
+      z: 0,
+      a: 11,
+      b: 28,
+      c: 8.0 / 3.0,
+      dt: 0.01,
+    }),
+    getPoints(lorenz, pointsCount, {
+      x: 0.1,
+      y: 0,
+      z: 0,
+      a: 10,
+      b: 27,
+      c: 8.0 / 3.0,
+      dt: 0.01,
+    }),
+  ]);
   const bounds = useMemo(() => {
-    const xMin = Math.min(...points.map((p) => p.x));
-    const yMin = Math.min(...points.map((p) => p.y));
-    const xMax = Math.max(...points.map((p) => p.x));
-    const yMax = Math.max(...points.map((p) => p.y));
-    return {
-      xMin,
-      yMin,
-      xMax,
-      yMax,
-      width: Math.abs(xMin) + Math.abs(xMax),
-      height: Math.abs(yMin) + Math.abs(yMax),
-    };
-  }, [points]);
-  const pathData = useMemo(() => {
-    return `M ${points.map((p) => `${p.x} ${p.y}`).join(" L ")}`;
-  }, [points]);
+    return getBoundsOfBounds(pointsSet.map(getBounds));
+  }, [pointsSet]);
+  const colors = ["black", "blue", "red"];
 
   return (
     <Container>
       <Plot
-        viewBox={`${bounds.xMin} ${bounds.yMin} ${bounds.width} ${bounds.height}`}
+        viewBox={`${bounds[`${projection.x}Min`]} ${
+          bounds[`${projection.y}Min`]
+        } ${bounds.width} ${bounds.height}`}
       >
-        <path d={pathData} fill="none" stroke="black" strokeWidth="0.01px" />
+        {pointsSet.map((points, i) => {
+          return (
+            <path
+              key={i}
+              d={getPathData(
+                points,
+                (p) => p[projection.x],
+                (p) => p[projection.y]
+              )}
+              fill="none"
+              stroke={colors[i % colors.length]}
+              strokeWidth="0.02px"
+            />
+          );
+        })}
       </Plot>
     </Container>
   );
