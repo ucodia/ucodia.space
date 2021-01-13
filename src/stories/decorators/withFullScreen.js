@@ -1,4 +1,6 @@
 import React from "react";
 import FullScreen from "../../components/FullScreen";
 
-export default (story) => <FullScreen>{story()}</FullScreen>;
+const withFullScreen = (story) => <FullScreen>{story()}</FullScreen>;
+
+export default withFullScreen;
