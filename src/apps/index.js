@@ -6,7 +6,6 @@ import Flowtime from "./Flowtime";
 import Conundrum from "./Conundrum";
 import sketches from "./sketches";
 import ThirtySixDaysOfType from "./36DaysOfType";
-import Attractors from "./Attractors";
 import Lorenz from "./Lorenz";
 
 const apps = {
@@ -16,7 +15,6 @@ const apps = {
   flowtime: <Flowtime />,
   conundrum: <Conundrum />,
   "36daysoftype": <ThirtySixDaysOfType />,
-  attractors: <Attractors />,
   lorenz: <Lorenz />,
   ...sketches,
 };
