@@ -14,7 +14,7 @@ const drawbot001 = (sketch) => {
   var settings = {};
   settings.background = 20;
   settings.saturation = 100;
-  settings.brightness = 80;
+  settings.brightness = 100;
   settings.opacity = 5;
   settings.maxBots = 30;
   settings.popFreq = 5;
@@ -29,7 +29,7 @@ const drawbot001 = (sketch) => {
   settings.contrast = false;
   settings.autoReset = true;
   settings.resetFreq = 800;
-  settings.autoRandomize = false;
+  settings.autoRandomize = true;
   settings.autoCapture = false;
 
   // actions
@@ -85,7 +85,7 @@ const drawbot001 = (sketch) => {
     fActions.add(actions, "capture");
 
     autoStretchP5(sketch);
-    reset();
+    sketch.background(settings.background);
   };
 
   function randomize() {
