@@ -7,11 +7,16 @@ import getPathData from "../utils/getPathData";
 const Container = styled.div`
   width: 100%;
   height: 100%;
+  background-color: black;
 `;
 
 const Plot = styled.svg`
   width: 100%;
   height: 100%;
+
+  path {
+    fill: none;
+  }
 `;
 
 const getPoints = (fn, n, params) => {
@@ -26,7 +31,7 @@ const getPoints = (fn, n, params) => {
 
   return points;
 };
-const pointsCount = 50000;
+const pointsCount = 20000;
 const projection = { x: "x", y: "y" };
 
 const Attractors = () => {
@@ -44,28 +49,36 @@ const Attractors = () => {
   const bounds = useMemo(() => {
     return getBoundsOfBounds(pointsSet.map(getBounds));
   }, [pointsSet]);
-  const colors = ["black", "blue", "red"];
+  const margin = Math.min(bounds.width, bounds.height) * 0.2;
+  const strokeWidth = Math.min(bounds.width, bounds.height) * 0.001;
 
   return (
     <Container>
       <Plot
-        viewBox={`${bounds[`${projection.x}Min`]} ${
-          bounds[`${projection.y}Min`]
-        } ${bounds.width} ${bounds.height}`}
+        viewBox={`${bounds[`${projection.x}Min`] - margin / 2} ${
+          bounds[`${projection.y}Min`] - margin / 2
+        } ${bounds.width + 2} ${bounds.height + margin}`}
       >
         {pointsSet.map((points, i) => {
           return (
-            <path
-              key={i}
-              d={getPathData(
-                points,
-                (p) => p[projection.x],
-                (p) => p[projection.y]
-              )}
-              fill="none"
-              stroke={colors[i % colors.length]}
-              strokeWidth="0.02px"
-            />
+            <>
+              <g>
+                <path
+                  key={i}
+                  d={getPathData(points)}
+                  stroke="gold"
+                  strokeWidth={strokeWidth}
+                />
+              </g>
+              <g transform="scale(-1,1)">
+                <path
+                  key={i}
+                  d={getPathData(points)}
+                  stroke="silver"
+                  strokeWidth={strokeWidth}
+                />
+              </g>
+            </>
           );
         })}
       </Plot>
