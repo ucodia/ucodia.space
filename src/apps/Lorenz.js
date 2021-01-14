@@ -26,8 +26,8 @@ const getPoints = (fn, n, params) => {
 
   return points;
 };
-const pointsCount = 6000;
-const projection = { x: "x", y: "z" };
+const pointsCount = 50000;
+const projection = { x: "x", y: "y" };
 
 const Attractors = () => {
   const [pointsSet] = useState([
@@ -37,24 +37,6 @@ const Attractors = () => {
       z: 0,
       a: 10,
       b: 28,
-      c: 8.0 / 3.0,
-      dt: 0.01,
-    }),
-    getPoints(lorenz, pointsCount, {
-      x: 0.1,
-      y: 0,
-      z: 0,
-      a: 11,
-      b: 28,
-      c: 8.0 / 3.0,
-      dt: 0.01,
-    }),
-    getPoints(lorenz, pointsCount, {
-      x: 0.1,
-      y: 0,
-      z: 0,
-      a: 10,
-      b: 27,
       c: 8.0 / 3.0,
       dt: 0.01,
     }),
