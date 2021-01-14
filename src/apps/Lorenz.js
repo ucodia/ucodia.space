@@ -7,12 +7,15 @@ import getPathData from "../utils/getPathData";
 const Container = styled.div`
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: black;
 `;
 
 const Plot = styled.svg`
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
 
   path {
     fill: none;
@@ -49,15 +52,14 @@ const Attractors = () => {
   const bounds = useMemo(() => {
     return getBoundsOfBounds(pointsSet.map(getBounds));
   }, [pointsSet]);
-  const margin = Math.min(bounds.width, bounds.height) * 0.2;
   const strokeWidth = Math.min(bounds.width, bounds.height) * 0.001;
 
   return (
     <Container>
       <Plot
-        viewBox={`${bounds[`${projection.x}Min`] - margin / 2} ${
-          bounds[`${projection.y}Min`] - margin / 2
-        } ${bounds.width + 2} ${bounds.height + margin}`}
+        viewBox={`${bounds[`${projection.x}Min`]} ${
+          bounds[`${projection.y}Min`]
+        } ${bounds.width} ${bounds.height}`}
       >
         {pointsSet.map((points, i) => {
           return (
