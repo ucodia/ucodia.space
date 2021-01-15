@@ -26,9 +26,9 @@ const Surface = styled.g`
   cursor: pointer;
 `;
 const Outline = styled.rect`
-  fill: "none";
-  stroke: "#333";
-  stroke-width: "1px";
+  fill: none;
+  stroke: #333;
+  stroke-width: 1px;
 `;
 const Dot = styled.ellipse`
   fill: white;
