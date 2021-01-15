@@ -27,7 +27,7 @@ const Zukunft = ({ size }) => {
   const diceSize = useMemo(() => {
     if (size.width >= 1024) return 40;
     else if (size.width >= 480) return 50;
-    else return 60;
+    else return 55;
   }, [size]);
   const [grid, setGrid] = useState({ dices: [], columns: 0, rows: 0 });
   useEffect(() => {
@@ -57,7 +57,7 @@ const Zukunft = ({ size }) => {
   return (
     <Container>
       <Plot>
-        {grid.dices.map((dice, i, array) => {
+        {grid.dices.map((dice, i) => {
           const x = i % grid.columns;
           const xOff = (size.width - grid.columns * diceSize) / 2;
           const yOff = (size.height - grid.rows * diceSize) / 2;
