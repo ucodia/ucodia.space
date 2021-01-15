@@ -34,7 +34,7 @@ const getPoints = (fn, n, params) => {
 
   return points;
 };
-const pointsCount = 20000;
+const pointsCount = 50000;
 const projection = { x: "x", y: "y" };
 
 const Attractors = () => {

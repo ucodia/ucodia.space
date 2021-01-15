@@ -1,5 +1,5 @@
 export const lorenz = (params) => {
-  const { x, y, z, a, b, c, dt, sf = 0.3 } = params;
+  const { x, y, z, a, b, c, dt, sf = 0.15 } = params;
 
   return {
     x: x + a * (y - x) * dt * sf,
