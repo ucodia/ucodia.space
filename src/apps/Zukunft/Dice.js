@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const faceToDots = {
-  0: [0, 1, 2, 3, 5, 6, 7, 8],
+  0: [],
   1: [4],
   2: [2, 6],
   3: [2, 4, 6],
@@ -13,6 +13,7 @@ const faceToDots = {
   e: [0, 1, 2, 3, 4, 6, 7, 8],
   l: [0, 3, 6, 7, 8],
   o: [0, 1, 2, 3, 5, 6, 7, 8],
+  "+": [1, 3, 4, 5, 7],
 };
 
 const Surface = styled.g`

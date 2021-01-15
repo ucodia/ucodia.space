@@ -46,7 +46,8 @@ const Zukunft = ({ size }) => {
 
   const handleDiceClick = (diceIndex) => {
     const dices = grid.dices.slice();
-    dices[diceIndex] = randomDice();
+    const current = dices[diceIndex];
+    dices[diceIndex] = { ...randomDice(), face: (current.face + 1) % 7 };
     setGrid((g) => ({ ...g, dices }));
   };
   const handleRandomize = () => {
@@ -72,7 +73,7 @@ const Zukunft = ({ size }) => {
           return (
             <Dice
               key={dice.id}
-              face={isFirstDice ? 0 : dice.face}
+              face={isFirstDice ? "o" : dice.face}
               size={diceSize}
               transform={`${translate} ${rotate}`}
               onClick={isFirstDice ? handleRandomize : () => handleDiceClick(i)}
