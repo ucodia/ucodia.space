@@ -26,7 +26,7 @@ const Surface = styled.g`
   cursor: pointer;
 `;
 const Outline = styled.rect`
-  fill: none;
+  fill: transparent;
   stroke: #333;
   stroke-width: 1px;
 `;
