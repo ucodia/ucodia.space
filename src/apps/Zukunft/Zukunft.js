@@ -36,7 +36,7 @@ const Zukunft = ({ size }) => {
       const rows = Math.floor(size.height / diceSize);
       const diff = columns * rows - g.columns * g.rows;
       const dices =
-        diff < 0
+        diff <= 0
           ? g.dices.slice(0, diff + g.dices.length)
           : [...g.dices, ...getN(diff, randomDice)];
 
