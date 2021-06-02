@@ -10,6 +10,7 @@ import setViewportVariables from "./utils/setViewportVariables";
 const StyleReset = createGlobalStyle`
   body {
     margin: 0;
+    padding: 0;
     font-family: 'Work Sans', sans-serif;
   }
 `;
