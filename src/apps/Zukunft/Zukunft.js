@@ -19,7 +19,7 @@ const Plot = styled.svg`
   height: 100%;
 `;
 
-const buttonFaces = [1, "-", "+", "carret-down"];
+const buttonFaces = ["carret-down", "-", "+", 1];
 const createDice = (face = 1, orientation = 0, primary = false) => ({
   face,
   orientation,
@@ -42,8 +42,7 @@ const Zukunft = ({ size }) => {
   const svgRef = useRef(null);
   const diceSize = useMemo(() => {
     if (size.width >= 1024) return 40;
-    else if (size.width >= 480) return 50;
-    else return 55;
+    else return 45;
   }, [size]);
   const [grid, setGrid] = useState({ dices: [], columns: 0, rows: 0 });
   const [isDrawing, setIsDrawing] = useState(false);
@@ -60,7 +59,7 @@ const Zukunft = ({ size }) => {
 
       // define buttons faces
       buttonFaces.forEach((face, i) => {
-        dices[i] = createDice(face, 0, true);
+        dices[dices.length - 4 + i] = createDice(face, 0, true);
       });
 
       return { dices, columns, rows };
@@ -72,7 +71,7 @@ const Zukunft = ({ size }) => {
     const current = dices[diceIndex];
     dices[diceIndex] = {
       ...current,
-      face: dices[0].face,
+      face: dices[dices.length - 1].face,
       orientation: (current.orientation + 1) % 2,
     };
     setGrid((g) => ({ ...g, dices }));
@@ -86,8 +85,8 @@ const Zukunft = ({ size }) => {
   const handleClearCanvas = () => {
     setGrid((g) => {
       const dices = [
-        ...g.dices.slice(0, buttonFaces.length),
         ...getN(g.dices.length - buttonFaces.length, zeroDice),
+        ...g.dices.slice(g.dices.length - 4),
       ];
       return { ...g, dices };
     });
@@ -95,8 +94,8 @@ const Zukunft = ({ size }) => {
   const handleRandomizeCanvas = () => {
     setGrid((g) => {
       const dices = [
-        ...g.dices.slice(0, buttonFaces.length),
         ...getN(g.dices.length - buttonFaces.length, randomDice),
+        ...g.dices.slice(g.dices.length - 4),
       ];
       return { ...g, dices };
     });
@@ -117,7 +116,7 @@ const Zukunft = ({ size }) => {
     const current = dices[diceIndex];
     dices[diceIndex] = {
       ...current,
-      face: dices[0].face,
+      face: dices[dices.length - 1].face,
     };
     setGrid((g) => ({ ...g, dices }));
   };
@@ -149,13 +148,13 @@ const Zukunft = ({ size }) => {
               primary={dice.primary}
               onMouseEnter={() => handlePaintDice(i)}
               onClick={
-                i === 0
-                  ? () => handleCycleFace(0)
-                  : i === 1
-                  ? () => handleClearCanvas()
-                  : i === 2
+                i === grid.dices.length - 1
+                  ? () => handleCycleFace(grid.dices.length - 1)
+                  : i === grid.dices.length - 2
                   ? () => handleRandomizeCanvas()
-                  : i === 3
+                  : i === grid.dices.length - 3
+                  ? () => handleClearCanvas()
+                  : i === grid.dices.length - 4
                   ? () => handleDownloadSvg()
                   : () => handleDiceClick(i)
               }
