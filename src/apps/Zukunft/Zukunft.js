@@ -6,6 +6,7 @@ import getN from "../../utils/getN";
 import id from "../../utils/id";
 import randomInt from "../../utils/randomInt";
 import Dice from "./Dice";
+import randomItem from "../../utils/randomItem";
 
 const Container = styled.div`
   width: 100%;
@@ -26,6 +27,15 @@ const createDice = (face = 1, orientation = 0, primary = false) => ({
   id: id(),
 });
 const randomDice = () => createDice(randomInt(1, 6), randomInt(0, 1));
+// eslint-disable-next-line no-unused-vars
+const randomHen = () => {
+  const faces = [
+    ["h", 0],
+    [6, 1],
+    ["n", 0],
+  ];
+  return createDice(...randomItem(faces));
+};
 const zeroDice = () => createDice(0, 0);
 
 const Zukunft = ({ size }) => {

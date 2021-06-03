@@ -1,3 +1,3 @@
-const randomItems = (items) => items[Math.floor(Math.random() * items.length)];
+const randomItem = (items) => items[Math.floor(Math.random() * items.length)];
 
-export default randomItems;
+export default randomItem;
