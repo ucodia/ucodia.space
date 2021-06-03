@@ -42,6 +42,7 @@ const Dice = ({
   transform,
   primary = false,
   onClick = () => {},
+  onMouseEnter = () => {},
 }) => {
   const dotsProps = useMemo(
     () =>
@@ -55,7 +56,12 @@ const Dice = ({
   );
 
   return (
-    <Surface transform={transform} onClick={onClick} className={`dice${face}`}>
+    <Surface
+      transform={transform}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      className={`dice${face}`}
+    >
       <Outline
         width={size}
         height={size}

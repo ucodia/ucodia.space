@@ -46,6 +46,7 @@ const Zukunft = ({ size }) => {
     else return 55;
   }, [size]);
   const [grid, setGrid] = useState({ dices: [], columns: 0, rows: 0 });
+  const [isDrawing, setIsDrawing] = useState(false);
 
   useEffect(() => {
     setGrid((g) => {
@@ -107,9 +108,25 @@ const Zukunft = ({ size }) => {
       d3SaveSvg.save(svgRef.current, { filename });
     }
   };
+  const handlePaintDice = (diceIndex) => {
+    if (!isDrawing || diceIndex < buttonFaces.length) {
+      return;
+    }
+
+    const dices = grid.dices.slice();
+    const current = dices[diceIndex];
+    dices[diceIndex] = {
+      ...current,
+      face: dices[0].face,
+    };
+    setGrid((g) => ({ ...g, dices }));
+  };
 
   return (
-    <Container>
+    <Container
+      onMouseDown={() => setIsDrawing(true)}
+      onMouseUp={() => setIsDrawing(false)}
+    >
       <Plot ref={svgRef}>
         {grid.dices.map((dice, i) => {
           const x = i % grid.columns;
@@ -130,6 +147,7 @@ const Zukunft = ({ size }) => {
               size={diceSize}
               transform={`${translate} ${rotate}`}
               primary={dice.primary}
+              onMouseEnter={() => handlePaintDice(i)}
               onClick={
                 i === 0
                   ? () => handleCycleFace(0)
