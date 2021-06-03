@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 
 const faceToDots = {
@@ -37,12 +37,23 @@ const Dot = styled.ellipse`
   stroke: none;
 `;
 const Dice = ({
-  face,
-  size,
+  face = 1,
+  size = 30,
   transform,
   primary = false,
   onClick = () => {},
 }) => {
+  const dotsProps = useMemo(
+    () =>
+      faceToDots[face].map((dot, i) => ({
+        cx: (size / 4) * ((dot % 3) + 1),
+        cy: (size / 4) * (Math.floor(dot / 3) + 1),
+        rx: size / 10,
+        ry: size / 10,
+      })),
+    [face, size]
+  );
+
   return (
     <Surface transform={transform} onClick={onClick} className={`dice${face}`}>
       <Outline
@@ -52,12 +63,9 @@ const Dice = ({
         ry={size / 5}
         primary={primary}
       />
-      {faceToDots[face].map((dot, i) => {
-        const cx = (size / 4) * ((dot % 3) + 1);
-        const cy = (size / 4) * (Math.floor(dot / 3) + 1);
-        const r = size / 10;
-        return <Dot key={i} cx={cx} cy={cy} rx={r} ry={r} primary={primary} />;
-      })}
+      {dotsProps.map((dotProps, i) => (
+        <Dot key={i} primary={primary} {...dotProps} />
+      ))}
     </Surface>
   );
 };
