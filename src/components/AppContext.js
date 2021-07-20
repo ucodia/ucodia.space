@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme, darkTheme } from "../themes";
@@ -8,9 +8,7 @@ import { IS_PROD } from "../utils/constants";
 
 const AppContext = ({ children }) => {
   const prefersDarkMode = usePrefersDarkMode();
-  const theme = useMemo(() => (prefersDarkMode ? darkTheme : defaultTheme), [
-    prefersDarkMode,
-  ]);
+  const theme = prefersDarkMode ? darkTheme : defaultTheme;
 
   return (
     <Router>

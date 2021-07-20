@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { withSize } from "react-sizeme";
 import d3SaveSvg from "d3-save-svg";
@@ -40,10 +40,7 @@ const zeroDice = () => createDice(0, 0);
 
 const Zukunft = ({ size }) => {
   const svgRef = useRef(null);
-  const diceSize = useMemo(() => {
-    if (size.width >= 1024) return 40;
-    else return 45;
-  }, [size]);
+  const diceSize = size.width >= 1024 ? 40 : 45;
   const [grid, setGrid] = useState({ dices: [], columns: 0, rows: 0 });
   const [isDrawing, setIsDrawing] = useState(false);
 
