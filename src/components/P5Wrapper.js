@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import p5 from "p5";
 import styled from "styled-components";
 
@@ -8,7 +8,6 @@ const Container = styled.div`
 `;
 
 const P5Wrapper = ({ sketch }) => {
-  const [, setP5Instance] = useState(null);
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -23,7 +22,6 @@ const P5Wrapper = ({ sketch }) => {
 
   useEffect(() => {
     const newP5Instance = new p5(sketch, containerRef.current);
-    setP5Instance(newP5Instance);
 
     // cleanup when sketch changes
     return () => {
