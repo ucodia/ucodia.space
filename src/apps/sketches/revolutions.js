@@ -118,6 +118,11 @@ const revolutions = (sketch) => {
     regen();
   };
 
+  sketch.doubleClicked = () => {
+    mode = (mode + 1) % 2;
+    regen();
+  };
+
   function regen() {
     console.log(`Generating: mode=${mode} n=${n} iterations=${iterations}`);
     dots = getDots(iterations, n, mode);
