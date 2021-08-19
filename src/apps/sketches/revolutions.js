@@ -111,8 +111,10 @@ const revolutions = (sketch) => {
   };
 
   sketch.mousePressed = () => {
-    iterations = sketch.map(sketch.mouseX, 0, sketch.width, 0, 1080);
-    n = sketch.map(sketch.mouseY, 0, sketch.height, 0, 1080);
+    iterations = Math.round(
+      sketch.map(sketch.mouseX, 0, sketch.width, 0, 1080)
+    );
+    n = Math.round(sketch.map(sketch.mouseY, 0, sketch.height, 0, 1080));
     regen();
   };
 
