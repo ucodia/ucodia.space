@@ -10,6 +10,7 @@ import lookAbove from "./lookAbove";
 import vintage from "./vintage";
 import scales from "./scales";
 import drawbot001 from "./drawbot001";
+import revolutions from "./revolutions";
 
 const withP5Wrapper = (sketch) => <P5Wrapper sketch={sketch} />;
 
@@ -23,6 +24,7 @@ const sketches = {
   vintage,
   scales,
   drawbot001,
+  revolutions,
 };
 
 export default mapValues(sketches, withP5Wrapper);
