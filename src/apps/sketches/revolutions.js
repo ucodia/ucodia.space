@@ -31,10 +31,10 @@ const revolutions = (sketch) => {
     yellow = sketch.color(255, 242, 0);
 
     sketch.noLoop();
-    redraw();
+    regen();
 
     autoStretchP5(sketch, () => {
-      sketch.draw();
+      sketch.redraw();
     });
   };
 
@@ -67,19 +67,19 @@ const revolutions = (sketch) => {
     switch (sketch.key) {
       case "r": {
         console.log(`Recording: mode=${mode} n=${n} iterations=${iterations}`);
-        sketch.save(`frame-${mode}${n}-${iterations}.svg`);
+        sketch.save(`frame-${mode}-${n}-${iterations}.svg`);
         break;
       }
       case "g": {
         iterations = randomInt(0, 1080);
         n = randomInt(0, 1080);
         mode = randomInt(0, 1);
-        redraw();
+        regen();
         break;
       }
       case "m": {
         mode = (mode + 1) % 2;
-        redraw();
+        regen();
         break;
       }
       default:
@@ -88,32 +88,38 @@ const revolutions = (sketch) => {
     switch (sketch.keyCode) {
       case sketch.LEFT_ARROW: {
         iterations -= 1;
-        redraw();
+        regen();
         break;
       }
       case sketch.RIGHT_ARROW: {
         iterations += 1;
-        redraw();
+        regen();
         break;
       }
       case sketch.UP_ARROW: {
         n += 3;
-        redraw();
+        regen();
         break;
       }
       case sketch.DOWN_ARROW: {
         n -= 3;
-        redraw();
+        regen();
         break;
       }
       default:
     }
   };
 
-  function redraw() {
+  sketch.mousePressed = () => {
+    iterations = sketch.map(sketch.mouseX, 0, sketch.width, 0, 1080);
+    n = sketch.map(sketch.mouseY, 0, sketch.height, 0, 1080);
+    regen();
+  };
+
+  function regen() {
     console.log(`Generating: mode=${mode} n=${n} iterations=${iterations}`);
     dots = getDots(iterations, n, mode);
-    sketch.draw();
+    sketch.redraw();
   }
 
   function getDots(iterations, n, mode) {
