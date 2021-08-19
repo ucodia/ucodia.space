@@ -7,9 +7,9 @@ export const meta = {
 
 const revolutions = (sketch) => {
   // gen variables
-  let iterations = 361;
-  let n = 361;
-  let mode = 1;
+  let iterations = 958;
+  let n = 69;
+  let mode = 0;
 
   // app state
   let dots = [];
