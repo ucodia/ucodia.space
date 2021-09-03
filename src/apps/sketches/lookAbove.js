@@ -17,7 +17,7 @@ const lookAbove = (sketch) => {
     autoStretchP5(sketch, () => sky.draw());
   };
 
-  sketch.touchStarted = () => {
+  sketch.mousePressed = () => {
     sky.rebirth();
     sky.draw();
   };

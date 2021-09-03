@@ -95,7 +95,7 @@ const illusions = (sketch) => {
 
   // event hooks
 
-  sketch.touchStarted = () => {
+  sketch.mousePressed = () => {
     invert();
     return false;
   };

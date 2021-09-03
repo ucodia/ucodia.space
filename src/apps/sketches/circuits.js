@@ -232,7 +232,7 @@ const circuits = (sketch) => {
   // event hookups //
   ///////////////////
 
-  sketch.touchStarted = () => {
+  sketch.mousePressed = () => {
     currentModel = generateModel();
     drawModel(currentModel);
   };

@@ -52,7 +52,7 @@ const scales = (sketch) => {
     sketch.arc(x + w / 2, y + mid, w, w, 0, sketch.PI, sketch.OPEN);
   }
 
-  sketch.touchStarted = () => {
+  sketch.mousePressed = () => {
     gradient = gradientIterator.next();
     drawScales();
   };
