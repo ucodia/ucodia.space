@@ -1,2 +1,1 @@
-import Zukunft from "./Zukunft";
-export default Zukunft;
+export { default } from "./Zukunft";

@@ -1,2 +1,1 @@
-import Flowtime from "./Flowtime";
-export default Flowtime;
+export { default } from "./Flowtime";

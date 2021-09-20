@@ -1,2 +1,1 @@
-import ThirtySixDaysOfType from "./36DaysOfType";
-export default ThirtySixDaysOfType;
+export { default } from "./36DaysOfType";

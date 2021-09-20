@@ -1,2 +1,1 @@
-import Kinetic from "./Kinetic";
-export default Kinetic;
+export { default } from "./Kinetic";
