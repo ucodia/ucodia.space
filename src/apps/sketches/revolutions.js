@@ -10,6 +10,7 @@ const revolutions = (sketch) => {
   let iterations = 958;
   let n = 69;
   let mode = 0;
+  let stepFactor = 24;
   let isAnimated = true;
 
   // app state
@@ -124,6 +125,7 @@ const revolutions = (sketch) => {
 
   sketch.mousePressed = () => {
     toggleAnimation();
+    // stepFactor = sketch.map(sketch.mouseX, 0, sketch.width, 36, 1);
   };
 
   sketch.doubleClicked = () => {
@@ -147,7 +149,7 @@ const revolutions = (sketch) => {
   }
 
   function getDots(iterations, n, mode) {
-    const inc = sketch.TWO_PI / (360 * 12);
+    const inc = sketch.TWO_PI / (360 * stepFactor);
     const dots = [];
     for (let i = 0; i < n; ++i) {
       dots[i] =
