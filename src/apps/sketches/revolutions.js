@@ -10,6 +10,7 @@ const revolutions = (sketch) => {
   let iterations = 958;
   let n = 69;
   let mode = 0;
+  let isAnimated = true;
 
   // app state
   let dots = [];
@@ -30,7 +31,9 @@ const revolutions = (sketch) => {
     magenta = sketch.color(236, 0, 140);
     yellow = sketch.color(255, 242, 0);
 
-    sketch.noLoop();
+    if (!isAnimated) {
+      sketch.noLoop();
+    }
     regen();
 
     autoStretchP5(sketch, () => {
@@ -39,6 +42,11 @@ const revolutions = (sketch) => {
   };
 
   sketch.draw = () => {
+    if (isAnimated) {
+      iterations = sketch.frameCount;
+      dots = getDots(sketch.frameCount, n, mode);
+    }
+
     sketch.clear();
     sketch.background(255);
 
@@ -86,6 +94,10 @@ const revolutions = (sketch) => {
     }
 
     switch (sketch.keyCode) {
+      case sketch.ENTER: {
+        toggleAnimation();
+        break;
+      }
       case sketch.LEFT_ARROW: {
         iterations -= 1;
         regen();
@@ -111,17 +123,22 @@ const revolutions = (sketch) => {
   };
 
   sketch.mousePressed = () => {
-    iterations = Math.round(
-      sketch.map(sketch.mouseX, 0, sketch.width, 0, 1080)
-    );
-    n = Math.round(sketch.map(sketch.mouseY, 0, sketch.height, 0, 1080));
-    regen();
+    toggleAnimation();
   };
 
   sketch.doubleClicked = () => {
     mode = (mode + 1) % 2;
     regen();
   };
+
+  function toggleAnimation() {
+    isAnimated = !isAnimated;
+    if (isAnimated) {
+      sketch.loop();
+    } else {
+      sketch.noLoop();
+    }
+  }
 
   function regen() {
     console.log(`Generating: mode=${mode} n=${n} iterations=${iterations}`);
@@ -130,7 +147,7 @@ const revolutions = (sketch) => {
   }
 
   function getDots(iterations, n, mode) {
-    const inc = sketch.TWO_PI / (360 * 6);
+    const inc = sketch.TWO_PI / (360 * 12);
     const dots = [];
     for (let i = 0; i < n; ++i) {
       dots[i] =
