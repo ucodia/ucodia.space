@@ -19,15 +19,21 @@ const StyleReset = createGlobalStyle`
 setViewportVariables();
 window.addEventListener("resize", debounce(setViewportVariables, 400));
 
-ReactDOM.render(
+const Root = () => (
   <AppContext>
     <>
       <StyleReset />
       <App />
     </>
-  </AppContext>,
-  document.getElementById("root")
+  </AppContext>
 );
+const rootElement = document.getElementById("root");
+
+if (rootElement.hasChildNodes()) {
+  ReactDOM.hydrate(<Root />, rootElement);
+} else {
+  ReactDOM.render(<Root />, rootElement);
+}
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
