@@ -89,5 +89,11 @@
     "src/**/*.{js,json,css,md}": [
       "prettier --write"
     ]
+  },
+  "reactSnap": {
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ]
   }
 }
