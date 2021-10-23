@@ -75,7 +75,6 @@ const revolutions = (sketch) => {
   sketch.keyPressed = () => {
     switch (sketch.key) {
       case "r": {
-        console.log(`Recording: mode=${mode} n=${n} iterations=${iterations}`);
         sketch.save(`frame-${mode}-${n}-${iterations}.svg`);
         break;
       }
@@ -143,7 +142,6 @@ const revolutions = (sketch) => {
   }
 
   function regen() {
-    console.log(`Generating: mode=${mode} n=${n} iterations=${iterations}`);
     dots = getDots(iterations, n, mode);
     sketch.redraw();
   }
