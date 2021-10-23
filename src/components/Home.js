@@ -69,7 +69,7 @@ const Home = ({ appsByName = apps }) => {
             const inc = Math.round(360 / items.length);
             const color = `hsl(${index * inc}, 80%, 60%)`;
             return (
-              <StyledLink color={color} key={key} to={key}>
+              <StyledLink color={color} key={key} to={`${key}/`}>
                 {key}
               </StyledLink>
             );
