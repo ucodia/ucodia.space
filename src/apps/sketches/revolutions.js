@@ -20,7 +20,6 @@ const revolutions = (sketch) => {
   let cyan;
   let magenta;
   let yellow;
-  const opacity = 150;
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
@@ -28,9 +27,9 @@ const revolutions = (sketch) => {
     sketch.noFill();
 
     dots = [];
-    cyan = sketch.color(0, 174, 239);
-    magenta = sketch.color(236, 0, 140);
-    yellow = sketch.color(255, 242, 0);
+    cyan = sketch.color(0, 174, 239, 150);
+    magenta = sketch.color(236, 0, 140, 150);
+    yellow = sketch.color(255, 242, 0, 150);
 
     if (!isAnimated) {
       sketch.noLoop();
@@ -59,11 +58,11 @@ const revolutions = (sketch) => {
       const r = (i + 3) % 3;
 
       if (r === 0) {
-        sketch.stroke(cyan, opacity);
+        sketch.stroke(cyan);
       } else if (r === 1) {
-        sketch.stroke(yellow, opacity);
+        sketch.stroke(yellow);
       } else if (r === 2) {
-        sketch.stroke(magenta, opacity);
+        sketch.stroke(magenta);
       }
 
       const p1 = pointOnCircle(centerX, centerY, dots[i], circleWidth / 2);
