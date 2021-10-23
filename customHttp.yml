@@ -1,5 +1,11 @@
 customHeaders:
-  - pattern: '/static/**/*'
+  - pattern: /**/*.html
     headers:
-      - key: 'Cache-Control' 
-        value: 'public, max-age=31536000, immutable'
+      - key: Cache-Control
+        value: no-cache
+      - key: Strict-Transport-Security
+        value: max-age=31536000
+  - pattern: /static/**/*
+    headers:
+      - key: Cache-Control 
+        value: public, max-age=31536000, immutable
