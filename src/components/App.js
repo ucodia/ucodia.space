@@ -6,8 +6,7 @@ import Home from "./Home";
 
 const GoToHEN = () => {
   useEffect(() => {
-    window.location =
-      "https://www.hicetnunc.xyz/tz/tz1cMugfiPv184Dw6PUhai78dTnzvPx9jnDy";
+    window.location = "https://www.hicetnunc.xyz/ucodia";
   }, []);
   return <div>Redirecting to Hic et Nunc...</div>;
 };
