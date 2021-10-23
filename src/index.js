@@ -5,6 +5,7 @@ import debounce from "lodash/debounce";
 import AppContext from "./components/AppContext";
 import App from "./components/App";
 import setViewportVariables from "./utils/setViewportVariables";
+import "typeface-work-sans";
 
 const StyleReset = createGlobalStyle`
   body {

@@ -33,6 +33,7 @@
     "react-scripts": "4.0.1",
     "react-sizeme": "^2.6.12",
     "styled-components": "^4.4.1",
+    "typeface-work-sans": "^1.1.13",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
