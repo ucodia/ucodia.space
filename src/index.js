@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { createGlobalStyle } from "styled-components";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import AppContext from "./components/AppContext";
 import App from "./components/App";
 import setViewportVariables from "./utils/setViewportVariables";

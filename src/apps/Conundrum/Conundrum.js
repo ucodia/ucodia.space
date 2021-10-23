@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { shuffle } from "lodash";
+import shuffle from "lodash/shuffle";
 import cyclicIterator from "../../utils/cyclicIterator";
 import sentences from "./sentences";
 

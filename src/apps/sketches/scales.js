@@ -1,4 +1,4 @@
-import { shuffle } from "lodash";
+import shuffle from "lodash/shuffle";
 import gradients from "../../data/gradients";
 import autoStretchP5 from "../../utils/autoStretchP5";
 import cyclicIterator from "../../utils/cyclicIterator";

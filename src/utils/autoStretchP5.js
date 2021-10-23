@@ -1,8 +1,6 @@
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 
-const noop = () => {};
-
-const stretchCanvas = (p5, onResized = noop) => {
+const stretchCanvas = (p5, onResized = () => {}) => {
   p5.resizeCanvas(
     p5.canvas.parentNode.clientWidth,
     p5.canvas.parentNode.clientHeight
