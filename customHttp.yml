@@ -11,6 +11,8 @@ customHeaders:
         value: 1; mode=block
       - key: X-Content-Type-Options
         value: nosniff
+      - key: Referrer-Policy
+        value: no-referrer
   - pattern: /static/**/*
     headers:
       - key: Cache-Control 
