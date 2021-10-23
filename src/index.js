@@ -4,7 +4,6 @@ import { createGlobalStyle } from "styled-components";
 import { debounce } from "lodash";
 import AppContext from "./components/AppContext";
 import App from "./components/App";
-import * as serviceWorker from "./serviceWorker";
 import setViewportVariables from "./utils/setViewportVariables";
 
 const StyleReset = createGlobalStyle`
@@ -34,8 +33,3 @@ if (rootElement.hasChildNodes()) {
 } else {
   ReactDOM.render(<Root />, rootElement);
 }
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
