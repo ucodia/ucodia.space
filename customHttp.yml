@@ -13,7 +13,7 @@ customHeaders:
         value: nosniff
       - key: Referrer-Policy
         value: no-referrer
-      - key: Content-Security-Policy-Report-Only
+      - key: Content-Security-Policy
         value: script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' https://*.giphy.com;; font-src 'self'; manifest-src 'self'; object-src 'none';
   - pattern: /static/**/*
     headers:
