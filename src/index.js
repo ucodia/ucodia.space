@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { createGlobalStyle } from "styled-components";
+import { BrowserRouter as Router } from "react-router-dom";
 import debounce from "lodash/debounce";
-import AppContext from "./components/AppContext";
 import App from "./components/App";
 import setViewportVariables from "./utils/setViewportVariables";
 import "typeface-work-sans";
@@ -20,12 +20,12 @@ setViewportVariables();
 window.addEventListener("resize", debounce(setViewportVariables, 400));
 
 const Root = () => (
-  <AppContext>
-    <>
-      <StyleReset />
+  <>
+    <StyleReset />
+    <Router>
       <App />
-    </>
-  </AppContext>
+    </Router>
+  </>
 );
 const rootElement = document.getElementById("root");
 

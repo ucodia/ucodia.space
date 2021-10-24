@@ -8,8 +8,13 @@ import P5Wrapper from "./P5Wrapper";
 
 const Container = styled.div`
   padding: 50px 0;
-  color: ${({ theme }) => theme.fg};
-  background-color: ${({ theme }) => theme.bg};
+  color: #000000;
+  background-color: #ffffff;
+
+  @media (prefers-color-scheme: dark) {
+    color: #ededed;
+    background-color: #121212;
+  }
 `;
 const Heading = styled.div`
   display: flex;
@@ -30,7 +35,11 @@ const Sketch = styled.div`
 `;
 const Logo = styled(LogoSvg)`
   height: 100px;
-  fill: ${({ theme }) => theme.fg};
+  fill: #000000;
+
+  @media (prefers-color-scheme: dark) {
+    fill: #ededed;
+  }
 
   @media only screen and (max-width: 425px) {
     height: 50px;
