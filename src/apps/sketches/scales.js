@@ -1,6 +1,6 @@
-import shuffle from "lodash/shuffle";
 import gradients from "../../data/gradients";
 import autoStretchP5 from "../../utils/autoStretchP5";
+import shuffle from "../../utils/shuffle";
 import cyclicIterator from "../../utils/cyclicIterator";
 const gradientIterator = cyclicIterator(shuffle(gradients));
 

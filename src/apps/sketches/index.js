@@ -1,5 +1,4 @@
 import React from "react";
-import mapValues from "lodash/mapValues";
 import P5Wrapper from "../../components/P5Wrapper";
 import diamonds from "./diamonds";
 import circuits from "./circuits";
@@ -11,8 +10,6 @@ import vintage from "./vintage";
 import scales from "./scales";
 import drawbot001 from "./drawbot001";
 import revolutions from "./revolutions";
-
-const withP5Wrapper = (sketch) => <P5Wrapper sketch={sketch} />;
 
 const sketches = {
   diamonds,
@@ -27,4 +24,9 @@ const sketches = {
   revolutions,
 };
 
-export default mapValues(sketches, withP5Wrapper);
+const wrappedSketches = {};
+for (const key in sketches) {
+  wrappedSketches[key] = <P5Wrapper sketch={sketches[key]} />;
+}
+
+export default wrappedSketches;
