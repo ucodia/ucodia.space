@@ -63,10 +63,9 @@ const Attractors = () => {
       >
         {pointsSet.map((points, i) => {
           return (
-            <>
+            <React.Fragment key={i}>
               <g>
                 <path
-                  key={i}
                   d={getPathData(points)}
                   stroke="gold"
                   strokeWidth={strokeWidth}
@@ -74,13 +73,12 @@ const Attractors = () => {
               </g>
               <g transform="scale(-1,1)">
                 <path
-                  key={i}
                   d={getPathData(points)}
                   stroke="silver"
                   strokeWidth={strokeWidth}
                 />
               </g>
-            </>
+            </React.Fragment>
           );
         })}
       </Plot>
