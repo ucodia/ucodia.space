@@ -1,4 +1,4 @@
-import debounce from "lodash/debounce";
+import debounce from "./debounce";
 
 const stretchCanvas = (p5, onResized = () => {}) => {
   p5.resizeCanvas(

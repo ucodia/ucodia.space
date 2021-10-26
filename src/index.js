@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router } from "react-router-dom";
-import debounce from "lodash/debounce";
+import "typeface-work-sans";
 import App from "./components/App";
 import setViewportVariables from "./utils/setViewportVariables";
-import "typeface-work-sans";
+import debounce from "./utils/debounce";
 
 const StyleReset = createGlobalStyle`
   body {
