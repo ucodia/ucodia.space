@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import SvgGradient from "./SvgGradient";
-import uuid from "uuid";
+import id from "../../utils/id";
 
 const SvgPath = ({ viewBox, data, gradient, flipped }) => {
   // it is required to generate unique IDs for each gradient definitions
   // if duplicated, SVG gradients might not re-render on mobile
-  const [gradientId] = useState(uuid.v4());
+  const [gradientId] = useState(id());
   const fillGradientId = `fill-gradient-${gradientId}`;
 
   return (
