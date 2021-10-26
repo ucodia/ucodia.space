@@ -7,6 +7,9 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
 `;
+const Alert = styled.div`
+  max-width: 70%;
+`;
 
 const Gif = styled.img`
   width: 100%;
@@ -47,10 +50,14 @@ const GiphyVox = () => {
 
   if (!speech) {
     return (
-      <div>
+      <Alert>
         <h1>Sorry!</h1>
-        <p>Your browser does not support speech recognition ¯\_(ツ)_/¯</p>
-      </div>
+        <p>
+          This experience requires speech recognition which is not available in
+          your browser ¯\_(ツ)_/¯
+        </p>
+        <p>PS: You can try it in Chrome desktop.</p>
+      </Alert>
     );
   }
 
