@@ -29,7 +29,7 @@ const Keyword = styled.div`
 const GiphyVox = () => {
   const [keyword, setKeyword] = useState("");
   const [gifUrl, setGifUrl] = useState("");
-  const [transcript] = useSpeechToText();
+  const [transcript, speech] = useSpeechToText();
   useEffect(() => {
     if (!keyword) return;
 
@@ -44,6 +44,15 @@ const GiphyVox = () => {
   useEffect(() => {
     setKeyword(transcript);
   }, [transcript]);
+
+  if (!speech) {
+    return (
+      <div>
+        <h1>Sorry!</h1>
+        <p>Your browser does not support speech recognition ¯\_(ツ)_/¯</p>
+      </div>
+    );
+  }
 
   return (
     <Container>

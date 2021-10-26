@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 
+const getBrowserSpeechRecognition = () =>
+  typeof window !== "undefined" &&
+  (window.SpeechRecognition ||
+    window.webkitSpeechRecognition ||
+    window.mozSpeechRecognition ||
+    window.msSpeechRecognition ||
+    window.oSpeechRecognition);
+
 const createSpeechRecognition = () => {
-  const BrowserSpeechRecognition =
-    typeof window !== "undefined" &&
-    (window.SpeechRecognition ||
-      window.webkitSpeechRecognition ||
-      window.mozSpeechRecognition ||
-      window.msSpeechRecognition ||
-      window.oSpeechRecognition);
+  const BrowserSpeechRecognition = getBrowserSpeechRecognition();
 
   const recognition = BrowserSpeechRecognition
     ? new BrowserSpeechRecognition()
