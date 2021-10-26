@@ -5,7 +5,7 @@ export const meta = {
   year: "2014",
 };
 
-const diamonds = (sketch, n = 3, spaceRatio = 0.2) => {
+const diamonds = (sketch, n = 3, spaceRatio = 0.2, transparent = false) => {
   let diams = [];
   let paused = false;
 
@@ -48,6 +48,10 @@ const diamonds = (sketch, n = 3, spaceRatio = 0.2) => {
 
     sketch.clear();
     sketch.noStroke();
+
+    if (!transparent) {
+      sketch.background(255);
+    }
 
     for (let i = 0; i < n; ++i) {
       diams[i].draw();
@@ -122,5 +126,5 @@ const diamonds = (sketch, n = 3, spaceRatio = 0.2) => {
   }
 };
 
-export const singleDiamond = (sketch) => diamonds(sketch, 1, 0);
+export const singleDiamond = (sketch) => diamonds(sketch, 1, 0, true);
 export default diamonds;

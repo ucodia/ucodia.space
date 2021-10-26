@@ -12,6 +12,7 @@ const Container = styled.div`
   justify-content: center;
   user-select: none;
   cursor: pointer;
+  color: #000000;
 
   animation-name: background-gradient;
   animation-duration: 10s;
