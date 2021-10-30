@@ -157,6 +157,7 @@ const fittestBubbleBath = (sketch) => {
     } else {
       settings.bg = 0;
     }
+    return false;
   };
 
   function randomInt(min, max) {
