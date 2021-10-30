@@ -3,7 +3,7 @@ export const meta = {
   year: "May 2016",
 };
 
-const fittestBubleBath = (sketch) => {
+const fittestBubbleBath = (sketch) => {
   // globals
   const bath = [];
 
@@ -15,10 +15,10 @@ const fittestBubleBath = (sketch) => {
   settings.attDist = 100;
   settings.minSize = 20;
   settings.maxSize = 400;
-  settings.bg = 255;
+  settings.bg = 0;
 
   sketch.setup = () => {
-    sketch.createCanvas(window.innerWidth, window.innerHeight);
+    sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
     sketch.frameRate(60);
     sketch.colorMode(sketch.HSB, 100);
   };
@@ -148,7 +148,7 @@ const fittestBubleBath = (sketch) => {
   }
 
   sketch.windowResized = () => {
-    sketch.resizeCanvas(window.innerWidth, window.innerHeight);
+    sketch.resizeCanvas(sketch.windowWidth, sketch.windowHeight);
   };
 
   sketch.mousePressed = () => {
@@ -186,4 +186,4 @@ const fittestBubleBath = (sketch) => {
   }
 };
 
-export default fittestBubleBath;
+export default fittestBubbleBath;
