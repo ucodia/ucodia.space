@@ -55,6 +55,7 @@ const scales = (sketch) => {
   sketch.mousePressed = () => {
     gradient = gradientIterator.next();
     drawScales();
+    return false;
   };
 
   // utilities

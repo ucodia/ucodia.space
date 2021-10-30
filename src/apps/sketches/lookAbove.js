@@ -20,6 +20,7 @@ const lookAbove = (sketch) => {
   sketch.mousePressed = () => {
     sky.rebirth();
     sky.draw();
+    return false;
   };
 
   // objects

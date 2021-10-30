@@ -122,13 +122,9 @@ const revolutions = (sketch) => {
   };
 
   sketch.mousePressed = () => {
-    toggleAnimation();
-    // stepFactor = sketch.map(sketch.mouseX, 0, sketch.width, 36, 1);
-  };
-
-  sketch.doubleClicked = () => {
     mode = (mode + 1) % 2;
     regen();
+    return false;
   };
 
   function toggleAnimation() {

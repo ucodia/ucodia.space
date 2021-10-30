@@ -235,6 +235,7 @@ const circuits = (sketch) => {
   sketch.mousePressed = () => {
     currentModel = generateModel();
     drawModel(currentModel);
+    return false;
   };
 
   sketch.keyPressed = () => {
