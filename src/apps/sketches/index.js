@@ -10,6 +10,7 @@ import vintage from "./vintage";
 import scales from "./scales";
 import drawbot001 from "./drawbot001";
 import revolutions from "./revolutions";
+import fittestBubleBath from "./fittestBubbleBath";
 
 const sketches = {
   diamonds,
@@ -22,6 +23,7 @@ const sketches = {
   scales,
   drawbot001,
   revolutions,
+  "fittest-bubble-bath": fittestBubleBath,
 };
 
 const wrappedSketches = {};
