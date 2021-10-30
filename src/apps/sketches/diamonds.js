@@ -1,4 +1,5 @@
 import autoStretchP5 from "../../utils/autoStretchP5";
+import diamond from "./diamond";
 
 export const meta = {
   name: "Diamonds",
@@ -7,18 +8,16 @@ export const meta = {
 
 const diamonds = (sketch, n = 3, spaceRatio = 0.2, transparent = false) => {
   let diams = [];
-  let paused = false;
 
   sketch.setup = () => {
     sketch.createCanvas(100, 100);
-    sketch.frameRate(30);
+    sketch.frameRate(60);
+    sketch.noStroke();
 
     autoStretchP5(sketch, layout);
   };
 
   function layout() {
-    paused = true;
-
     const isHorizontal = sketch.width >= sketch.height;
 
     let spacing = isHorizontal
@@ -39,15 +38,10 @@ const diamonds = (sketch, n = 3, spaceRatio = 0.2, transparent = false) => {
 
       diams[i] = createDiamond(baseX, baseY, r, 8, offset);
     }
-
-    paused = false;
   }
 
   sketch.draw = () => {
-    if (paused) return;
-
     sketch.clear();
-    sketch.noStroke();
 
     if (!transparent) {
       sketch.background(255);
@@ -59,26 +53,29 @@ const diamonds = (sketch, n = 3, spaceRatio = 0.2, transparent = false) => {
     }
   };
 
-  function createDiamond(x, y, radius, sides, offset, inc, palette) {
+  function createDiamond(x, y, radius, sides, offset) {
     if (!x) x = 0;
     if (!y) y = 0;
     if (!radius) radius = 100;
     if (!sides) sides = 8;
     if (!offset) offset = 0;
-    if (!palette) {
-      palette = [
-        sketch.color(0, 174, 239, 50), // cyan
-        sketch.color(255, 242, 0, 50), // yellow
-        sketch.color(236, 0, 140, 50), // magenta
-      ];
-    }
-    if (!inc) inc = 1 / 1000;
 
+    const palette = [
+      sketch.color(0, 174, 239, 50), // cyan
+      sketch.color(255, 242, 0, 50), // yellow
+      sketch.color(236, 0, 140, 50), // magenta
+    ];
+    const inc = 1 / 1000;
     let position = sketch.constrain(offset, 0, 1);
 
     return {
       draw: function () {
-        diamond(x, y, radius, sides, position, palette);
+        const facets = diamond(x, y, radius, sides, position, palette);
+        for (let i = 0; i < facets.length; i++) {
+          const facet = facets[i];
+          sketch.fill(palette[facet.color]);
+          sketch.triangle(...facet.points);
+        }
       },
       move: function () {
         position += inc;
@@ -87,41 +84,6 @@ const diamonds = (sketch, n = 3, spaceRatio = 0.2, transparent = false) => {
       pos() {
         return position;
       },
-    };
-  }
-
-  function diamond(x, y, radius, sides, offset, palette) {
-    if (!offset) offset = 0;
-    let points = [];
-
-    // map percentage to radian
-    const baseAngle = sketch.map(offset, 0, 1, 0, sketch.TWO_PI);
-
-    for (let i = 0; i < sides; i++) {
-      let startAngle = baseAngle + (sketch.TWO_PI / sides) * i;
-      let addedAngle = i % 2 === 0 ? 0 : baseAngle;
-      points[i] = pointOnCircle(x, y, startAngle + addedAngle, radius);
-    }
-
-    for (let i = 0; i < points.length; i++) {
-      // select color from palette
-      let sel = i % palette.length;
-      sketch.fill(palette[sel]);
-
-      for (let j = 0; j < points.length; j++) {
-        if (i !== j) {
-          let p1 = points[i];
-          let p2 = points[j];
-          sketch.triangle(x, y, p1.x, p1.y, p2.x, p2.y);
-        }
-      }
-    }
-  }
-
-  function pointOnCircle(x, y, angle, radius) {
-    return {
-      x: radius * sketch.cos(angle) + x,
-      y: radius * sketch.sin(angle) + y,
     };
   }
 };
