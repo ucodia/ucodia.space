@@ -1,3 +1,5 @@
+import autoStretchP5 from "../../utils/autoStretchP5";
+
 export const meta = {
   name: "Fittest Bubble Bath",
   year: "May 2016",
@@ -11,24 +13,30 @@ const fittestBubbleBath = (sketch) => {
   const settings = {};
   settings.maxBubs = 100;
   settings.minSpeed = 1;
-  settings.maxSpeed = 10;
+  settings.maxSpeed = 8;
   settings.attDist = 100;
   settings.minSize = 20;
   settings.maxSize = 400;
-  settings.bg = 0;
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
     sketch.frameRate(60);
     sketch.colorMode(sketch.HSB, 100);
+
+    autoStretchP5(sketch, layout);
   };
+
+  function layout() {
+    const minSide = Math.min(sketch.width, sketch.height);
+    settings.minSize = minSide * 0.05;
+    settings.maxSize = minSide * 0.5;
+  }
 
   sketch.draw = () => {
     sketch.clear();
-    sketch.background(settings.bg);
+    sketch.background(255);
 
-    // store bubbles to explode after loop
-    var explode = [];
+    const toExplode = [];
 
     for (var i = 0; i < bath.length; i++) {
       const bubble = bath[i];
@@ -54,7 +62,7 @@ const fittestBubbleBath = (sketch) => {
               neighbor.pos.y
             );
             bubble.merge(neighbor);
-            explode.push(neighbor);
+            toExplode.push(neighbor);
           }
         }
       }
@@ -62,14 +70,15 @@ const fittestBubbleBath = (sketch) => {
       bubble.update(neighbors);
 
       // explode bubbles that reaches max size
-      if (bubble.size > settings.maxSize) explode.push(bubble);
+      if (bubble.size > settings.maxSize) toExplode.push(bubble);
     }
 
     // explode big and merged bubbles
-    for (let i = 0; i < explode.length; i++) {
-      var index = bath.indexOf(explode[i]);
+    for (let i = 0; i < toExplode.length; i++) {
+      var index = bath.indexOf(toExplode[i]);
       if (index !== -1) bath.splice(index, 1);
     }
+    toExplode.length = 0;
 
     // add some bubbles to the bath
     // frameCount % n === 0 is for rate limiting
@@ -137,8 +146,8 @@ const fittestBubbleBath = (sketch) => {
         this.size,
         settings.minSize,
         settings.maxSize,
-        80,
-        5
+        100,
+        20
       );
 
       sketch.noStroke();
@@ -152,11 +161,27 @@ const fittestBubbleBath = (sketch) => {
   };
 
   sketch.mousePressed = () => {
-    if (settings.bg === 0) {
-      settings.bg = 255;
-    } else {
-      settings.bg = 0;
+    const mousePos = sketch.createVector(sketch.mouseX, sketch.mouseY);
+
+    const toExplode = [];
+    for (let i = 0; i < bath.length; i++) {
+      const bubble = bath[i];
+      const d = bubble.pos.dist(mousePos);
+      if (d < bubble.size / 2) {
+        toExplode.push(bubble);
+      }
     }
+    // alter bath in a separate loop
+    for (let i = 0; i < toExplode.length; i++) {
+      var index = bath.indexOf(toExplode[i]);
+      if (index !== -1) bath.splice(index, 1);
+    }
+
+    // if nothing was popped, add a new bubble
+    if (toExplode.length === 0) {
+      bath.push(new Bubble(sketch.mouseX, sketch.mouseY));
+    }
+
     return false;
   };
 
