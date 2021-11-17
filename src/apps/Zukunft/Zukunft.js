@@ -6,20 +6,17 @@ import getN from "../../utils/getN";
 import id from "../../utils/id";
 import randomInt from "../../utils/randomInt";
 import Dice from "./Dice";
-import randomItem from "../../utils/randomItem";
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
   background-color: black;
 `;
-
 const Plot = styled.svg`
   width: 100%;
   height: 100%;
 `;
 
-const buttonFaces = ["carret-down", "-", "+", 1];
 const createDice = (face = 1, orientation = 0, primary = false) => ({
   face,
   orientation,
@@ -27,73 +24,35 @@ const createDice = (face = 1, orientation = 0, primary = false) => ({
   id: id(),
 });
 const randomDice = () => createDice(randomInt(1, 6), randomInt(0, 1));
-// eslint-disable-next-line no-unused-vars
-const randomHen = () => {
-  const faces = [
-    ["h", 0],
-    [6, 1],
-    ["n", 0],
-  ];
-  return createDice(...randomItem(faces));
+const generateDices = (columns, rows) => {
+  const dices = getN(columns * rows, randomDice);
+  const word = "zukunft".split("");
+  const indexStart =
+    (Math.floor(rows / 2) - 1) * columns +
+    Math.floor((columns - word.length) / 2);
+
+  word.forEach((letter, i) => {
+    dices[indexStart + i] = createDice(letter);
+  });
+  console.log(dices);
+  return dices;
 };
-const zeroDice = () => createDice(0, 0);
 
 const Zukunft = ({ size }) => {
   const svgRef = useRef(null);
   const diceSize = size.width >= 1024 ? 40 : 45;
   const [grid, setGrid] = useState({ dices: [], columns: 0, rows: 0 });
-  const [isDrawing, setIsDrawing] = useState(false);
 
   useEffect(() => {
-    setGrid((g) => {
-      const columns = Math.floor(size.width / diceSize) - 1;
-      const rows = Math.floor(size.height / diceSize) - 1;
-      const diff = columns * rows - g.columns * g.rows;
-      const dices =
-        diff <= 0
-          ? g.dices.slice(0, diff + g.dices.length)
-          : [...g.dices, ...getN(diff, randomDice)];
-
-      // define buttons faces
-      buttonFaces.forEach((face, i) => {
-        dices[dices.length - 4 + i] = createDice(face, 0, true);
-      });
-
-      return { dices, columns, rows };
-    });
+    const columns = Math.floor(size.width / diceSize) - 1;
+    const rows = Math.floor(size.height / diceSize) - 1;
+    const dices = generateDices(columns, rows);
+    setGrid({ dices, columns, rows });
   }, [size, diceSize]);
 
-  const handleDiceClick = (diceIndex) => {
-    const dices = grid.dices.slice();
-    const current = dices[diceIndex];
-    dices[diceIndex] = {
-      ...current,
-      face: dices[dices.length - 1].face,
-      orientation: (current.orientation + 1) % 2,
-    };
-    setGrid((g) => ({ ...g, dices }));
-  };
-  const handleCycleFace = (diceIndex) => {
-    const dices = grid.dices.slice();
-    const current = dices[diceIndex];
-    dices[diceIndex] = { ...current, face: (current.face + 1) % 7 };
-    setGrid((g) => ({ ...g, dices }));
-  };
-  const handleClearCanvas = () => {
-    setGrid((g) => {
-      const dices = [
-        ...getN(g.dices.length - buttonFaces.length, zeroDice),
-        ...g.dices.slice(g.dices.length - 4),
-      ];
-      return { ...g, dices };
-    });
-  };
   const handleRandomizeCanvas = () => {
     setGrid((g) => {
-      const dices = [
-        ...getN(g.dices.length - buttonFaces.length, randomDice),
-        ...g.dices.slice(g.dices.length - 4),
-      ];
+      const dices = generateDices(g.columns, g.rows);
       return { ...g, dices };
     });
   };
@@ -104,25 +63,9 @@ const Zukunft = ({ size }) => {
       d3SaveSvg.save(svgRef.current, { filename });
     }
   };
-  const handlePaintDice = (diceIndex) => {
-    if (!isDrawing || diceIndex < buttonFaces.length) {
-      return;
-    }
-
-    const dices = grid.dices.slice();
-    const current = dices[diceIndex];
-    dices[diceIndex] = {
-      ...current,
-      face: dices[dices.length - 1].face,
-    };
-    setGrid((g) => ({ ...g, dices }));
-  };
 
   return (
-    <Container
-      onMouseDown={() => setIsDrawing(true)}
-      onMouseUp={() => setIsDrawing(false)}
-    >
+    <Container>
       <Plot ref={svgRef}>
         {grid.dices.map((dice, i) => {
           const x = i % grid.columns;
@@ -142,18 +85,10 @@ const Zukunft = ({ size }) => {
               face={dice.face}
               size={diceSize}
               transform={`${translate} ${rotate}`}
-              primary={dice.primary}
-              onMouseEnter={() => handlePaintDice(i)}
               onClick={
                 i === grid.dices.length - 1
-                  ? () => handleCycleFace(grid.dices.length - 1)
-                  : i === grid.dices.length - 2
-                  ? () => handleRandomizeCanvas()
-                  : i === grid.dices.length - 3
-                  ? () => handleClearCanvas()
-                  : i === grid.dices.length - 4
                   ? () => handleDownloadSvg()
-                  : () => handleDiceClick(i)
+                  : () => handleRandomizeCanvas(i)
               }
             />
           );

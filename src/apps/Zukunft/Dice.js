@@ -33,14 +33,13 @@ const Outline = styled.rect`
   stroke-width: 1px;
 `;
 const Dot = styled.ellipse`
-  fill: ${(props) => (props.primary ? "goldenrod" : "white")};
+  fill: white;
   stroke: none;
 `;
 const Dice = ({
   face = 1,
   size = 30,
   transform,
-  primary = false,
   onClick = () => {},
   onMouseEnter = () => {},
 }) => {
@@ -62,15 +61,9 @@ const Dice = ({
       onMouseEnter={onMouseEnter}
       className={`dice${face}`}
     >
-      <Outline
-        width={size}
-        height={size}
-        rx={size / 5}
-        ry={size / 5}
-        primary={primary}
-      />
+      <Outline width={size} height={size} rx={size / 5} ry={size / 5} />
       {dotsProps.map((dotProps, i) => (
-        <Dot key={i} primary={primary} {...dotProps} />
+        <Dot key={i} {...dotProps} />
       ))}
     </Surface>
   );
