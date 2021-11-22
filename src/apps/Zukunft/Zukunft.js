@@ -40,7 +40,7 @@ const generateDices = (columns, rows) => {
 
 const Zukunft = ({ size }) => {
   const svgRef = useRef(null);
-  const diceSize = 40;
+  const diceSize = size.width >= 1024 ? 40 : 30;
   const [grid, setGrid] = useState({ dices: [], columns: 0, rows: 0 });
 
   useEffect(() => {
