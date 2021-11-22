@@ -28,19 +28,19 @@ const generateDices = (columns, rows) => {
   const dices = getN(columns * rows, randomDice);
   const word = "zukunft".split("");
   const indexStart =
-    (Math.floor(rows / 2) - 1) * columns +
+    (Math.ceil(rows / 2) - 1) * columns +
     Math.floor((columns - word.length) / 2);
 
   word.forEach((letter, i) => {
     dices[indexStart + i] = createDice(letter);
   });
-  console.log(dices);
+  console.log(columns, rows);
   return dices;
 };
 
 const Zukunft = ({ size }) => {
   const svgRef = useRef(null);
-  const diceSize = size.width >= 1024 ? 40 : 45;
+  const diceSize = 40;
   const [grid, setGrid] = useState({ dices: [], columns: 0, rows: 0 });
 
   useEffect(() => {
