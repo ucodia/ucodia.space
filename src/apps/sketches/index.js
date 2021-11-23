@@ -11,6 +11,7 @@ import scales from "./scales";
 import drawbot001 from "./drawbot001";
 import revolutions from "./revolutions";
 import fittestBubleBath from "./fittestBubbleBath";
+import circleClock from "./circleClock";
 
 const sketches = {
   diamonds,
@@ -24,6 +25,7 @@ const sketches = {
   drawbot001,
   revolutions,
   "fittest-bubble-bath": fittestBubleBath,
+  "circle-clock": circleClock,
 };
 
 const wrappedSketches = {};
