@@ -5,7 +5,7 @@ import Zukunft from "./Zukunft";
 import Flowtime from "./Flowtime";
 import Conundrum from "./Conundrum";
 import sketches from "./sketches";
-import Lorenz from "./Lorenz";
+// import Lorenz from "./Lorenz";
 
 const apps = {
   "giphy-vox": <GiphyVox />,
@@ -13,7 +13,7 @@ const apps = {
   zukunft: <Zukunft />,
   flowtime: <Flowtime />,
   conundrum: <Conundrum />,
-  lorenz: <Lorenz />,
+  // lorenz: <Lorenz />,
   ...sketches,
 };
 
