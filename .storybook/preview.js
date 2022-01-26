@@ -1,10 +1,10 @@
 import React from "react";
-import AppContext from "../src/components/AppContext";
+import { BrowserRouter as Router } from "react-router-dom";
 
 export const decorators = [
   (Story) => (
-    <AppContext theme="default">
+    <Router>
       <Story />
-    </AppContext>
+    </Router>
   ),
 ];
