@@ -13,10 +13,7 @@
     "eject": "react-scripts eject",
     "serve": "serve",
     "postbuild": "react-snap",
-    "format": "prettier --write 'src/**/*.{js,json,css,md}'",
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "dependencies": {
     "d3": "^7.1.1",
@@ -35,17 +32,6 @@
     "typeface-work-sans": "^1.1.13"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.4.14",
-    "@storybook/addon-essentials": "^6.4.14",
-    "@storybook/addon-links": "^6.4.14",
-    "@storybook/builder-webpack5": "^6.4.14",
-    "@storybook/manager-webpack5": "^6.4.14",
-    "@storybook/node-logger": "^6.4.14",
-    "@storybook/preset-create-react-app": "^4.0.0",
-    "@storybook/react": "^6.4.14",
-    "husky": "^4.3.7",
-    "lint-staged": "^10.5.3",
-    "prettier": "^2.2.1",
     "react-snap": "^1.23.0",
     "serve": "^12.0.1",
     "source-map-explorer": "^2.4.2",
@@ -55,24 +41,6 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      },
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      }
     ]
   },
   "browserslist": {
@@ -85,16 +53,6 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "src/**/*.{js,json,css,md}": [
-      "prettier --write"
     ]
   },
   "reactSnap": {
