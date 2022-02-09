@@ -12,6 +12,7 @@ import drawbot001 from "./drawbot001";
 import revolutions from "./revolutions";
 import fittestBubleBath from "./fittestBubbleBath";
 import circleClock from "./circleClock";
+import lorenz from "./lorenz";
 
 const sketches = {
   diamonds,
@@ -26,6 +27,7 @@ const sketches = {
   revolutions,
   "fittest-bubble-bath": fittestBubleBath,
   "circle-clock": circleClock,
+  lorenz: lorenz,
 };
 
 const wrappedSketches = {};
