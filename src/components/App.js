@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import FullScreen from "./FullScreen";
 import Page from "./Page";
 import Home from "./Home";
@@ -8,29 +8,40 @@ import apps from "../apps";
 
 const App = () => {
   return (
-    <Switch>
-      <Route path="/" exact>
-        <Page title="You're Home">
-          <Home />
-        </Page>
-      </Route>
+    <Routes>
+      <Route
+        path="/"
+        exact
+        element={
+          <Page title="You're Home">
+            <Home />
+          </Page>
+        }
+      />
       {Object.keys(apps).map((appKey) => {
         return (
-          <Route key={appKey} path={`/${appKey}`}>
-            <Page title={appKey}>
-              <FullScreen>{apps[appKey]}</FullScreen>
-            </Page>
-          </Route>
+          <Route
+            key={appKey}
+            path={`/${appKey}`}
+            element={
+              <Page title={appKey}>
+                <FullScreen>{apps[appKey]}</FullScreen>
+              </Page>
+            }
+          />
         );
       })}
-      <Route path="*">
-        <Page title="404">
-          <FullScreen>
-            <NotFound />
-          </FullScreen>
-        </Page>
-      </Route>
-    </Switch>
+      <Route
+        path="*"
+        element={
+          <Page title="404">
+            <FullScreen>
+              <NotFound />
+            </FullScreen>
+          </Page>
+        }
+      />
+    </Routes>
   );
 };
 
