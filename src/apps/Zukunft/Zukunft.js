@@ -34,7 +34,6 @@ const generateDices = (columns, rows) => {
   word.forEach((letter, i) => {
     dices[indexStart + i] = createDice(letter);
   });
-  console.log(columns, rows);
   return dices;
 };
 
