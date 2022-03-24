@@ -49,6 +49,11 @@ const circuits = (sketch) => {
     }
   };
 
+  sketch.mousePressed = () => {
+    currentModel = generateModel();
+    sketch.draw();
+  };
+
   sketch.draw = () => {
     sketch.clear();
     sketch.background(isDarkTheme ? "#000" : "#fff");
