@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import SvgGradient from "./SvgGradient";
 import id from "../../utils/id";
 
@@ -21,15 +20,6 @@ const SvgPath = ({ viewBox, data, gradient, flipped }) => {
       />
     </svg>
   );
-};
-
-SvgPath.propTypes = {
-  viewBox: PropTypes.string.isRequired,
-  data: PropTypes.string.isRequired,
-  gradient: PropTypes.shape({
-    colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-  }),
-  flipped: PropTypes.bool,
 };
 
 export default SvgPath;
