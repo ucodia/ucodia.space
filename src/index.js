@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router } from "react-router-dom";
 import "typeface-work-sans";
@@ -27,10 +27,11 @@ const Root = () => (
     </Router>
   </>
 );
-const rootElement = document.getElementById("root");
 
-if (rootElement.hasChildNodes()) {
-  ReactDOM.hydrate(<Root />, rootElement);
+const container = document.getElementById("root");
+if (container.hasChildNodes()) {
+  hydrateRoot(container, <Root />);
 } else {
-  ReactDOM.render(<Root />, rootElement);
+  const root = createRoot(container);
+  root.render(<Root />);
 }
