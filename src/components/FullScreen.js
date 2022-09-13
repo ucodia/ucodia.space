@@ -7,14 +7,6 @@ const FullScreen = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
-  color: #000000;
-  background-color: #ffffff;
-
-  @media (prefers-color-scheme: dark) {
-    color: #ededed;
-    background-color: #121212;
-  }
 `;
 
 export default FullScreen;

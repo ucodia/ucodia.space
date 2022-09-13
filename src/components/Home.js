@@ -8,13 +8,6 @@ import P5Wrapper from "./P5Wrapper";
 
 const Container = styled.div`
   padding: 50px 0;
-  color: #000000;
-  background-color: #ffffff;
-
-  @media (prefers-color-scheme: dark) {
-    color: #ededed;
-    background-color: #121212;
-  }
 `;
 const Heading = styled.div`
   display: flex;

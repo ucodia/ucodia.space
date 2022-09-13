@@ -12,6 +12,13 @@ const StyleReset = createGlobalStyle`
     margin: 0;
     padding: 0;
     font-family: 'Work Sans', sans-serif;
+
+    color: #000000;
+    background-color: #ffffff;
+    @media (prefers-color-scheme: dark) {
+      color: #ededed;
+      background-color: #121212;
+    }
   }
 `;
 
