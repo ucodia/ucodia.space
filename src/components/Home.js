@@ -44,16 +44,35 @@ const List = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`;
-const StyledLink = styled(Link)`
-  padding: 10px;
-  text-decoration: none;
-  color: ${(props) => props.color};
+
   font-size: 3rem;
   @media only screen and (max-width: 425px) {
     font-size: 2rem;
   }
 `;
+const ExternalLink = styled.a`
+  padding: 10px;
+  text-decoration: none;
+  color: ${(props) => props.color};
+`;
+const PageLink = styled(Link)`
+  padding: 10px;
+  text-decoration: none;
+  color: ${(props) => props.color};
+`;
+
+const links = Object.keys(pages)
+  .map((page) => ({
+    type: "page",
+    name: page,
+    to: pages[page],
+  }))
+  .concat({
+    type: "link",
+    name: "about",
+    to: "https://ucodia.notion.site/Who-is-Ucodia-15cd507c414146c098df52f557a1c1d5",
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
 
 const Home = () => {
   return (
@@ -65,17 +84,20 @@ const Home = () => {
         <Logo />
       </Heading>
       <List>
-        {Object.keys(pages)
-          .sort()
-          .map((page, index, items) => {
-            const inc = Math.round(360 / items.length);
-            const color = `hsl(${index * inc}, 80%, 60%)`;
-            return (
-              <StyledLink color={color} key={page} to={`${page}/`}>
-                {page}
-              </StyledLink>
-            );
-          })}
+        {links.map(({ type, name, to }, index, items) => {
+          const inc = Math.round(360 / items.length);
+          const color = `hsl(${index * inc}, 80%, 60%)`;
+
+          return type === "page" ? (
+            <PageLink color={color} key={name} to={`/${name}`}>
+              {name}
+            </PageLink>
+          ) : (
+            <ExternalLink color={color} key={name} href={to}>
+              {name}
+            </ExternalLink>
+          );
+        })}
       </List>
     </Container>
   );
