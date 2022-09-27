@@ -4,7 +4,7 @@ import FullScreen from "./FullScreen";
 import Page from "./Page";
 import Home from "./Home";
 import NotFound from "./NotFound";
-import apps from "../apps";
+import pages from "../pages";
 
 const App = () => {
   return (
@@ -18,14 +18,14 @@ const App = () => {
           </Page>
         }
       />
-      {Object.keys(apps).map((appKey) => {
+      {Object.keys(pages).map((page) => {
         return (
           <Route
-            key={appKey}
-            path={`/${appKey}`}
+            key={page}
+            path={`/${page}`}
             element={
-              <Page title={appKey}>
-                <FullScreen>{apps[appKey]}</FullScreen>
+              <Page title={page}>
+                <FullScreen>{pages[page]}</FullScreen>
               </Page>
             }
           />

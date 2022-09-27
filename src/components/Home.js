@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as LogoSvg } from "../svg/ucodia-logo.svg";
-import { singleDiamond } from "../apps/sketches/diamonds";
-import apps from "../apps";
+import { singleDiamond } from "../pages/sketches/diamonds";
+import pages from "../pages";
 import P5Wrapper from "./P5Wrapper";
 
 const Container = styled.div`
@@ -55,7 +55,7 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const Home = ({ appsByName = apps }) => {
+const Home = () => {
   return (
     <Container>
       <Heading>
@@ -65,14 +65,14 @@ const Home = ({ appsByName = apps }) => {
         <Logo />
       </Heading>
       <List>
-        {Object.keys(appsByName)
+        {Object.keys(pages)
           .sort()
-          .map((key, index, items) => {
+          .map((page, index, items) => {
             const inc = Math.round(360 / items.length);
             const color = `hsl(${index * inc}, 80%, 60%)`;
             return (
-              <StyledLink color={color} key={key} to={`${key}/`}>
-                {key}
+              <StyledLink color={color} key={page} to={`${page}/`}>
+                {page}
               </StyledLink>
             );
           })}
