@@ -6,7 +6,7 @@ import Flowtime from "./Flowtime";
 import Conundrum from "./Conundrum";
 import sketches from "./sketches";
 
-const apps = {
+const pages = {
   "giphy-vox": <GiphyVox />,
   kinetic: <Kinetic />,
   zukunft: <Zukunft />,
@@ -15,4 +15,4 @@ const apps = {
   ...sketches,
 };
 
-export default apps;
+export default pages;
