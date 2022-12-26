@@ -19,11 +19,12 @@ const Gif = styled.img`
 
 const Keyword = styled.div`
   padding: 20px;
-  width: 100%;
   font-size: 3rem;
   position: absolute;
-  background-color: white
-  top: 70%;
+  bottom: 0;
+  width: 100%;
+  color: black;
+  background-color: white;
   opacity: 0.5;
   text-align: center;
   z-index: 99;
