@@ -1,6 +1,10 @@
 import React, { useRef, useEffect } from "react";
 import p5 from "p5";
+import p5Svg from "p5.js-svg";
 import styled from "styled-components";
+
+// add SVG renderer to p5;
+p5Svg(p5);
 
 const Container = styled.div`
   width: 100%;
