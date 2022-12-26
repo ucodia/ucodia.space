@@ -64,7 +64,11 @@ const GiphyVox = () => {
 
   return (
     <Container>
-      {gifUrl && <Gif src={gifUrl} alt={`gif for keyword "${keyword}"`} />}
+      {gifUrl ? (
+        <Gif src={gifUrl} alt={`gif for keyword "${keyword}"`} />
+      ) : (
+        <Container />
+      )}
       <Keyword>{keyword ? keyword : "say something..."}</Keyword>
     </Container>
   );
