@@ -1,6 +1,7 @@
-// circle clock
-// 2021-10-12
-// lionel ringenbach
+export const meta = {
+  name: "Circle Clock",
+  created: "2021-10-12",
+};
 
 const circleClock = (sketch) => {
   sketch.setup = () => {

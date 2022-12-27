@@ -2,7 +2,7 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Fittest Bubble Bath",
-  year: "May 2016",
+  created: "2016-06-13",
 };
 
 const fittestBubbleBath = (sketch) => {

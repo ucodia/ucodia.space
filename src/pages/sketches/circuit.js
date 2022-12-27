@@ -1,8 +1,8 @@
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
-  name: "Circuits",
-  year: "2016",
+  name: "Circuit",
+  created: "2016-04-06",
 };
 
 const circuits = (sketch) => {

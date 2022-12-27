@@ -3,6 +3,11 @@ import styled from "styled-components";
 import useSpeechToText from "../hooks/useSpeechToText";
 import giphy from "../apis/giphy";
 
+export const meta = {
+  name: "Giphy Vox",
+  created: "2017-11-13",
+};
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -72,11 +77,6 @@ const GiphyVox = () => {
       <Keyword>{keyword ? keyword : "say something..."}</Keyword>
     </Container>
   );
-};
-
-export const meta = {
-  name: "Giphy Vox",
-  year: "201?",
 };
 
 export default GiphyVox;

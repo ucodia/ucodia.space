@@ -4,6 +4,11 @@ import { fromNow } from "flowtime";
 import { format } from "date-fns";
 import useInterval from "../../hooks/useInterval";
 
+export const meta = {
+  name: "Flowtime",
+  created: "2018-07-09",
+};
+
 const Container = styled.div`
   width: 100%;
   height: 100%;

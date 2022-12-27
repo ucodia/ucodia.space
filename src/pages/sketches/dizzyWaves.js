@@ -2,7 +2,7 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Dizzy Waves",
-  year: "201?",
+  created: "2015",
 };
 
 const dizzyWaves = (sketch) => {

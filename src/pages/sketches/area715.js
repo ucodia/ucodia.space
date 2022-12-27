@@ -2,7 +2,7 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Area 715",
-  year: "2015",
+  created: "2015-10-26",
 };
 
 const area715 = (sketch) => {

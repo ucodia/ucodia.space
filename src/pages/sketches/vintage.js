@@ -2,7 +2,7 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
   name: "Vintage",
-  year: "201?",
+  created: "2017-12-18",
 };
 
 const vintage = (sketch) => {

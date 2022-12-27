@@ -4,6 +4,11 @@ import shuffle from "../../utils/shuffle";
 import cyclicIterator from "../../utils/cyclicIterator";
 import sentences from "./sentences";
 
+export const meta = {
+  name: "Conumdrum",
+  created: "2020-02-22",
+};
+
 const numberOfWords = 3;
 const offsetRatio = 0.1;
 const wordRatio = (1 - offsetRatio) / numberOfWords;

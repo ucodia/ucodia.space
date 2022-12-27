@@ -6,7 +6,7 @@ const gradientIterator = cyclicIterator(shuffle(gradients));
 
 export const meta = {
   name: "Scales",
-  year: "201?",
+  created: "2016-03-21",
 };
 
 const scales = (sketch) => {

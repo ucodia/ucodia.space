@@ -7,6 +7,11 @@ import id from "../../utils/id";
 import randomInt from "../../utils/randomInt";
 import Dice from "./Dice";
 
+export const meta = {
+  name: "Zukunft",
+  created: "2016-04-02",
+};
+
 const Container = styled.div`
   width: 100%;
   height: 100%;

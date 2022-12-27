@@ -1,6 +1,11 @@
 import { GUI } from "dat.gui";
 import autoStretchP5 from "../../utils/autoStretchP5";
 
+export const meta = {
+  name: "Drawbot001",
+  created: "2016-04-06",
+};
+
 const drawbot001 = (sketch) => {
   // globals
   var bots = [];

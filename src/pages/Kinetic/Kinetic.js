@@ -6,6 +6,11 @@ import gradients from "../../data/gradients";
 import shapes from "./data/shapes";
 import cyclicIterator from "../../utils/cyclicIterator";
 
+export const meta = {
+  name: "Kinetic",
+  created: "2016-02-02",
+};
+
 const Container = styled.div`
   width: 100%;
   height: 100%;

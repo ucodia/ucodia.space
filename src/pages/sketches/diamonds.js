@@ -3,7 +3,7 @@ import diamond from "./diamond";
 
 export const meta = {
   name: "Diamonds",
-  year: "2014",
+  created: "2014-11-14",
 };
 
 const diamonds = (sketch, n = 3, spaceRatio = 0.2, transparent = false) => {
