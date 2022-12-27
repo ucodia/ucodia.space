@@ -8,7 +8,7 @@ import illusions from "./illusions";
 import lookAbove from "./lookAbove";
 import vintage from "./vintage";
 import scales from "./scales";
-import drawbot001 from "./drawbot001";
+import drawbot from "./drawbot";
 import revolutions from "./revolutions";
 import fittestBubleBath from "./fittestBubbleBath";
 import circleClock from "./circleClock";
@@ -23,7 +23,7 @@ const sketches = {
   "look-above": lookAbove,
   vintage,
   scales,
-  drawbot001,
+  drawbot,
   revolutions,
   "fittest-bubble-bath": fittestBubleBath,
   "circle-clock": circleClock,
