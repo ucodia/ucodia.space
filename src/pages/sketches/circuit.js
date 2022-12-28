@@ -52,6 +52,7 @@ const circuits = (sketch) => {
   sketch.mousePressed = () => {
     currentModel = generateModel();
     sketch.draw();
+    return false;
   };
 
   sketch.draw = () => {
