@@ -2,7 +2,6 @@ import React from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router } from "react-router-dom";
-import "typeface-work-sans";
 import App from "./components/App";
 import setViewportVariables from "./utils/setViewportVariables";
 import debounce from "./utils/debounce";
@@ -11,7 +10,7 @@ const StyleReset = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
-    font-family: 'Work Sans', sans-serif;
+    font-family: 'Helvetica', sans-serif;
 
     color: #000000;
     background-color: #ffffff;

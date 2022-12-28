@@ -28,8 +28,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-sizeme": "^3.0.2",
-    "styled-components": "^5.3.3",
-    "typeface-work-sans": "^1.1.13"
+    "styled-components": "^5.3.3"
   },
   "devDependencies": {
     "react-snap": "^1.23.0",
