@@ -65,7 +65,7 @@ const links = Object.keys(pages)
   .map((page) => ({
     type: "page",
     name: page,
-    to: pages[page],
+    to: page,
   }))
   .concat({
     type: "link",
@@ -89,11 +89,11 @@ const Home = () => {
           const color = `hsl(${index * inc}, 80%, 60%)`;
 
           return type === "page" ? (
-            <PageLink color={color} key={name} to={`/${name}`}>
+            <PageLink color={color} key={name} to={`/${to}`}>
               {name}
             </PageLink>
           ) : (
-            <ExternalLink color={color} key={name} href={to}>
+            <ExternalLink color={color} key={name} href={to} target="_blank">
               {name}
             </ExternalLink>
           );
