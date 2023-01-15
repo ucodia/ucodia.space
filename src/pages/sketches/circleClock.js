@@ -4,6 +4,8 @@ export const meta = {
 };
 
 const circleClock = (sketch) => {
+  let darkBg = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
     sketch.frameRate(15);
@@ -12,7 +14,7 @@ const circleClock = (sketch) => {
 
   sketch.draw = () => {
     sketch.clear();
-    sketch.background(255);
+    sketch.background(darkBg ? 0 : 255);
 
     const now = new Date();
     const hours = now.getHours();
@@ -83,18 +85,18 @@ const circleClock = (sketch) => {
       secondsR
     );
 
-    sketch.fill(0);
+    sketch.fill(darkBg ? 255 : 0);
     sketch.ellipse(centerX, centerY, clockR * 2, clockR * 2);
-    sketch.fill(255);
+    sketch.fill(darkBg ? 0 : 255);
     sketch.ellipse(hoursCenter.x, hoursCenter.y, hoursR * 2, hoursR * 2);
-    sketch.fill(0);
+    sketch.fill(darkBg ? 255 : 0);
     sketch.ellipse(
       minutesCenter.x,
       minutesCenter.y,
       minutesR * 2,
       minutesR * 2
     );
-    sketch.fill(255);
+    sketch.fill(darkBg ? 0 : 255);
     sketch.ellipse(
       secondsCenter.x,
       secondsCenter.y,
@@ -105,6 +107,10 @@ const circleClock = (sketch) => {
 
   sketch.windowResized = () => {
     sketch.resizeCanvas(sketch.windowWidth, sketch.windowHeight);
+  };
+
+  sketch.doubleClicked = () => {
+    darkBg = !darkBg;
   };
 
   const pointOnCircle = (x, y, angle, radius) => {
