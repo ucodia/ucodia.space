@@ -8,7 +8,7 @@ const circleClock = (sketch) => {
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
-    sketch.frameRate(15);
+    sketch.frameRate(25);
     sketch.noStroke();
   };
 
