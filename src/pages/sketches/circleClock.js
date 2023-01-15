@@ -6,9 +6,8 @@ export const meta = {
 const circleClock = (sketch) => {
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
-    sketch.blendMode(sketch.DIFFERENCE);
+    sketch.frameRate(15);
     sketch.noStroke();
-    sketch.fill(255);
   };
 
   sketch.draw = () => {
@@ -84,14 +83,18 @@ const circleClock = (sketch) => {
       secondsR
     );
 
+    sketch.fill(0);
     sketch.ellipse(centerX, centerY, clockR * 2, clockR * 2);
+    sketch.fill(255);
     sketch.ellipse(hoursCenter.x, hoursCenter.y, hoursR * 2, hoursR * 2);
+    sketch.fill(0);
     sketch.ellipse(
       minutesCenter.x,
       minutesCenter.y,
       minutesR * 2,
       minutesR * 2
     );
+    sketch.fill(255);
     sketch.ellipse(
       secondsCenter.x,
       secondsCenter.y,
