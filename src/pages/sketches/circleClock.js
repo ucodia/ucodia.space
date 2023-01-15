@@ -24,10 +24,12 @@ const circleClock = (sketch) => {
     const centerX = sketch.width / 2;
     const centerY = sketch.height / 2;
 
-    const outerR = minSide * 0.4;
-    const hoursR = minSide * 0.3;
-    const minutesR = minSide * 0.2;
-    const secondsR = minSide * 0.1;
+    const clockR = minSide * 0.4;
+    // 3/4 2/3 1/2 design
+    const hoursR = clockR * (3 / 4);
+    const minutesR = hoursR * (2 / 3);
+    const secondsR = minutesR * (1 / 2);
+
     const hoursA = sketch.map(
       (hours % 12) + sketch.map(minutes, 0, 60, 0, 1),
       0,
@@ -50,7 +52,7 @@ const circleClock = (sketch) => {
       sketch.TWO_PI - sketch.HALF_PI
     );
 
-    const posOnOuter = pointOnCircle(centerX, centerY, hoursA, outerR);
+    const posOnOuter = pointOnCircle(centerX, centerY, hoursA, clockR);
     const hoursCenter = pointOnCircle(
       posOnOuter.x,
       posOnOuter.y,
@@ -82,7 +84,7 @@ const circleClock = (sketch) => {
       secondsR
     );
 
-    sketch.ellipse(centerX, centerY, outerR * 2, outerR * 2);
+    sketch.ellipse(centerX, centerY, clockR * 2, clockR * 2);
     sketch.ellipse(hoursCenter.x, hoursCenter.y, hoursR * 2, hoursR * 2);
     sketch.ellipse(
       minutesCenter.x,
