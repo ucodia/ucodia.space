@@ -4,11 +4,14 @@ export const meta = {
 };
 
 const circleClock = (sketch) => {
+  const { secondsOffsetRatio, stepAngle } = sketch.getURLParams();
   let darkBg = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
-    sketch.frameRate(25);
+
+    const fps = stepAngle ? 360 / stepAngle / 60 : 25;
+    sketch.frameRate(fps);
     sketch.noStroke();
   };
 
@@ -29,7 +32,8 @@ const circleClock = (sketch) => {
     // 3/4 2/3 1/2 design
     const hoursR = clockR * (3 / 4);
     const minutesR = hoursR * (2 / 3);
-    const secondsR = minutesR * (1 / 2);
+    const secondOffset = minutesR * secondsOffsetRatio;
+    const secondsR = minutesR * (1 / 2) + secondOffset;
 
     const hoursA = sketch.map(
       (hours % 12) + sketch.map(minutes, 0, 60, 0, 1),
