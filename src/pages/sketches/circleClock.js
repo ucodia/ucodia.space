@@ -32,7 +32,7 @@ const circleClock = (sketch) => {
     // 3/4 2/3 1/2 design
     const hoursR = clockR * (3 / 4);
     const minutesR = hoursR * (2 / 3);
-    const secondOffset = minutesR * secondsOffsetRatio;
+    const secondOffset = secondsOffsetRatio ? minutesR * secondsOffsetRatio : 0;
     const secondsR = minutesR * (1 / 2) + secondOffset;
 
     const hoursA = sketch.map(
