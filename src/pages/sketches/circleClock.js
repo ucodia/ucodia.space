@@ -4,14 +4,13 @@ export const meta = {
 };
 
 const circleClock = (sketch) => {
-  const { secondsOffsetRatio, stepAngle } = sketch.getURLParams();
+  const { noSeconds } = sketch.getURLParams();
+  const secondsEnabled = !noSeconds;
   let darkBg = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
-
-    const fps = stepAngle ? 360 / stepAngle / 60 : 25;
-    sketch.frameRate(fps);
+    sketch.frameRate(noSeconds ? 1 : 25);
     sketch.noStroke();
   };
 
@@ -30,10 +29,9 @@ const circleClock = (sketch) => {
 
     const clockR = minSide * 0.4;
     // 3/4 2/3 1/2 design
-    const hoursR = clockR * (3 / 4);
-    const minutesR = hoursR * (2 / 3);
-    const secondOffset = secondsOffsetRatio ? minutesR * secondsOffsetRatio : 0;
-    const secondsR = minutesR * (1 / 2) + secondOffset;
+    const hoursR = clockR * (secondsEnabled ? 3 / 4 : 2 / 3);
+    const minutesR = hoursR * (secondsEnabled ? 2 / 3 : 1 / 2);
+    const secondsR = minutesR * (1 / 2);
 
     const hoursA = sketch.map(
       (hours % 12) + sketch.map(minutes, 0, 60, 0, 1),
@@ -100,13 +98,15 @@ const circleClock = (sketch) => {
       minutesR * 2,
       minutesR * 2
     );
-    sketch.fill(darkBg ? 0 : 255);
-    sketch.ellipse(
-      secondsCenter.x,
-      secondsCenter.y,
-      secondsR * 2,
-      secondsR * 2
-    );
+    if (secondsEnabled) {
+      sketch.fill(darkBg ? 0 : 255);
+      sketch.ellipse(
+        secondsCenter.x,
+        secondsCenter.y,
+        secondsR * 2,
+        secondsR * 2
+      );
+    }
   };
 
   sketch.windowResized = () => {
