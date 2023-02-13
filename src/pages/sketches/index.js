@@ -13,6 +13,7 @@ import revolutions from "./revolutions";
 import fittestBubleBath from "./fittestBubbleBath";
 import circleClock from "./circleClock";
 import lorenz from "./lorenz";
+import cmyDance from "./cmyDance";
 
 const sketches = {
   diamonds,
@@ -28,6 +29,7 @@ const sketches = {
   "fittest-bubble-bath": fittestBubleBath,
   "circle-clock": circleClock,
   lorenz: lorenz,
+  "cmy-dance": cmyDance,
 };
 
 const wrappedSketches = {};
