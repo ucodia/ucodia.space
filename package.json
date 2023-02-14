@@ -9,7 +9,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "dependencies": {
     "d3": "^7.8.2",
@@ -25,6 +26,9 @@
     "react-scripts": "^5.0.1",
     "react-sizeme": "^3.0.2",
     "styled-components": "^5.3.6"
+  },
+  "devDependencies": {
+    "source-map-explorer": "^2.5.3"
   },
   "eslintConfig": {
     "extends": [
