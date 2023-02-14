@@ -11,8 +11,6 @@
     "test": "react-scripts test --coverage --watchAll=false",
     "watch": "react-scripts test",
     "eject": "react-scripts eject",
-    "serve": "serve",
-    "postbuild": "react-snap",
     "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "dependencies": {
@@ -31,8 +29,6 @@
     "styled-components": "^5.3.3"
   },
   "devDependencies": {
-    "react-snap": "^1.23.0",
-    "serve": "^14.1.2",
     "source-map-explorer": "^2.5.2"
   },
   "eslintConfig": {
@@ -51,12 +47,6 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
-  },
-  "reactSnap": {
-    "puppeteerArgs": [
-      "--no-sandbox",
-      "--disable-setuid-sandbox"
     ]
   }
 }
