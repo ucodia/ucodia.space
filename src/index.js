@@ -1,9 +1,6 @@
-import { hydrate, render } from "react-dom";
+import React from "react";
+import ReactDOM from "react-dom/client";
 import Root from "./components/Root";
 
-const rootElement = document.getElementById("root");
-if (rootElement.hasChildNodes()) {
-  hydrate(<Root />, rootElement);
-} else {
-  render(<Root />, rootElement);
-}
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<Root />);
