@@ -24,12 +24,12 @@ const cmyDance = (sketch) => {
     ],
   ];
   const [realWidth, realHeight] = getRealSize(params);
-  const palette = [
-    [0, 174, 239],
-    [255, 242, 0],
-    [236, 0, 140],
-  ];
   const alpha = 150;
+  const palette = [
+    [0, 174, 239, alpha],
+    [255, 242, 0, alpha],
+    [236, 0, 140, alpha],
+  ];
 
   let realScale = 1;
   let scaleOffset = 0.1;
@@ -51,10 +51,10 @@ const cmyDance = (sketch) => {
     sketch.stroke(0);
     sketch.strokeWeight(5);
 
-    for (var i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++) {
       const tInc = i * 1.5;
-      for (var j = 0; j < params.length; j++) {
-        sketch.stroke(sketch.color(...palette[j % palette.length], alpha));
+      for (let j = 0; j < params.length; j++) {
+        sketch.stroke(sketch.color(...palette[j % palette.length]));
         sketch.line(
           ...getPoint(...params[j][0], t + tInc),
           ...getPoint(...params[j][1], t + tInc)
@@ -74,6 +74,8 @@ const cmyDance = (sketch) => {
         sketch.save(`cmy-dance-${Math.round(t)}.png`);
         break;
       }
+      default: {
+      }
     }
   };
 
@@ -85,21 +87,19 @@ const cmyDance = (sketch) => {
   }
 
   function getRealSize(params) {
-    const bounds = {
-      maxX: 0,
-      maxY: 0,
-    };
+    let maxX = 0;
+    let maxY = 0;
 
-    for (var i = 1; i < 1000; i++) {
-      for (var j = 0; j < params.length; j++) {
+    for (let i = 1; i < 1000; i++) {
+      for (let j = 0; j < params.length; j++) {
         const [x1, y1] = getPoint(...params[j][0], i);
         const [x2, y2] = getPoint(...params[j][1], i);
-        bounds.maxX = Math.max(bounds.maxX, x1, x2);
-        bounds.maxY = Math.max(bounds.maxY, y1, y2);
+        maxX = Math.max(maxX, x1, x2);
+        maxY = Math.max(maxY, y1, y2);
       }
     }
 
-    return [bounds.maxX * 2, bounds.maxY * 2];
+    return [maxX * 2, maxY * 2];
   }
 };
 
