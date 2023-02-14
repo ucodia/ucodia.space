@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { fromNow } from "flowtime";
-import { format } from "date-fns";
 import useInterval from "../../hooks/useInterval";
 
 export const meta = {
   name: "Flowtime",
   created: "2018-07-09",
 };
+
+const timeFormatter = new Intl.DateTimeFormat(
+  Intl.DateTimeFormat().resolvedOptions().locale,
+  { timeStyle: "medium" }
+);
 
 const Container = styled.div`
   width: 100%;
@@ -69,7 +73,7 @@ const Flowtime = () => {
       onMouseUp={showFlowtime}
       onTouchEnd={showFlowtime}
     >
-      <Time>{format(time, "pp")}</Time>
+      <Time>{timeFormatter.format(time)}</Time>
     </Container>
   );
 };
