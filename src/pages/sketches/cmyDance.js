@@ -5,11 +5,11 @@ export const meta = {
   created: "2023-02-12",
 };
 
-const params = [
+const paramsSet = [
   [
     [
       [1 / 10, 1 / 5, 1 / 10, 1 / 4, 300, 1, -100, 4],
-      [1 / 10, 1 / 1, 1 / 20, 1 / 12, 500, 11, 100, 200],
+      [1 / 10, 1 / 10, 1 / 20, 1 / 20, 500, 11, 100, 200],
     ],
     [
       [1 / 10, 1 / 5, 1 / 10, 1 / 4, 300, 10, 100, 4],
@@ -50,6 +50,26 @@ const params = [
   ],
 ];
 
+function getRandomSet() {
+  const getRandomT = () => 1 / getRandomInt(5, 50);
+  const getRandomF = () => getRandomInt(-300, 300);
+  const getRandomParams = () => [
+    getRandomT(),
+    getRandomT(),
+    getRandomT(),
+    getRandomT(),
+    getRandomF(),
+    getRandomF(),
+    getRandomF(),
+    getRandomF(),
+  ];
+  return [
+    [getRandomParams(), getRandomParams()],
+    [getRandomParams(), getRandomParams()],
+    [getRandomParams(), getRandomParams()],
+  ];
+}
+
 function f(tx1, tx2, ty1, ty2, fx1, fx2, fy1, fy2, t) {
   return [
     Math.sin(t * tx1) * fx1 + Math.sin(t * tx2) * fx2,
@@ -73,13 +93,16 @@ function getMax(params) {
   return [maxX * 2, maxY * 2];
 }
 
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 const cmyDance = (sketch) => {
   const { set = 0 } = sketch.getURLParams();
-  let p = params[Math.min(set, params.length - 1)];
+  let p = paramsSet[Math.min(set, paramsSet.length - 1)];
   let t = 0;
   let inc = 1 / 4;
   let n = 16;
-  const [realWidth, realHeight] = getMax(p);
   const alpha = 150;
   const palette = [
     [0, 174, 239, alpha],
@@ -92,12 +115,25 @@ const cmyDance = (sketch) => {
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
-
-    autoStretchP5(sketch, () => {
-      realScale =
-        1 / Math.max(realWidth / sketch.width, realHeight / sketch.height);
-    });
+    autoStretchP5(sketch, layout);
   };
+
+  function layout() {
+    let maxX = 0;
+    let maxY = 0;
+    // brute force way to find bounds
+    for (let i = 1; i < 1000; i++) {
+      for (let j = 0; j < p.length; j++) {
+        const [x1, y1] = f(...p[j][0], i);
+        const [x2, y2] = f(...p[j][1], i);
+        maxX = Math.max(maxX, x1, x2);
+        maxY = Math.max(maxY, y1, y2);
+      }
+    }
+
+    realScale =
+      1 / Math.max((maxX * 2) / sketch.width, (maxY * 2) / sketch.height);
+  }
 
   sketch.draw = () => {
     sketch.clear();
@@ -128,6 +164,11 @@ const cmyDance = (sketch) => {
     switch (sketch.key) {
       case "s": {
         sketch.save(`cmy-dance-${Math.round(t)}.png`);
+        break;
+      }
+      case "g": {
+        p = getRandomSet();
+        layout();
         break;
       }
       default: {
