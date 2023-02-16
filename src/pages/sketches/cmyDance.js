@@ -8,8 +8,8 @@ export const meta = {
 
 function f(xs, ys, t) {
   return [
-    xs.reduce((acc, [tx, fx]) => (acc += Math.sin(t * tx) * fx), 0),
-    ys.reduce((acc, [ty, fy]) => (acc += Math.cos(t * ty) * fy), 0),
+    xs.reduce((acc, [tx, fx]) => (acc += Math.sin(t * (1 / tx)) * fx), 0),
+    ys.reduce((acc, [ty, fy]) => (acc += Math.cos(t * (1 / ty)) * fy), 0),
   ];
 }
 
