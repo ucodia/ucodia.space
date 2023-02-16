@@ -59,8 +59,10 @@ const cmyDance = (sketch) => {
     sketch.strokeWeight(5);
 
     if (sketch.mouseIsPressed) {
+      inc = sketch.map(sketch.mouseX, 0, sketch.width, -1, 1);
       n = sketch.map(sketch.mouseY, 0, sketch.height, 3, 64);
     }
+    t += inc;
 
     for (let i = 0; i < n; i++) {
       const tInc = i * 1.5;
@@ -69,11 +71,6 @@ const cmyDance = (sketch) => {
         sketch.line(...f(...p[j][0], t + tInc), ...f(...p[j][1], t + tInc));
       }
     }
-
-    if (sketch.mouseIsPressed) {
-      inc = sketch.map(sketch.mouseX, 0, sketch.width, -1, 1);
-    }
-    t += inc;
   };
 
   sketch.keyPressed = () => {
