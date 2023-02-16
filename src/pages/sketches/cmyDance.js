@@ -91,17 +91,10 @@ const cmyDance = (sketch) => {
 };
 
 function getRandomSet() {
-  const getRandomT = () => 1 / getRandomInt(5, 50);
-  const getRandomF = () => getRandomInt(-300, 300);
+  const getRandomTF = () => [getRandomInt(5, 50), getRandomInt(-300, 300)];
   const getRandomParams = () => [
-    [
-      [getRandomT(), getRandomF()],
-      [getRandomT(), getRandomF()],
-    ],
-    [
-      [getRandomT(), getRandomF()],
-      [getRandomT(), getRandomF()],
-    ],
+    [...Array.from(Array(getRandomInt(1, 6)).keys()).map(getRandomTF)],
+    [...Array.from(Array(getRandomInt(1, 6)).keys()).map(getRandomTF)],
   ];
   return [
     [getRandomParams(), getRandomParams()],
