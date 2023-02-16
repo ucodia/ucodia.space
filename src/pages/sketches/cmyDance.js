@@ -1,89 +1,21 @@
 import autoStretchP5 from "../../utils/autoStretchP5";
+import presets from "./cmyDancePresets.json";
 
 export const meta = {
   name: "CMY Dance",
   created: "2023-02-12",
 };
 
-const paramsSet = [
-  [
-    [
-      [1 / 10, 1 / 5, 1 / 10, 1 / 4, 300, 1, -100, 4],
-      [1 / 10, 1 / 10, 1 / 20, 1 / 20, 500, 11, 100, 200],
-    ],
-    [
-      [1 / 10, 1 / 5, 1 / 10, 1 / 4, 300, 10, 100, 4],
-      [1 / 30, 1 / 10, 1 / 20, 1 / 12, 200, 100, 100, 300],
-    ],
-    [
-      [1 / 10, 1 / 50, 1 / 30, 1 / 12, 300, 10, -200, 40],
-      [1 / 30, 1 / 12, 1 / 10, 1 / 12, 500, 11, 50, 200],
-    ],
-  ],
-  [
-    [
-      [1 / 10, 1 / 5, 1 / 10, 1 / 4, 300, 1, 300, 1],
-      [1 / 10, 1 / 5, 1 / 10, 1 / 4, 500, 1, 100, 100],
-    ],
-    [
-      [1 / 10, 1 / 5, 1 / 10, 1 / 5, 300, 10, 100, 10],
-      [1 / 10, 1 / 30, 1 / 10, 1 / 30, 100, -300, 100, 300],
-    ],
-    [
-      [1 / 10, 1 / 50, 1 / 30, 1 / 12, 300, 10, -300, 10],
-      [1 / 30, 1 / 12, 1 / 30, 1 / 12, 200, 10, 200, 200],
-    ],
-  ],
-  [
-    [
-      [1 / 20, 1 / 20, 1 / 20, 1 / 20, 100, 300, 100, 300],
-      [1 / 10, 1 / 10, 1 / 10, 1 / 10, 10, 100, 10, 100],
-    ],
-    [
-      [1 / 40, 1 / 40, 1 / 40, 1 / 40, 100, 300, 100, 300],
-      [1 / 20, 1 / 20, 1 / 20, 1 / 20, 10, 100, 10, 100],
-    ],
-    [
-      [1 / 100, 1 / 40, 1 / 100, 1 / 40, 100, 300, 100, 300],
-      [1 / 20, 1 / 60, 1 / 20, 1 / 60, 300, 100, 300, 100],
-    ],
-  ],
-];
-
-function getRandomSet() {
-  const getRandomT = () => 1 / getRandomInt(5, 50);
-  const getRandomF = () => getRandomInt(-300, 300);
-  const getRandomParams = () => [
-    getRandomT(),
-    getRandomT(),
-    getRandomT(),
-    getRandomT(),
-    getRandomF(),
-    getRandomF(),
-    getRandomF(),
-    getRandomF(),
-  ];
+function f(xs, ys, t) {
   return [
-    [getRandomParams(), getRandomParams()],
-    [getRandomParams(), getRandomParams()],
-    [getRandomParams(), getRandomParams()],
+    xs.reduce((acc, [tx, fx]) => (acc += Math.sin(t * tx) * fx), 0),
+    ys.reduce((acc, [ty, fy]) => (acc += Math.cos(t * ty) * fy), 0),
   ];
-}
-
-function f(tx1, tx2, ty1, ty2, fx1, fx2, fy1, fy2, t) {
-  return [
-    Math.sin(t * tx1) * fx1 + Math.sin(t * tx2) * fx2,
-    Math.cos(t * ty1) * fy1 + Math.cos(t * ty2) * fy2,
-  ];
-}
-
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 const cmyDance = (sketch) => {
-  const { set = 0 } = sketch.getURLParams();
-  let p = paramsSet[Math.min(set, paramsSet.length - 1)];
+  const { preset = 0 } = sketch.getURLParams();
+  let p = presets[Math.min(preset, presets.length - 1)];
   let t = 0;
   let inc = 1 / 4;
   let n = 16;
@@ -160,5 +92,29 @@ const cmyDance = (sketch) => {
     }
   };
 };
+
+function getRandomSet() {
+  const getRandomT = () => 1 / getRandomInt(5, 50);
+  const getRandomF = () => getRandomInt(-300, 300);
+  const getRandomParams = () => [
+    [
+      [getRandomT(), getRandomF()],
+      [getRandomT(), getRandomF()],
+    ],
+    [
+      [getRandomT(), getRandomF()],
+      [getRandomT(), getRandomF()],
+    ],
+  ];
+  return [
+    [getRandomParams(), getRandomParams()],
+    [getRandomParams(), getRandomParams()],
+    [getRandomParams(), getRandomParams()],
+  ];
+}
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 export default cmyDance;
