@@ -77,22 +77,6 @@ function f(tx1, tx2, ty1, ty2, fx1, fx2, fy1, fy2, t) {
   ];
 }
 
-function getMax(params) {
-  let maxX = 0;
-  let maxY = 0;
-
-  for (let i = 1; i < 1000; i++) {
-    for (let j = 0; j < params.length; j++) {
-      const [x1, y1] = f(...params[j][0], i);
-      const [x2, y2] = f(...params[j][1], i);
-      maxX = Math.max(maxX, x1, x2);
-      maxY = Math.max(maxY, y1, y2);
-    }
-  }
-
-  return [maxX * 2, maxY * 2];
-}
-
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
