@@ -74,7 +74,7 @@ const Home = () => {
         <Sketch>
           <P5Wrapper sketch={singleDiamond} />
         </Sketch>
-        <picture height={100}>
+        <picture>
           <source
             srcSet="/dark-ucodia-logo.svg"
             media="(prefers-color-scheme: dark)"
