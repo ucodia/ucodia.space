@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { withSize } from "react-sizeme";
-import d3SaveSvg from "d3-save-svg";
+// TODO: Replace this library, it does not have a default export...
+// import d3SaveSvg from "d3-save-svg";
 import getN from "../../utils/getN";
 import id from "../../utils/id";
 import randomInt from "../../utils/randomInt";
@@ -61,11 +62,11 @@ const Zukunft = ({ size }) => {
     });
   };
   const handleDownloadSvg = () => {
-    const suggestion = `zukunft-${new Date().getTime()}`;
-    const filename = prompt("Choose a filename:", suggestion);
-    if (filename) {
-      d3SaveSvg.save(svgRef.current, { filename });
-    }
+    // const suggestion = `zukunft-${new Date().getTime()}`;
+    // const filename = prompt("Choose a filename:", suggestion);
+    // if (filename) {
+    //   d3SaveSvg.save(svgRef.current, { filename });
+    // }
   };
 
   return (

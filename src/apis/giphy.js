@@ -1,4 +1,4 @@
-const apiKey = process.env.REACT_APP_GIPHY_API_KEY;
+const apiKey = import.meta.env.VITE_GIPHY_API_KEY;
 const searchUrl = "https://api.giphy.com/v1/gifs/search";
 
 const search = async (query) => {
