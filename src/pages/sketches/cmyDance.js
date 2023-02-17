@@ -53,25 +53,27 @@ const cmyDance = (sketch) => {
       1 / Math.max((maxX * 2) / sketch.width, (maxY * 2) / sketch.height);
   }
 
-  sketch.draw = () => {
-    sketch.clear();
-    sketch.background(0);
-    sketch.translate(sketch.width / 2, sketch.height / 2);
-    sketch.scale(realScale - scaleOffset);
-    sketch.strokeWeight(5);
+  sketch.draw = (g) => {
+    if (!g) g = sketch;
 
-    if (sketch.mouseIsPressed) {
-      sx.inc = sketch.map(sketch.mouseX, 0, sketch.width, -1, 1);
-      sx.n = Math.round(sketch.map(sketch.mouseY, 0, sketch.height, 3, 64));
+    g.clear();
+    g.background(0);
+    g.translate(g.width / 2, g.height / 2);
+    g.scale(realScale - scaleOffset);
+    g.strokeWeight(5);
+
+    if (g.mouseIsPressed) {
+      sx.inc = g.map(g.mouseX, 0, g.width, -1, 1);
+      sx.n = Math.round(g.map(g.mouseY, 0, g.height, 3, 64));
     }
     t += sx.inc;
 
-    const alpha = sketch.map(sx.opacity, 0, 1, 0, 255);
+    const alpha = g.map(sx.opacity, 0, 1, 0, 255);
     for (let i = 0; i < sx.n; i++) {
       const tInc = i * 1.5;
       for (let j = 0; j < sx.set.length; j++) {
-        sketch.stroke(sketch.color(...palette[j % palette.length], alpha));
-        sketch.line(
+        g.stroke(g.color(...palette[j % palette.length], alpha));
+        g.line(
           ...f(...sx.set[j][0], t + tInc),
           ...f(...sx.set[j][1], t + tInc)
         );
@@ -82,7 +84,13 @@ const cmyDance = (sketch) => {
   sketch.keyPressed = () => {
     switch (sketch.key) {
       case "s": {
-        sketch.save(`cmy-dance-${Math.round(t)}.png`);
+        const svg = sketch.createGraphics(
+          sketch.windowWidth,
+          sketch.windowHeight,
+          sketch.SVG
+        );
+        sketch.draw(svg);
+        svg.save(`cmy-dance-${Math.round(t)}.svg`);
         break;
       }
       case "g": {
