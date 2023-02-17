@@ -15,17 +15,19 @@ function f(xs, ys, t) {
 
 const cmyDance = (sketch) => {
   const { preset = 0 } = sketch.getURLParams();
-  let p = presets[Math.min(preset, presets.length - 1)];
-  let t = 0;
-  let inc = 1 / 4;
-  let n = 16;
-  const alpha = 150;
-  const palette = [
-    [0, 174, 239, alpha],
-    [255, 242, 0, alpha],
-    [236, 0, 140, alpha],
-  ];
+  const sx = {
+    set: presets[Math.min(preset, presets.length - 1)],
+    inc: 1 / 4,
+    n: 16,
+    opacity: 0.6,
+  };
 
+  const palette = [
+    [0, 174, 239],
+    [255, 242, 0],
+    [236, 0, 140],
+  ];
+  let t = 0;
   let realScale = 1;
   let scaleOffset = 0.1;
 
@@ -39,9 +41,9 @@ const cmyDance = (sketch) => {
     let maxY = 0;
     // brute force way to find bounds
     for (let i = 1; i < 1000; i++) {
-      for (let j = 0; j < p.length; j++) {
-        const [x1, y1] = f(...p[j][0], i);
-        const [x2, y2] = f(...p[j][1], i);
+      for (let j = 0; j < sx.set.length; j++) {
+        const [x1, y1] = f(...sx.set[j][0], i);
+        const [x2, y2] = f(...sx.set[j][1], i);
         maxX = Math.max(maxX, x1, x2);
         maxY = Math.max(maxY, y1, y2);
       }
@@ -59,16 +61,20 @@ const cmyDance = (sketch) => {
     sketch.strokeWeight(5);
 
     if (sketch.mouseIsPressed) {
-      inc = sketch.map(sketch.mouseX, 0, sketch.width, -1, 1);
-      n = sketch.map(sketch.mouseY, 0, sketch.height, 3, 64);
+      sx.inc = sketch.map(sketch.mouseX, 0, sketch.width, -1, 1);
+      sx.n = Math.round(sketch.map(sketch.mouseY, 0, sketch.height, 3, 64));
     }
-    t += inc;
+    t += sx.inc;
 
-    for (let i = 0; i < n; i++) {
+    const alpha = sketch.map(sx.opacity, 0, 1, 0, 255);
+    for (let i = 0; i < sx.n; i++) {
       const tInc = i * 1.5;
-      for (let j = 0; j < p.length; j++) {
-        sketch.stroke(sketch.color(...palette[j % palette.length]));
-        sketch.line(...f(...p[j][0], t + tInc), ...f(...p[j][1], t + tInc));
+      for (let j = 0; j < sx.set.length; j++) {
+        sketch.stroke(sketch.color(...palette[j % palette.length], alpha));
+        sketch.line(
+          ...f(...sx.set[j][0], t + tInc),
+          ...f(...sx.set[j][1], t + tInc)
+        );
       }
     }
   };
@@ -80,7 +86,7 @@ const cmyDance = (sketch) => {
         break;
       }
       case "g": {
-        p = getRandomSet();
+        sx.set = getRandomSet();
         layout();
         break;
       }
