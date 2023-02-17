@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { ReactComponent as LogoSvg } from "../svg/ucodia-logo.svg";
 import { singleDiamond } from "../pages/sketches/diamonds";
 import pages from "../pages";
 import P5Wrapper from "./P5Wrapper";
@@ -26,14 +25,8 @@ const Sketch = styled.div`
     width: 100px;
   }
 `;
-const Logo = styled(LogoSvg)`
+const LogoImg = styled.img`
   height: 100px;
-  fill: #000000;
-
-  @media (prefers-color-scheme: dark) {
-    fill: #ededed;
-  }
-
   @media only screen and (max-width: 425px) {
     height: 50px;
   }
@@ -81,7 +74,13 @@ const Home = () => {
         <Sketch>
           <P5Wrapper sketch={singleDiamond} />
         </Sketch>
-        <Logo />
+        <picture height={100}>
+          <source
+            srcSet="/dark-ucodia-logo.svg"
+            media="(prefers-color-scheme: dark)"
+          />
+          <LogoImg src="/light-ucodia-logo.svg" alt="website logo" />
+        </picture>
       </Heading>
       <List>
         {links.map(({ type, name, to }, index, items) => {
