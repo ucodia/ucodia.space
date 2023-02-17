@@ -8,4 +8,9 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: { output: { manualChunks: { p5: ["p5", "p5.js-svg"] } } },
   },
+  esbuild: {
+    // This resolves unsafe-eval CSP violation caused by regenerator
+    // https://github.com/facebook/regenerator/issues/378
+    banner: "var regeneratorRuntime;",
+  },
 });

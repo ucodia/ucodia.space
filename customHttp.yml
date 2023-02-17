@@ -13,6 +13,8 @@ customHeaders:
         value: nosniff
       - key: Referrer-Policy
         value: no-referrer
+      - key: Content-Security-Policy
+        value: default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://*.giphy.com; connect-src https://api.giphy.com; object-src 'none';
   - pattern: /assets/**/*
     headers:
       - key: Cache-Control 
