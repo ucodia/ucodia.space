@@ -1,5 +1,4 @@
 import cyclicIterator from "../../../utils/cyclicIterator";
-import pointOnCircle from "../../../utils/pointOnCircle";
 import autoStretchP5 from "../../../utils/autoStretchP5";
 import pointsToSegments from "../utils/pointsToSegments";
 
@@ -102,6 +101,13 @@ const f = (sketch) => {
     letter = sketch.key;
     layout();
   };
+
+  function pointOnCircle(x, y, angle, radius) {
+    return {
+      x: radius * Math.cos(angle) + x,
+      y: radius * Math.sin(angle) + y,
+    };
+  }
 };
 
 export default f;

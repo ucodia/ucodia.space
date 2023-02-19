@@ -3,9 +3,7 @@ import styled from "styled-components";
 import { withSize } from "react-sizeme";
 // TODO: Replace this library, it does not have a default export...
 // import d3SaveSvg from "d3-save-svg";
-import getN from "../../utils/getN";
 import id from "../../utils/id";
-import randomInt from "../../utils/randomInt";
 import Dice from "./Dice";
 
 export const meta = {
@@ -23,6 +21,9 @@ const Plot = styled.svg`
   height: 100%;
 `;
 
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+const getN = (n, fn) => Array.from(Array(n).keys()).map(fn);
 const createDice = (face = 1, orientation = 0, primary = false) => ({
   face,
   orientation,
