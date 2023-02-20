@@ -16,6 +16,7 @@ const diamonds = (sketch, n = 3, transparent = false) => {
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
+    sketch.noStroke();
     autoStretchP5(sketch, layout);
   };
 
@@ -44,7 +45,6 @@ const diamonds = (sketch, n = 3, transparent = false) => {
 
   sketch.draw = () => {
     sketch.clear();
-    sketch.noStroke();
 
     if (!transparent) {
       sketch.background("#ffffff");
