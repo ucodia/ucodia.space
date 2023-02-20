@@ -20,7 +20,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.1",
     "react-sizeme": "^3.0.2",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "u5js": "^0.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

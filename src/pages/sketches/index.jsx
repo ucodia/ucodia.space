@@ -1,5 +1,5 @@
 import React from "react";
-import P5Wrapper from "../../components/P5Wrapper";
+import U5Wrapper from "../../components/U5Wrapper";
 import diamonds from "./diamonds";
 import circuit from "./circuit";
 import dizzyWaves from "./dizzyWaves";
@@ -14,9 +14,12 @@ import fittestBubleBath from "./fittestBubbleBath";
 import circleClock from "./circleClock";
 import lorenz from "./lorenz";
 import cmyDance from "./cmyDance";
+const P5Wrapper = React.lazy(() => import(`../../components/P5Wrapper`));
 
-const sketches = {
+const u5Sketches = {
   diamonds,
+};
+const p5Sketches = {
   circuit,
   "dizzy-waves": dizzyWaves,
   area715,
@@ -33,8 +36,15 @@ const sketches = {
 };
 
 const wrappedSketches = {};
-for (const key in sketches) {
-  wrappedSketches[key] = <P5Wrapper sketch={sketches[key]} />;
+for (const key in u5Sketches) {
+  wrappedSketches[key] = <U5Wrapper sketch={u5Sketches[key]} />;
+}
+for (const key in p5Sketches) {
+  wrappedSketches[key] = (
+    <React.Suspense fallback={<>...</>}>
+      <P5Wrapper sketch={p5Sketches[key]} />
+    </React.Suspense>
+  );
 }
 
 export default wrappedSketches;

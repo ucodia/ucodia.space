@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { singleDiamond } from "../pages/sketches/diamonds";
 import pages from "../pages";
-import P5Wrapper from "./P5Wrapper";
+import U5Wrapper from "./U5Wrapper";
 
 const Container = styled.div`
   padding: 50px 0;
@@ -72,7 +72,7 @@ const Home = () => {
     <Container>
       <Heading>
         <Sketch>
-          <P5Wrapper sketch={singleDiamond} />
+          <U5Wrapper sketch={singleDiamond} />
         </Sketch>
         <picture>
           <source
