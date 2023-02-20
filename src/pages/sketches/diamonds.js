@@ -5,14 +5,18 @@ export const meta = {
   created: "2014-11-14",
 };
 
-const diamonds = (sketch, n = 3, spaceRatio = 0.2, transparent = false) => {
+const diamonds = (sketch, n = 3, transparent = false) => {
   let diams = [];
+  const palette = [
+    "rgba(0, 174, 239, 0.2)", // cyan
+    "rgba(255, 242, 0, 0.2)", // yellow
+    "rgba(236, 0, 140, 0.2)", // magenta
+  ];
+  const spaceRatio = 0.2;
 
   sketch.setup = () => {
-    sketch.createCanvas(100, 100);
-    sketch.frameRate(60);
+    sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
     sketch.noStroke();
-
     autoStretchP5(sketch, layout);
   };
 
@@ -43,7 +47,7 @@ const diamonds = (sketch, n = 3, spaceRatio = 0.2, transparent = false) => {
     sketch.clear();
 
     if (!transparent) {
-      sketch.background(255);
+      sketch.background("#ffffff");
     }
 
     for (let i = 0; i < n; ++i) {
@@ -59,11 +63,6 @@ const diamonds = (sketch, n = 3, spaceRatio = 0.2, transparent = false) => {
     if (!sides) sides = 8;
     if (!offset) offset = 0;
 
-    const palette = [
-      sketch.color(0, 174, 239, 50), // cyan
-      sketch.color(255, 242, 0, 50), // yellow
-      sketch.color(236, 0, 140, 50), // magenta
-    ];
     const inc = 1 / 1000;
     let position = sketch.constrain(offset, 0, 1);
 
@@ -126,5 +125,5 @@ const diamonds = (sketch, n = 3, spaceRatio = 0.2, transparent = false) => {
   }
 };
 
-export const singleDiamond = (sketch) => diamonds(sketch, 1, 0, true);
+export const singleDiamond = (sketch) => diamonds(sketch, 1, true);
 export default diamonds;
