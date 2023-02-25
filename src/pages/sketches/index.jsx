@@ -18,6 +18,7 @@ const P5Wrapper = React.lazy(() => import(`../../components/P5Wrapper`));
 
 const u5Sketches = {
   diamonds,
+  "circle-clock": circleClock,
 };
 const p5Sketches = {
   circuit,
@@ -30,7 +31,6 @@ const p5Sketches = {
   drawbot,
   revolutions,
   "fittest-bubble-bath": fittestBubleBath,
-  "circle-clock": circleClock,
   lorenz: lorenz,
   "cmy-dance": cmyDance,
 };

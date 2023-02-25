@@ -4,7 +4,9 @@ export const meta = {
 };
 
 const circleClock = (sketch) => {
-  const { noSeconds } = sketch.getURLParams();
+  const noSeconds = new URLSearchParams(window.location.search).has(
+    "noSeconds"
+  );
   const secondsEnabled = !noSeconds;
   let darkBg = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -16,7 +18,7 @@ const circleClock = (sketch) => {
 
   sketch.draw = () => {
     sketch.clear();
-    sketch.background(darkBg ? 0 : 255);
+    sketch.background(darkBg ? "black" : "white");
 
     const now = new Date();
     const hours = now.getHours();
@@ -87,11 +89,11 @@ const circleClock = (sketch) => {
       secondsR
     );
 
-    sketch.fill(darkBg ? 255 : 0);
+    sketch.fill(darkBg ? "white" : "black");
     sketch.ellipse(centerX, centerY, clockR * 2, clockR * 2);
-    sketch.fill(darkBg ? 0 : 255);
+    sketch.fill(darkBg ? "black" : "white");
     sketch.ellipse(hoursCenter.x, hoursCenter.y, hoursR * 2, hoursR * 2);
-    sketch.fill(darkBg ? 255 : 0);
+    sketch.fill(darkBg ? "white" : "black");
     sketch.ellipse(
       minutesCenter.x,
       minutesCenter.y,
@@ -99,7 +101,7 @@ const circleClock = (sketch) => {
       minutesR * 2
     );
     if (secondsEnabled) {
-      sketch.fill(darkBg ? 0 : 255);
+      sketch.fill(darkBg ? "black" : "white");
       sketch.ellipse(
         secondsCenter.x,
         secondsCenter.y,
