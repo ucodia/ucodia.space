@@ -17,7 +17,6 @@ const circleClock = (sketch) => {
   };
 
   sketch.draw = () => {
-    sketch.clear();
     sketch.background(darkBg ? "black" : "white");
 
     const now = new Date();
@@ -59,32 +58,19 @@ const circleClock = (sketch) => {
 
     const posOnOuter = pointOnCircle(centerX, centerY, hoursA, clockR);
     const hoursCenter = pointOnCircle(
-      posOnOuter.x,
-      posOnOuter.y,
+      ...posOnOuter,
       hoursA + sketch.PI,
       hoursR
     );
-    const posOnHours = pointOnCircle(
-      hoursCenter.x,
-      hoursCenter.y,
-      minutesA,
-      hoursR
-    );
+    const posOnHours = pointOnCircle(...hoursCenter, minutesA, hoursR);
     const minutesCenter = pointOnCircle(
-      posOnHours.x,
-      posOnHours.y,
+      ...posOnHours,
       minutesA + sketch.PI,
       minutesR
     );
-    const posOnMinutes = pointOnCircle(
-      minutesCenter.x,
-      minutesCenter.y,
-      secondsA,
-      minutesR
-    );
+    const posOnMinutes = pointOnCircle(...minutesCenter, secondsA, minutesR);
     const secondsCenter = pointOnCircle(
-      posOnMinutes.x,
-      posOnMinutes.y,
+      ...posOnMinutes,
       secondsA + sketch.PI,
       secondsR
     );
@@ -92,22 +78,12 @@ const circleClock = (sketch) => {
     sketch.fill(darkBg ? "white" : "black");
     sketch.ellipse(centerX, centerY, clockR * 2, clockR * 2);
     sketch.fill(darkBg ? "black" : "white");
-    sketch.ellipse(hoursCenter.x, hoursCenter.y, hoursR * 2, hoursR * 2);
+    sketch.ellipse(...hoursCenter, hoursR * 2, hoursR * 2);
     sketch.fill(darkBg ? "white" : "black");
-    sketch.ellipse(
-      minutesCenter.x,
-      minutesCenter.y,
-      minutesR * 2,
-      minutesR * 2
-    );
+    sketch.ellipse(...minutesCenter, minutesR * 2, minutesR * 2);
     if (secondsEnabled) {
       sketch.fill(darkBg ? "black" : "white");
-      sketch.ellipse(
-        secondsCenter.x,
-        secondsCenter.y,
-        secondsR * 2,
-        secondsR * 2
-      );
+      sketch.ellipse(...secondsCenter, secondsR * 2, secondsR * 2);
     }
   };
 
@@ -119,12 +95,10 @@ const circleClock = (sketch) => {
     darkBg = !darkBg;
   };
 
-  const pointOnCircle = (x, y, angle, radius) => {
-    return {
-      x: radius * Math.cos(angle) + x,
-      y: radius * Math.sin(angle) + y,
-    };
-  };
+  const pointOnCircle = (x, y, angle, radius) => [
+    radius * Math.cos(angle) + x,
+    radius * Math.sin(angle) + y,
+  ];
 };
 
 export default circleClock;
