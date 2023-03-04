@@ -18,14 +18,6 @@ const StyleReset = createGlobalStyle`
   }
 `;
 
-// define and update viewport CSS variable
-const setViewportVariables = () => {
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty("--vh", `${vh}px`);
-};
-setViewportVariables();
-window.addEventListener("resize", debounce(setViewportVariables, 400));
-
 const Root = () => (
   <>
     <StyleReset />
