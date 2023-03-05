@@ -2,6 +2,7 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 import presets from "./cmyDancePresets.json";
 
 export const meta = {
+  slug: "cmy-dance",
   name: "CMY Dance",
   created: "2023-02-12",
 };
@@ -14,7 +15,7 @@ function f(xs, ys, t) {
 }
 
 const cmyDance = (sketch) => {
-  const { preset = 0 } = sketch.getURLParams();
+  const { preset = 0 } = getURLParams();
   const sx = {
     set: presets[Math.min(preset, presets.length - 1)],
     inc: 1 / 4,
@@ -53,27 +54,27 @@ const cmyDance = (sketch) => {
       1 / Math.max((maxX * 2) / sketch.width, (maxY * 2) / sketch.height);
   }
 
-  sketch.draw = (g) => {
-    if (!g) g = sketch;
+  sketch.draw = (ctx) => {
+    if (!ctx) ctx = sketch;
 
-    g.clear();
-    g.background(0);
-    g.translate(g.width / 2, g.height / 2);
-    g.scale(realScale - scaleOffset);
-    g.strokeWeight(5);
+    ctx.clear();
+    ctx.background("black");
+    ctx.translate(ctx.width / 2, ctx.height / 2);
+    ctx.scale(realScale - scaleOffset);
+    ctx.strokeWeight(5);
 
-    if (g.mouseIsPressed) {
-      sx.inc = g.map(g.mouseX, 0, g.width, -1, 1);
-      sx.n = Math.round(g.map(g.mouseY, 0, g.height, 3, 64));
+    if (ctx.mouseIsPressed) {
+      sx.inc = ctx.map(ctx.mouseX, 0, ctx.width, -1, 1);
+      sx.n = Math.round(ctx.map(ctx.mouseY, 0, ctx.height, 3, 64));
     }
     t += sx.inc;
 
-    const alpha = g.map(sx.opacity, 0, 1, 0, 255);
     for (let i = 0; i < sx.n; i++) {
       const tInc = i * 1.5;
       for (let j = 0; j < sx.set.length; j++) {
-        g.stroke(g.color(...palette[j % palette.length], alpha));
-        g.line(
+        const [r, g, b] = palette[j % palette.length];
+        ctx.stroke(`rgba(${r},${g},${b},${sx.opacity})`);
+        ctx.line(
           ...f(...sx.set[j][0], t + tInc),
           ...f(...sx.set[j][1], t + tInc)
         );
@@ -119,6 +120,10 @@ function getRandomSet() {
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getURLParams() {
+  return Object.fromEntries(new URLSearchParams(window.location.search));
 }
 
 export default cmyDance;

@@ -1,6 +1,7 @@
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
+  slug: "area715",
   name: "Area 715",
   created: "2015-10-26",
 };

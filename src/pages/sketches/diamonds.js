@@ -1,8 +1,10 @@
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
+  slug: "diamonds",
   name: "Diamonds",
   created: "2014-11-14",
+  renderer: "u5",
 };
 
 const diamonds = (sketch, n = 3, transparent = false) => {

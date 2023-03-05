@@ -1,6 +1,7 @@
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
+  slug: "look-above",
   name: "Look Above",
   created: "2015",
 };

@@ -1,50 +1,42 @@
 import React from "react";
-import U5Wrapper from "../../components/U5Wrapper";
-import diamonds from "./diamonds";
-import circuit from "./circuit";
-import dizzyWaves from "./dizzyWaves";
-import area715 from "./area715";
-import illusions from "./illusions";
-import lookAbove from "./lookAbove";
-import vintage from "./vintage";
-import scales from "./scales";
-import drawbot from "./drawbot";
-import revolutions from "./revolutions";
-import fittestBubleBath from "./fittestBubbleBath";
-import circleClock from "./circleClock";
-import lorenz from "./lorenz";
-import cmyDance from "./cmyDance";
-const P5Wrapper = React.lazy(() => import(`../../components/P5Wrapper`));
+import SketchWrapper from "../../components/SketchWrapper";
+import * as diamonds from "./diamonds";
+import * as circuit from "./circuit";
+import * as dizzyWaves from "./dizzyWaves";
+import * as area715 from "./area715";
+import * as illusions from "./illusions";
+import * as lookAbove from "./lookAbove";
+import * as vintage from "./vintage";
+import * as scales from "./scales";
+import * as drawbot from "./drawbot";
+import * as revolutions from "./revolutions";
+import * as fittestBubleBath from "./fittestBubbleBath";
+import * as circleClock from "./circleClock";
+import * as lorenz from "./lorenz";
+import * as cmyDance from "./cmyDance";
 
-const u5Sketches = {
+const sketches = [
   diamonds,
-  "circle-clock": circleClock,
-};
-const p5Sketches = {
+  circleClock,
   circuit,
-  "dizzy-waves": dizzyWaves,
+  dizzyWaves,
   area715,
   illusions,
-  "look-above": lookAbove,
+  lookAbove,
   vintage,
   scales,
   drawbot,
   revolutions,
-  "fittest-bubble-bath": fittestBubleBath,
-  lorenz: lorenz,
-  "cmy-dance": cmyDance,
-};
+  fittestBubleBath,
+  lorenz,
+  cmyDance,
+];
 
-const wrappedSketches = {};
-for (const key in u5Sketches) {
-  wrappedSketches[key] = <U5Wrapper sketch={u5Sketches[key]} />;
-}
-for (const key in p5Sketches) {
-  wrappedSketches[key] = (
-    <React.Suspense fallback={<>...</>}>
-      <P5Wrapper sketch={p5Sketches[key]} />
-    </React.Suspense>
+const wrappedSketches = sketches.reduce((acc, cur) => {
+  acc[cur.meta.slug] = (
+    <SketchWrapper sketch={cur.default} renderer={cur.meta.renderer} />
   );
-}
+  return acc;
+}, {});
 
 export default wrappedSketches;

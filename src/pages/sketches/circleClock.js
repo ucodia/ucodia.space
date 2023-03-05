@@ -1,8 +1,10 @@
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
+  slug: "cicle-clock",
   name: "Circle Clock",
   created: "2021-10-12",
+  renderer: "u5",
 };
 
 const circleClock = (sketch) => {

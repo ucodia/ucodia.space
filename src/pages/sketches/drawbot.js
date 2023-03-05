@@ -2,6 +2,7 @@ import { GUI } from "dat.gui";
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
+  slug: "drawbot",
   name: "Drawbot",
   created: "2016-04-06",
 };
