@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import u5 from "u5js";
+import Alert from "./Alert";
 
 const Container = styled.div`
   width: 100%;
@@ -8,11 +9,26 @@ const Container = styled.div`
 `;
 
 const U5Wrapper = ({ sketch }) => {
+  const [error, setError] = useState(undefined);
   const containerRef = useRef(null);
   useEffect(() => {
-    const u5Instance = new u5(sketch, containerRef.current);
-    return () => u5Instance.remove();
+    try {
+      const u5Instance = new u5(sketch, containerRef.current);
+      setError(undefined);
+      return () => u5Instance.remove();
+    } catch (error) {
+      setError(error);
+    }
   }, []);
+
+  if (error) {
+    return (
+      <Alert title="Ouch!">
+        <p>There was an error initializing this sketch.</p>
+        <pre>{error.message}</pre>
+      </Alert>
+    );
+  }
 
   return <Container ref={containerRef} />;
 };

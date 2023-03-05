@@ -6,16 +6,16 @@ const StyledLink = styled(Link)`
   @media (prefers-color-scheme: dark) {
     color: #ededed;
   }
-`
+`;
 
-const NotFound = () => {
+const Alert = ({ title, children }) => {
   return (
     <div>
-      <h1>404</h1>
-      <p>Ceci n'est pas une page.</p>
+      <h1>{title}</h1>
+      {children}
       <StyledLink to="/">← Back to home</StyledLink>
     </div>
   );
 };
 
-export default NotFound;
+export default Alert;

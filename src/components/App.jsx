@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 import Page from "./Page";
 import Home from "./Home";
-import NotFound from "./NotFound";
+import Alert from "./Alert";
 import pages from "../pages";
 
 const FullScreen = styled.div`
@@ -45,7 +45,9 @@ const App = () => {
         element={
           <Page title="404">
             <FullScreen>
-              <NotFound />
+              <Alert title="404">
+                <p>Ceci n'est pas une page.</p>
+              </Alert>
             </FullScreen>
           </Page>
         }
