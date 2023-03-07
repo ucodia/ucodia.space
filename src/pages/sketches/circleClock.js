@@ -8,98 +8,78 @@ export const meta = {
 };
 
 const circleClock = (sketch) => {
-  const noSeconds = new URLSearchParams(window.location.search).has(
-    "noSeconds"
-  );
-  const secondsEnabled = !noSeconds;
   let darkBg = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
-    sketch.frameRate(noSeconds ? 1 : 25);
+    sketch.frameRate(25);
     sketch.noStroke();
     autoStretchP5(sketch);
   };
 
   sketch.draw = () => {
+    const bodyR = Math.min(sketch.width, sketch.height) * 0.4;
+    const { hour, minute, second } = getHandsCircles(new Date(), bodyR);
+
     sketch.background(darkBg ? "black" : "white");
-
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-    const millis = now.getMilliseconds();
-    const minSide = Math.min(sketch.width, sketch.height);
-    const centerX = sketch.width / 2;
-    const centerY = sketch.height / 2;
-
-    const clockR = minSide * 0.4;
-    // 3/4 2/3 1/2 design
-    const hoursR = clockR * (secondsEnabled ? 3 / 4 : 2 / 3);
-    const minutesR = hoursR * (secondsEnabled ? 2 / 3 : 1 / 2);
-    const secondsR = minutesR * (1 / 2);
-
-    const hoursA = sketch.map(
-      (hours % 12) + sketch.map(minutes, 0, 60, 0, 1),
-      0,
-      12,
-      -sketch.HALF_PI,
-      sketch.TWO_PI - sketch.HALF_PI
-    );
-    const minutesA = sketch.map(
-      minutes + sketch.map(seconds, 0, 60, 0, 1),
-      0,
-      60,
-      -sketch.HALF_PI,
-      sketch.TWO_PI - sketch.HALF_PI
-    );
-    const secondsA = sketch.map(
-      seconds + sketch.map(millis, 0, 1000, 0, 1),
-      0,
-      60,
-      -sketch.HALF_PI,
-      sketch.TWO_PI - sketch.HALF_PI
-    );
-
-    const posOnOuter = pointOnCircle(centerX, centerY, hoursA, clockR);
-    const hoursCenter = pointOnCircle(
-      ...posOnOuter,
-      hoursA + sketch.PI,
-      hoursR
-    );
-    const posOnHours = pointOnCircle(...hoursCenter, minutesA, hoursR);
-    const minutesCenter = pointOnCircle(
-      ...posOnHours,
-      minutesA + sketch.PI,
-      minutesR
-    );
-    const posOnMinutes = pointOnCircle(...minutesCenter, secondsA, minutesR);
-    const secondsCenter = pointOnCircle(
-      ...posOnMinutes,
-      secondsA + sketch.PI,
-      secondsR
-    );
+    sketch.translate(sketch.width / 2, sketch.height / 2);
 
     sketch.fill(darkBg ? "white" : "black");
-    sketch.ellipse(centerX, centerY, clockR * 2, clockR * 2);
+    sketch.circle(0, 0, bodyR * 2);
     sketch.fill(darkBg ? "black" : "white");
-    sketch.ellipse(...hoursCenter, hoursR * 2, hoursR * 2);
+    sketch.circle(hour.x, hour.y, hour.r * 2);
     sketch.fill(darkBg ? "white" : "black");
-    sketch.ellipse(...minutesCenter, minutesR * 2, minutesR * 2);
-    if (secondsEnabled) {
-      sketch.fill(darkBg ? "black" : "white");
-      sketch.ellipse(...secondsCenter, secondsR * 2, secondsR * 2);
-    }
+    sketch.circle(minute.x, minute.y, minute.r * 2);
+    sketch.fill(darkBg ? "black" : "white");
+    sketch.circle(second.x, second.y, second.r * 2);
   };
 
   sketch.doubleClicked = () => {
     darkBg = !darkBg;
   };
-
-  const pointOnCircle = (x, y, angle, radius) => [
-    radius * Math.cos(angle) + x,
-    radius * Math.sin(angle) + y,
-  ];
 };
+
+function getHandsCircles(date, radius = 1) {
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+  const second = date.getSeconds();
+  const milli = date.getMilliseconds();
+
+  const hourOffset = map(minute, 0, 60, 0, 1);
+  const minuteOffset = map(second, 0, 60, 0, 1);
+  const secondOffset = map(milli, 0, 1000, 0, 1);
+  const hourA =
+    map((hour % 12) + hourOffset, 0, 12, 0, Math.PI * 2) - Math.PI * 0.5;
+  const minuteA =
+    map(minute + minuteOffset, 0, 60, 0, Math.PI * 2) - Math.PI * 0.5;
+  const secondA =
+    map(second + secondOffset, 0, 60, 0, Math.PI * 2) - Math.PI * 0.5;
+
+  // 3/4 2/3 1/2 design
+  const hourR = radius * (3 / 4);
+  const minuteR = hourR * (2 / 3);
+  const secondR = minuteR * (1 / 2);
+
+  const posOnRadius = pointOnCircle(0, 0, hourA, radius);
+  const hourPos = pointOnCircle(...posOnRadius, hourA + Math.PI, hourR);
+  const posOnHours = pointOnCircle(...hourPos, minuteA, hourR);
+  const minutePos = pointOnCircle(...posOnHours, minuteA + Math.PI, minuteR);
+  const posOnMinutes = pointOnCircle(...minutePos, secondA, minuteR);
+  const secondPos = pointOnCircle(...posOnMinutes, secondA + Math.PI, secondR);
+
+  return {
+    hour: { x: hourPos[0], y: hourPos[1], r: hourR },
+    minute: { x: minutePos[0], y: minutePos[1], r: minuteR },
+    second: { x: secondPos[0], y: secondPos[1], r: secondR },
+  };
+}
+
+function map(n, start1, stop1, start2, stop2) {
+  return ((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2;
+}
+
+function pointOnCircle(x, y, angle, radius) {
+  return [radius * Math.cos(angle) + x, radius * Math.sin(angle) + y];
+}
 
 export default circleClock;
