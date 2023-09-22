@@ -14,11 +14,12 @@ const timeFormatter = new Intl.DateTimeFormat(
 );
 
 const Container = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  grid-auto-rows: 1fr;
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   user-select: none;
   cursor: pointer;
   color: #000000;
@@ -38,7 +39,23 @@ const Container = styled.div`
   }
 `;
 
+const Header = styled.h1`
+  text-align: center;
+  font-weight: 100;
+  background-color: white;
+  margin: 0;
+  padding 16px;
+  box-shadow: rgb(51, 51, 51) 0px 0px 10px;
+  font-size: 3rem;
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 4rem;
+  }
+`;
+
 const Time = styled.code`
+  text-align: center;
+  align-self: center;
   font-size: 3rem;
 
   @media only screen and (min-width: 768px) {
@@ -73,6 +90,7 @@ const Flowtime = () => {
       onMouseUp={showFlowtime}
       onTouchEnd={showFlowtime}
     >
+      <Header>~ flowtime ~</Header>
       <Time>{timeFormatter.format(time)}</Time>
     </Container>
   );
