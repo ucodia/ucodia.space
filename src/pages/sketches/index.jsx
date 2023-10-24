@@ -14,6 +14,7 @@ import * as fittestBubleBath from "./fittestBubbleBath";
 import * as circleClock from "./circleClock";
 import * as lorenz from "./lorenz";
 import * as cmyDance from "./cmyDance";
+import * as squircle from "./squircle";
 
 const sketches = [
   diamonds,
@@ -30,6 +31,7 @@ const sketches = [
   fittestBubleBath,
   lorenz,
   cmyDance,
+  squircle,
 ];
 
 const wrappedSketches = sketches.reduce((acc, cur) => {
