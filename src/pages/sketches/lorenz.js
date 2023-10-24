@@ -3,7 +3,7 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 export const meta = {
   slug: "lorenz",
   name: "Lorenz",
-  year: "2021-01-13",
+  year: "2021-02-14",
 };
 
 const lorenz = (sketch) => {
