@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { fromNow } from "flowtime";
+import { fromDate } from "flowtime";
 import useInterval from "../../hooks/useInterval";
 
 export const meta = {
@@ -68,10 +68,10 @@ const Time = styled.code`
 `;
 
 const Flowtime = () => {
-  const [time, setTime] = useState(fromNow().toDate());
+  const [time, setTime] = useState(fromDate(new Date()).toDate());
   const [realityCheck, setRealityCheck] = useState(false);
   useInterval(() => {
-    setTime(realityCheck ? new Date() : fromNow().toDate());
+    setTime(realityCheck ? new Date() : fromDate(new Date()).toDate());
   }, 1000);
 
   const showReality = () => {
@@ -80,7 +80,7 @@ const Flowtime = () => {
   };
   const showFlowtime = () => {
     setRealityCheck(false);
-    setTime(fromNow().toDate());
+    setTime(fromDate(new Date()).toDate());
   };
 
   return (
