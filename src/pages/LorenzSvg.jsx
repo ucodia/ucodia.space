@@ -1,6 +1,7 @@
 import { GUI } from "dat.gui";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
+import useGui from "../hooks/useGui";
 
 export const meta = {
   name: "Lorenz (for plotters)",
@@ -25,12 +26,12 @@ const Plot = styled.svg`
   }
 `;
 
-export const saveSVG = (svgElement, parameters) => {
+export const saveSVG = (svgElement, settings) => {
   if (svgElement) {
     const svgData = new XMLSerializer().serializeToString(svgElement);
     const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
 
-    const filename = `lorenz-attractor_${Object.values(parameters).join(
+    const filename = `lorenz-attractor_${Object.values(settings).join(
       "_"
     )}.svg`;
 
@@ -87,22 +88,22 @@ const getPoints = (fn, n, params, offset = 0) => {
   return points;
 };
 
-const getAttractorPoints = (parameters) => {
-  switch (parameters.attractor) {
+const getAttractorPoints = (settings) => {
+  switch (settings.attractor) {
     case "lorenz": {
       return getPoints(
         lorenz,
-        parameters.pointCount,
+        settings.pointCount,
         {
-          x: 0.1,
-          y: 0,
-          z: 0,
-          a: 10,
-          b: 28,
-          c: 8.0 / 3.0,
-          dt: parameters.dt,
+          x: settings.x,
+          y: settings.y,
+          z: settings.z,
+          a: settings.a,
+          b: settings.b,
+          c: settings.c,
+          dt: settings.dt,
         },
-        parameters.offset
+        settings.offset
       );
     }
     default: {
@@ -110,49 +111,66 @@ const getAttractorPoints = (parameters) => {
   }
 };
 
+const uiConfig = {
+  attractor: {
+    default: "lorenz",
+    options: ["lorenz"],
+  },
+  pointCount: {
+    default: 50000,
+    range: [100, 100000],
+  },
+  offset: {
+    default: 400,
+    range: [0, 10000],
+  },
+  projection: {
+    default: "xy",
+    options: ["xy", "yx", "xz", "zx", "yz", "zy"],
+  },
+  x: {
+    default: 0.1,
+    range: [0, 10],
+  },
+  y: {
+    default: 0,
+    range: [0, 10],
+  },
+  z: {
+    default: 0,
+    range: [0, 10],
+  },
+  a: {
+    default: 10,
+    range: [0, 60],
+  },
+  b: {
+    default: 28,
+    range: [0, 100],
+  },
+  c: {
+    default: 8 / 3,
+    range: [0, 10],
+  },
+  dt: {
+    default: 0.003,
+    range: [0.001, 0.02],
+    step: 0.0001,
+  },
+};
+
 const LorenzSvg = () => {
   const svgRef = useRef(null);
-  const [parameters, setParameters] = useState({
-    pointCount: 10000,
-    offset: 500,
-    attractor: "lorenz",
-    projection: "xy",
-    dt: 1 / 400,
+  const settings = useGui({
+    ...uiConfig,
+    save: () => saveSVG(svgRef.current, settings),
   });
-  const points = useMemo(() => getAttractorPoints(parameters), [parameters]);
+  const points = useMemo(() => getAttractorPoints(settings), [settings]);
   const bounds = useMemo(
-    () => getBounds(points, parameters.projection),
-    [points, parameters.projection]
+    () => getBounds(points, settings.projection),
+    [points, settings.projection]
   );
   const strokeWidth = Math.min(bounds.width, bounds.height) * 0.001;
-
-  useEffect(() => {
-    const gui = new GUI();
-    gui.add(parameters, "attractor", ["lorenz"]).onChange((value) => {
-      setParameters((prev) => ({ ...prev, attractor: value }));
-    });
-    gui.add(parameters, "pointCount", 100, 50000).onChange((value) => {
-      setParameters((prev) => ({ ...prev, pointCount: value }));
-    });
-    gui.add(parameters, "offset", 0, 10000).onChange((value) => {
-      setParameters((prev) => ({ ...prev, offset: value }));
-    });
-    gui
-      .add(parameters, "projection", ["xy", "yx", "xz", "zx", "yz", "zy"])
-      .onChange((value) => {
-        setParameters((prev) => ({ ...prev, projection: value }));
-      });
-    gui.add(parameters, "dt", 0.001, 0.02, 0.0001).onChange((value) => {
-      setParameters((prev) => ({ ...prev, dt: value }));
-    });
-    gui
-      .add({ save: () => saveSVG(svgRef.current, parameters) }, "save")
-      .name("Save as SVG");
-
-    return () => {
-      gui.destroy();
-    };
-  }, []);
 
   return (
     <Container>
@@ -163,7 +181,7 @@ const LorenzSvg = () => {
       >
         <g>
           <path
-            d={getPathData(points, parameters.projection)}
+            d={getPathData(points, settings.projection)}
             stroke="black"
             strokeWidth={strokeWidth}
           />
