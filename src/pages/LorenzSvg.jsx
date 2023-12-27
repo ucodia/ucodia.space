@@ -82,9 +82,9 @@ function sprott({ x, y, z, a, b, dt }) {
 
 function thomas({ x, y, z, a, b, dt }) {
   return {
-    x: x + (y + a * x * y + x * z) * dt,
-    y: y + (1 - b * (x * x) + y * z) * dt,
-    z: z + (x - x * x - y * y) * dt,
+    x: x + (Math.sin(y) - b * x) * dt,
+    y: y + (Math.sin(z) - b * y) * dt,
+    z: z + (Math.sin(x) - b * z) * dt,
   };
 }
 
@@ -170,6 +170,20 @@ const getAttractorPoints = (settings) => {
         settings.offset
       );
     }
+    case "thomas": {
+      return getPoints(
+        thomas,
+        settings.pointCount,
+        {
+          x: 1.1,
+          y: 1.1,
+          z: -0.01,
+          b: 0.2,
+          dt: 0.2,
+        },
+        settings.offset
+      );
+    }
     default: {
     }
   }
@@ -178,7 +192,7 @@ const getAttractorPoints = (settings) => {
 const uiConfig = {
   attractor: {
     default: "lorenz",
-    options: ["lorenz", "halvorsen", "sprott"],
+    options: ["lorenz", "halvorsen", "sprott", "thomas"],
   },
   pointCount: {
     default: 10000,
