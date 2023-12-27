@@ -4,6 +4,7 @@ import Kinetic from "./Kinetic";
 import Zukunft from "./Zukunft";
 import Flowtime from "./Flowtime";
 import Conundrum from "./Conundrum";
+import LorenzSvg from "./LorenzSvg";
 import sketches from "./sketches";
 
 const pages = {
@@ -12,6 +13,7 @@ const pages = {
   zukunft: <Zukunft />,
   flowtime: <Flowtime />,
   conundrum: <Conundrum />,
+  "lorenz-svg": <LorenzSvg />,
   ...sketches,
 };
 
