@@ -15,6 +15,10 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: white;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #121212;
+  }
 `;
 
 const Plot = styled.svg`
@@ -23,6 +27,13 @@ const Plot = styled.svg`
 
   path {
     fill: none;
+    stroke: #121212;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    path {
+      stroke: white;
+    }
   }
 `;
 
@@ -53,6 +64,30 @@ function lorenz({ x, y, z, a, b, c, dt }) {
   };
 }
 
+function halvorsen({ x, y, z, a, dt }) {
+  return {
+    x: x + (-a * x - 4 * y - 4 * z - y * y) * dt,
+    y: y + (-a * y - 4 * z - 4 * x - z * z) * dt,
+    z: z + (-a * z - 4 * x - 4 * y - x * x) * dt,
+  };
+}
+
+function sprott({ x, y, z, a, b, dt }) {
+  return {
+    x: x + (y + a * x * y + x * z) * dt,
+    y: y + (1 - b * (x * x) + y * z) * dt,
+    z: z + (x - x * x - y * y) * dt,
+  };
+}
+
+function thomas({ x, y, z, a, b, dt }) {
+  return {
+    x: x + (y + a * x * y + x * z) * dt,
+    y: y + (1 - b * (x * x) + y * z) * dt,
+    z: z + (x - x * x - y * y) * dt,
+  };
+}
+
 function getPathData(points, projection) {
   const xFn = (p) => p[projection[0]];
   const yFn = (p) => p[projection[1]];
@@ -75,7 +110,7 @@ function getBounds(points, projection) {
   };
 }
 
-const getPoints = (fn, n, params, offset = 0) => {
+const getPoints = (fn, n, params, offset) => {
   const points = [];
   let currentParams = { ...params };
 
@@ -106,6 +141,35 @@ const getAttractorPoints = (settings) => {
         settings.offset
       );
     }
+    case "halvorsen": {
+      return getPoints(
+        halvorsen,
+        settings.pointCount,
+        {
+          x: settings.x,
+          y: settings.y,
+          z: settings.z,
+          a: settings.a,
+          dt: settings.dt,
+        },
+        settings.offset
+      );
+    }
+    case "sprott": {
+      return getPoints(
+        sprott,
+        settings.pointCount,
+        {
+          x: settings.x,
+          y: settings.y,
+          z: settings.z,
+          a: settings.a,
+          b: settings.b,
+          dt: settings.dt,
+        },
+        settings.offset
+      );
+    }
     default: {
     }
   }
@@ -114,14 +178,14 @@ const getAttractorPoints = (settings) => {
 const uiConfig = {
   attractor: {
     default: "lorenz",
-    options: ["lorenz"],
+    options: ["lorenz", "halvorsen", "sprott"],
   },
   pointCount: {
-    default: 50000,
+    default: 10000,
     range: [100, 100000],
   },
   offset: {
-    default: 400,
+    default: 0,
     range: [0, 10000],
   },
   projection: {
@@ -130,15 +194,15 @@ const uiConfig = {
   },
   x: {
     default: 0.1,
-    range: [0, 10],
+    range: [-1, 1],
   },
   y: {
     default: 0,
-    range: [0, 10],
+    range: [-1, 1],
   },
   z: {
-    default: 0,
-    range: [0, 10],
+    default: -1,
+    range: [-1, 1],
   },
   a: {
     default: 10,
@@ -182,7 +246,6 @@ const LorenzSvg = () => {
         <g>
           <path
             d={getPathData(points, settings.projection)}
-            stroke="black"
             strokeWidth={strokeWidth}
           />
         </g>
