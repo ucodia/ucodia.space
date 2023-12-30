@@ -88,6 +88,13 @@ function thomas({ x, y, z, a, b, dt }) {
   };
 }
 
+const attractors = {
+  lorenz,
+  halvorsen,
+  sprott,
+  thomas,
+};
+
 function getPathData(points, projection) {
   const xFn = (p) => p[projection[0]];
   const yFn = (p) => p[projection[1]];
@@ -124,75 +131,26 @@ const getPoints = (fn, n, params, offset) => {
 };
 
 const getAttractorPoints = (settings) => {
-  switch (settings.attractor) {
-    case "lorenz": {
-      return getPoints(
-        lorenz,
-        settings.pointCount,
-        {
-          x: settings.x,
-          y: settings.y,
-          z: settings.z,
-          a: settings.a,
-          b: settings.b,
-          c: settings.c,
-          dt: settings.dt,
-        },
-        settings.offset
-      );
-    }
-    case "halvorsen": {
-      return getPoints(
-        halvorsen,
-        settings.pointCount,
-        {
-          x: settings.x,
-          y: settings.y,
-          z: settings.z,
-          a: settings.a,
-          dt: settings.dt,
-        },
-        settings.offset
-      );
-    }
-    case "sprott": {
-      return getPoints(
-        sprott,
-        settings.pointCount,
-        {
-          x: settings.x,
-          y: settings.y,
-          z: settings.z,
-          a: settings.a,
-          b: settings.b,
-          dt: settings.dt,
-        },
-        settings.offset
-      );
-    }
-    case "thomas": {
-      return getPoints(
-        thomas,
-        settings.pointCount,
-        {
-          x: 1.1,
-          y: 1.1,
-          z: -0.01,
-          b: 0.2,
-          dt: 0.2,
-        },
-        settings.offset
-      );
-    }
-    default: {
-    }
-  }
+  return getPoints(
+    attractors[settings.attractor],
+    settings.pointCount,
+    {
+      x: settings.x,
+      y: settings.y,
+      z: settings.z,
+      a: settings.a,
+      b: settings.b,
+      c: settings.c,
+      dt: settings.dt,
+    },
+    settings.offset
+  );
 };
 
 const uiConfig = {
   attractor: {
     default: "lorenz",
-    options: ["lorenz", "halvorsen", "sprott", "thomas"],
+    options: Object.keys(attractors),
   },
   pointCount: {
     default: 10000,
@@ -221,14 +179,17 @@ const uiConfig = {
   a: {
     default: 10,
     range: [0, 60],
+    step: 0.01,
   },
   b: {
     default: 28,
     range: [0, 100],
+    step: 0.01,
   },
   c: {
     default: 8 / 3,
     range: [0, 10],
+    step: 0.01,
   },
   dt: {
     default: 0.003,
