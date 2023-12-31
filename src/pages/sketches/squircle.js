@@ -69,6 +69,7 @@ const squircle = (sketch) => {
           sketch.windowHeight,
           sketch.SVG
         );
+        svg.rectMode(sketch.CENTER);
         sketch.draw(svg);
         svg.save(`squircle-${sx.noise.seed}.svg`);
         break;
