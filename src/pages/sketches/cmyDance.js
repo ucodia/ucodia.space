@@ -27,6 +27,18 @@ function f(xms, yms, t) {
   ];
 }
 
+const defaultSx = {
+  length: 16,
+  offset: 0,
+  spacing: 1,
+  speed: 0.25,
+  thickness: 5,
+  opacity: 0.6,
+  looping: true,
+  preset: 0,
+  seed: "",
+};
+
 const cmyDance = (sketch) => {
   const palette = [
     [255, 242, 0], // yellow
@@ -37,34 +49,15 @@ const cmyDance = (sketch) => {
   let realScale = 1;
   let scaleOffset = 0.1;
 
-  const {
-    preset = 0,
-    seed = "",
-    length,
-    offset,
-    spacing,
-    speed,
-    thickness,
-    opacity,
-  } = getURLParams();
+  const urlSx = getURLParams();
+  const sx = { ...defaultSx, ...urlSx };
 
-  const sx = {
-    length: length || 16,
-    offset: offset || 0,
-    spacing: spacing || 1,
-    speed: speed || 0.25,
-    thickness: thickness || 5,
-    opacity: opacity || 0.6,
-    looping: true,
-    preset,
-    seed,
-    paramSet: [],
-  };
+  let paramSet = [];
 
   var gui = new GUI();
   gui.close();
   gui.add(sx, "length", 3, 300, 1);
-  gui.add(sx, "offset", -1000, 1000, 1);
+  gui.add(sx, "offset", -10000, 10000, 1);
   gui.add(sx, "spacing", 0.01, 10, 0.1);
   gui.add(sx, "speed", -5, 5, 0.1);
   gui.add(sx, "thickness", 0.5, 20, 0.1);
@@ -83,9 +76,12 @@ const cmyDance = (sketch) => {
       sketch.draw(svg);
       svg.save(`cmy-dance-${sx.seed}.svg`);
     },
+    shareUrl: () => {
+      const params = { ...sx };
+      setURLParams(params);
+    },
   };
-  gui.add(actions, "newSeed");
-  gui.add(actions, "save");
+  Object.keys(actions).forEach((name) => gui.add(actions, name));
 
   presetControl.onChange(() => {
     seedControl.setValue("");
@@ -114,9 +110,9 @@ const cmyDance = (sketch) => {
     let maxY = 0;
     // brute force way to find bounds
     for (let i = 1; i < 1000; i++) {
-      for (let j = 0; j < sx.paramSet.length; j++) {
-        const [x1, y1] = f(...sx.paramSet[j][0], i);
-        const [x2, y2] = f(...sx.paramSet[j][1], i);
+      for (let j = 0; j < paramSet.length; j++) {
+        const [x1, y1] = f(...paramSet[j][0], i);
+        const [x2, y2] = f(...paramSet[j][1], i);
         maxX = Math.max(maxX, x1, x2);
         maxY = Math.max(maxY, y1, y2);
       }
@@ -134,22 +130,20 @@ const cmyDance = (sketch) => {
   }
 
   function updateFromPreset() {
-    sx.paramSet = presets[sx.preset];
+    paramSet = presets[sx.preset];
     layout();
   }
 
   function updateFromSeed() {
-    sx.paramSet = getRandomSet(sx.seed);
+    paramSet = getRandomSet(sx.seed);
     layout();
   }
 
   function updateUrl() {
     if (sx.seed) {
-      setURLParam("seed", sx.seed);
-      unsetURLParam("preset");
+      setURLParams({ seed: sx.seed });
     } else {
-      setURLParam("preset", sx.preset);
-      unsetURLParam("seed");
+      setURLParams({ preset: sx.preset });
     }
   }
 
@@ -165,12 +159,12 @@ const cmyDance = (sketch) => {
 
     for (let i = 0; i < sx.length; i++) {
       const tInc = i * sx.spacing + sx.offset;
-      for (let j = 0; j < sx.paramSet.length; j++) {
+      for (let j = 0; j < paramSet.length; j++) {
         const [r, g, b] = palette[j % palette.length];
         ctx.stroke(`rgba(${r},${g},${b},${sx.opacity})`);
         ctx.line(
-          ...f(...sx.paramSet[j][0], t + tInc),
-          ...f(...sx.paramSet[j][1], t + tInc)
+          ...f(...paramSet[j][0], t + tInc),
+          ...f(...paramSet[j][1], t + tInc)
         );
       }
     }
@@ -294,18 +288,29 @@ function getRandomString() {
 }
 
 function getURLParams() {
-  return Object.fromEntries(new URLSearchParams(window.location.search));
+  const params = new URLSearchParams(window.location.search);
+  const parsedParams = {};
+  for (const [key, value] of params) {
+    if (/^-?\d+(\.\d+)?$/.test(value)) {
+      parsedParams[key] = parseFloat(value);
+    } else {
+      parsedParams[key] = value;
+    }
+  }
+  return parsedParams;
 }
 
-function setURLParam(name, value) {
+function setURLParams(obj) {
   const url = new URL(window.location.href);
-  url.searchParams.set(name, value);
-  window.history.pushState(null, "", url);
-}
-
-function unsetURLParam(name) {
-  const url = new URL(window.location.href);
-  url.searchParams.delete(name);
+  const params = Array.from(url.searchParams.keys());
+  params.forEach((param) => {
+    if (!Object.hasOwnProperty.call(obj, param)) {
+      url.searchParams.delete(param);
+    }
+  });
+  for (const [key, value] of Object.entries(obj)) {
+    url.searchParams.set(key, value);
+  }
   window.history.pushState(null, "", url);
 }
 
