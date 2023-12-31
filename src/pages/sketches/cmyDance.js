@@ -1,3 +1,4 @@
+import { GUI } from "dat.gui";
 import autoStretchP5 from "../../utils/autoStretchP5";
 import { numericalRecipesLcg } from "../../utils/lcg";
 import presets from "./cmyDancePresets.json";
@@ -27,27 +28,6 @@ function f(xms, yms, t) {
 }
 
 const cmyDance = (sketch) => {
-  const { preset = 0, seed } = getURLParams();
-
-  const sx = {
-    set: [],
-    speedInc: 1 / 4,
-    spaceInc: 1,
-    thickness: 5,
-    n: 16,
-    maxN: 150,
-    opacity: 0.6,
-    looping: true,
-    preset,
-    seed,
-  };
-
-  if (seed) {
-    updateFromSeed(seed);
-  } else {
-    updateFromPreset(preset);
-  }
-
   const palette = [
     [255, 242, 0], // yellow
     [236, 0, 140], // magenta
@@ -56,6 +36,73 @@ const cmyDance = (sketch) => {
   let t = 0;
   let realScale = 1;
   let scaleOffset = 0.1;
+
+  const {
+    preset = 0,
+    seed = "",
+    length,
+    offset,
+    spacing,
+    speed,
+    thickness,
+    opacity,
+  } = getURLParams();
+
+  const sx = {
+    length: length || 16,
+    offset: offset || 0,
+    spacing: spacing || 1,
+    speed: speed || 0.25,
+    thickness: thickness || 5,
+    opacity: opacity || 0.6,
+    looping: true,
+    preset,
+    seed,
+    paramSet: [],
+  };
+
+  var gui = new GUI();
+  gui.close();
+  gui.add(sx, "length", 3, 300, 1);
+  gui.add(sx, "offset", -1000, 1000, 1);
+  gui.add(sx, "spacing", 0.01, 10, 0.1);
+  gui.add(sx, "speed", -5, 5, 0.1);
+  gui.add(sx, "thickness", 0.5, 20, 0.1);
+  gui.add(sx, "opacity", 0, 1, 0.1);
+  const seedControl = gui.add(sx, "seed");
+  const presetControl = gui.add(sx, "preset", [0, 1, 2]);
+
+  const actions = {
+    newSeed: () => seedControl.setValue(getRandomString()),
+    save: () => {
+      const svg = sketch.createGraphics(
+        sketch.windowWidth,
+        sketch.windowHeight,
+        sketch.SVG
+      );
+      sketch.draw(svg);
+      svg.save(`cmy-dance-${sx.seed}.svg`);
+    },
+  };
+  gui.add(actions, "newSeed");
+  gui.add(actions, "save");
+
+  presetControl.onChange(() => {
+    seedControl.setValue("");
+    updateFromPreset();
+    updateUrl();
+  });
+  seedControl.onChange((val) => {
+    if (!val) return;
+    updateFromSeed();
+    updateUrl();
+  });
+
+  if (sx.seed) {
+    updateFromSeed();
+  } else {
+    updateFromPreset();
+  }
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
@@ -67,9 +114,9 @@ const cmyDance = (sketch) => {
     let maxY = 0;
     // brute force way to find bounds
     for (let i = 1; i < 1000; i++) {
-      for (let j = 0; j < sx.set.length; j++) {
-        const [x1, y1] = f(...sx.set[j][0], i);
-        const [x2, y2] = f(...sx.set[j][1], i);
+      for (let j = 0; j < sx.paramSet.length; j++) {
+        const [x1, y1] = f(...sx.paramSet[j][0], i);
+        const [x2, y2] = f(...sx.paramSet[j][1], i);
         maxX = Math.max(maxX, x1, x2);
         maxY = Math.max(maxY, y1, y2);
       }
@@ -87,11 +134,23 @@ const cmyDance = (sketch) => {
   }
 
   function updateFromPreset() {
-    sx.set = presets[sx.preset];
+    sx.paramSet = presets[sx.preset];
+    layout();
   }
 
   function updateFromSeed() {
-    sx.set = getRandomSet(sx.seed);
+    sx.paramSet = getRandomSet(sx.seed);
+    layout();
+  }
+
+  function updateUrl() {
+    if (sx.seed) {
+      setURLParam("seed", sx.seed);
+      unsetURLParam("preset");
+    } else {
+      setURLParam("preset", sx.preset);
+      unsetURLParam("seed");
+    }
   }
 
   sketch.draw = (ctx) => {
@@ -102,21 +161,16 @@ const cmyDance = (sketch) => {
     ctx.translate(ctx.width / 2, ctx.height / 2);
     ctx.scale(realScale - scaleOffset);
     ctx.strokeWeight(sx.thickness);
+    t += sx.speed;
 
-    if (ctx.mouseIsPressed) {
-      sx.speedInc = ctx.map(ctx.mouseX, 0, ctx.width, -1, 1);
-      sx.n = Math.round(ctx.map(ctx.mouseY, 0, ctx.height, 1, sx.maxN));
-    }
-    t += sx.speedInc;
-
-    for (let i = 0; i < sx.n; i++) {
-      const tInc = i * sx.spaceInc;
-      for (let j = 0; j < sx.set.length; j++) {
+    for (let i = 0; i < sx.length; i++) {
+      const tInc = i * sx.spacing + sx.offset;
+      for (let j = 0; j < sx.paramSet.length; j++) {
         const [r, g, b] = palette[j % palette.length];
         ctx.stroke(`rgba(${r},${g},${b},${sx.opacity})`);
         ctx.line(
-          ...f(...sx.set[j][0], t + tInc),
-          ...f(...sx.set[j][1], t + tInc)
+          ...f(...sx.paramSet[j][0], t + tInc),
+          ...f(...sx.paramSet[j][1], t + tInc)
         );
       }
     }
@@ -129,36 +183,11 @@ const cmyDance = (sketch) => {
   sketch.keyPressed = () => {
     switch (sketch.key) {
       case "s": {
-        const svg = sketch.createGraphics(
-          sketch.windowWidth,
-          sketch.windowHeight,
-          sketch.SVG
-        );
-        sketch.draw(svg);
-        svg.save(`cmy-dance-${sx.seed()}.svg`);
+        actions.save();
         break;
       }
       case "n": {
-        sx.seed = getRandomString();
-        setURLParam("seed", sx.seed);
-        unsetURLParam("preset");
-        updateFromSeed();
-        layout();
-        if (!sx.looping) {
-          sketch.loop();
-        }
-        break;
-      }
-      case "p": {
-        sx.preset = (sx.preset + 1) % presets.length;
-        setURLParam("preset", sx.preset);
-        unsetURLParam("seed");
-        updateFromPreset();
-        layout();
-        if (!sx.looping) {
-          sketch.loop();
-        }
-        break;
+        actions.newSeed();
       }
       case " ": {
         toggleLooping();
@@ -169,10 +198,8 @@ const cmyDance = (sketch) => {
     }
   };
 
-  sketch.mouseWheel = (event) => {
-    if (sx.spaceInc <= 0) return;
-    sx.spaceInc += event.delta * 0.01;
-    if (sx.spaceInc < 0) sx.spaceInc = 0.001;
+  sketch.cleanup = () => {
+    gui.destroy();
   };
 };
 
