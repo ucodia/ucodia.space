@@ -1,3 +1,4 @@
+import { GUI } from "dat.gui";
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
@@ -6,37 +7,76 @@ export const meta = {
   created: "2021-11-16",
 };
 
+const defaultSx = {
+  lineCount: 18,
+  marginRatio: 0.2,
+  thickness: 2,
+  squareness: 1,
+  background: "#fff",
+  stroke: "#000",
+  noise: {
+    seed: 2,
+    res: 1 / 20,
+  },
+  radius: {
+    fn: "linear",
+    inc: 30,
+    reverse: false,
+  },
+  rotate: {
+    fn: "linear",
+    inc: (Math.PI * 2) / 120,
+    reverse: false,
+  },
+  translate: {
+    fn: "none",
+    inc: 3,
+    reverse: false,
+  },
+};
+
 const squircle = (sketch) => {
-  const sx = {
-    lineCount: 18,
-    marginRatio: 0.2,
-    squareness: 1,
-    noise: {
-      seed: 2,
-      res: 1 / 20,
+  const sx = { ...defaultSx };
+
+  const gui = new GUI();
+  gui.close();
+  gui.add(sx, "lineCount", 3, 500, 1);
+  gui.add(sx, "thickness", 0.1, 10, 0.1);
+  gui.add(sx, "squareness", 0, 1, 0.01);
+  gui.addColor(sx, "background");
+  gui.addColor(sx, "stroke");
+  const radiusFolder = gui.addFolder("radius");
+  radiusFolder.open();
+  radiusFolder.add(sx.radius, "fn", ["none", "fixed", "linear"]);
+  radiusFolder.add(sx.radius, "inc", 1, 250);
+  radiusFolder.add(sx.radius, "reverse");
+  const rotateFolder = gui.addFolder("rotate");
+  rotateFolder.open();
+  rotateFolder.add(sx.rotate, "fn", ["none", "linear", "sin", "noise"]);
+  rotateFolder.add(sx.rotate, "inc", 0, Math.PI / 4);
+  rotateFolder.add(sx.rotate, "reverse");
+  const translateFolder = gui.addFolder("translate");
+  translateFolder.open();
+  translateFolder.add(sx.translate, "fn", ["none", "fixed", "linear"]);
+  translateFolder.add(sx.translate, "inc", -250, 250);
+  translateFolder.add(sx.translate, "reverse");
+  const actions = {
+    randomize: () => {
+      randomizeFeatures();
+      sketch.draw();
     },
-    colors: {
-      fn: "inc",
-      palette: [],
-    },
-    background: ["#fff", "#fff"],
-    stroke: ["#fff", "#000"],
-    radius: {
-      fn: "linear",
-      inc: 30,
-      reverse: false,
-    },
-    rotate: {
-      fn: "linear",
-      inc: (Math.PI * 2) / 120,
-      reverse: false,
-    },
-    translate: {
-      fn: "none",
-      inc: 3,
-      reverse: false,
+    save: () => {
+      const svg = sketch.createGraphics(
+        sketch.windowWidth,
+        sketch.windowHeight,
+        sketch.SVG
+      );
+      svg.rectMode(sketch.CENTER);
+      sketch.draw(svg);
+      svg.save(`squircle-${sx.noise.seed}.svg`);
     },
   };
+  Object.keys(actions).forEach((name) => gui.add(actions, name));
 
   const data = { colors: {}, palettes: {} };
 
@@ -64,19 +104,11 @@ const squircle = (sketch) => {
   sketch.keyPressed = () => {
     switch (sketch.key) {
       case "s": {
-        const svg = sketch.createGraphics(
-          sketch.windowWidth,
-          sketch.windowHeight,
-          sketch.SVG
-        );
-        svg.rectMode(sketch.CENTER);
-        sketch.draw(svg);
-        svg.save(`squircle-${sx.noise.seed}.svg`);
+        actions.save();
         break;
       }
       case "n": {
-        randomizeFeatures();
-        sketch.draw();
+        actions.randomize();
       }
     }
   };
@@ -84,8 +116,7 @@ const squircle = (sketch) => {
   sketch.draw = (ctx) => {
     if (!ctx) ctx = sketch;
 
-    const bg = getBackground(sx);
-    ctx.background(bg);
+    ctx.background(sx.background);
     ctx.noFill();
 
     const minSide = getMinSide();
@@ -95,7 +126,6 @@ const squircle = (sketch) => {
     const inc = (maxWidth - minWidth) / (sx.lineCount - 1);
 
     for (let i = 0; i < sx.lineCount; i++) {
-      const fg = getStroke(sx, i);
       const rot = getRotation(sx, i);
       const trans = getTranslation(sx, i);
       const rads = getRadiuses(sx, i);
@@ -105,8 +135,8 @@ const squircle = (sketch) => {
       ctx.translate(ctx.width / 2, ctx.height / 2);
       ctx.rotate(rot);
       ctx.translate(-ctx.width / 2 + trans, -ctx.height / 2 + trans);
-      ctx.stroke(fg);
-      ctx.strokeWeight(2);
+      ctx.stroke(sx.stroke);
+      ctx.strokeWeight(sx.thickness);
       ctx.rect(
         ctx.width / 2,
         ctx.height / 2,
@@ -117,33 +147,11 @@ const squircle = (sketch) => {
       ctx.pop();
     }
 
-    ctx.noLoop();
+    // ctx.noLoop();
   };
 
   function getMinSide() {
     return Math.min(sketch.width, sketch.height);
-  }
-
-  function getBackground({ colors, background }) {
-    switch (colors.fn) {
-      case "inc": {
-        return background[0];
-      }
-      default: {
-        return data.colors.black;
-      }
-    }
-  }
-
-  function getStroke({ colors, stroke }, i) {
-    switch (colors.fn) {
-      case "inc": {
-        return stroke[1];
-      }
-      default: {
-        return data.colors.white;
-      }
-    }
   }
 
   function getRotation(sx, i) {
@@ -161,7 +169,7 @@ const squircle = (sketch) => {
         sketch.noiseSeed(sx.noise.seed);
         return (
           sx.rotate.inc *
-          sketch.map(noise(i * sx.noise.res), 0, 1, -0.5, 0.5) *
+          sketch.map(sketch.noise(i * sx.noise.res), 0, 1, -0.5, 0.5) *
           10
         );
       }
@@ -364,22 +372,11 @@ const squircle = (sketch) => {
     sx.rotate.inc = rotationStrengthFeature.value;
     sx.rotate.reverse = Math.random() > 0.5;
     sx.radius.fn = radiusFeature.value;
-    sx.colors.palette = paletteFeature.value;
-    sx.background = paperColorFeature.value;
-    sx.stroke = inkColorFeature.value;
+    sx.background = paperColorFeature.value[0];
+    sx.stroke = inkColorFeature.value[1];
 
-    window.$fxhashFeatures = {
-      Paper: paperColorFeature.name,
-      Ink: inkColorFeature.name,
-      Palette: [paperColorFeature.name, inkColorFeature.name].includes("Color")
-        ? paletteFeature.name
-        : "None",
-      Density: densityFeature.name,
-      Rotation: rotationFeature.name,
-      Speed: rotationStrengthFeature.name,
-      Radius: radiusFeature.name,
-    };
-    console.log(window.$fxhashFeatures);
+    console.log(sx);
+    gui.updateDisplay();
   }
 };
 
