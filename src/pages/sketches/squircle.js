@@ -14,6 +14,7 @@ const defaultSx = {
   squareness: 1,
   background: "#fff",
   stroke: "#000",
+  transparent: true,
   noise: {
     seed: 2,
     res: 1 / 20,
@@ -43,12 +44,14 @@ const squircle = (sketch) => {
   gui.add(sx, "lineCount", 3, 500, 1);
   gui.add(sx, "thickness", 0.1, 10, 0.1);
   gui.add(sx, "squareness", 0, 1, 0.01);
+  gui.add(sx, "marginRatio", 0, 1, 0.01);
   gui.addColor(sx, "background");
   gui.addColor(sx, "stroke");
+  gui.add(sx, "transparent");
   const radiusFolder = gui.addFolder("radius");
   radiusFolder.open();
   radiusFolder.add(sx.radius, "fn", ["none", "fixed", "linear"]);
-  radiusFolder.add(sx.radius, "inc", 1, 250);
+  radiusFolder.add(sx.radius, "inc", 1, 100);
   radiusFolder.add(sx.radius, "reverse");
   const rotateFolder = gui.addFolder("rotate");
   rotateFolder.open();
@@ -58,7 +61,7 @@ const squircle = (sketch) => {
   const translateFolder = gui.addFolder("translate");
   translateFolder.open();
   translateFolder.add(sx.translate, "fn", ["none", "fixed", "linear"]);
-  translateFolder.add(sx.translate, "inc", -250, 250);
+  translateFolder.add(sx.translate, "inc", -500, 500, 0.01);
   translateFolder.add(sx.translate, "reverse");
   const actions = {
     randomize: () => {
@@ -116,8 +119,15 @@ const squircle = (sketch) => {
   sketch.draw = (ctx) => {
     if (!ctx) ctx = sketch;
 
+    ctx.clear();
     ctx.background(sx.background);
-    ctx.noFill();
+    ctx.stroke(sx.stroke);
+    ctx.strokeWeight(sx.thickness);
+    if (sx.transparent) {
+      ctx.noFill();
+    } else {
+      ctx.fill(sx.background);
+    }
 
     const minSide = getMinSide();
     const portrait = minSide === ctx.width;
@@ -135,8 +145,6 @@ const squircle = (sketch) => {
       ctx.translate(ctx.width / 2, ctx.height / 2);
       ctx.rotate(rot);
       ctx.translate(-ctx.width / 2 + trans, -ctx.height / 2 + trans);
-      ctx.stroke(sx.stroke);
-      ctx.strokeWeight(sx.thickness);
       ctx.rect(
         ctx.width / 2,
         ctx.height / 2,
