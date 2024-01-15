@@ -52,7 +52,7 @@ const defaultSx = {
   color: colors.white,
   particleSize: 1,
   opacity: 0.3,
-  marginRatio: 0.1,
+  marginRatio: 0.2,
   xModifier: "noop",
   yModifier: "noop",
   seed: "3vg11h8l6",
@@ -97,8 +97,17 @@ const infiniteChaos = (sketch) => {
   const particleSizeController = gui.add(sx, "particleSize", 0, 2, 0.1);
   const opacityController = gui.add(sx, "opacity", 0, 1, 0.05);
   const marginRatioController = gui.add(sx, "marginRatio", 0, 0.5, 0.05);
-  const xModifierController = gui.add(sx, "xModifier", Object.keys(modifiers));
-  const yModifierController = gui.add(sx, "yModifier", Object.keys(modifiers));
+  const advancedFolder = gui.addFolder("advanced");
+  const xModifierController = advancedFolder.add(
+    sx,
+    "xModifier",
+    Object.keys(modifiers)
+  );
+  const yModifierController = advancedFolder.add(
+    sx,
+    "yModifier",
+    Object.keys(modifiers)
+  );
   const highResController = gui.add(sx, "highRes");
   const seedController = gui.add(sx, "seed");
   const presetSeedController = gui.add(sx, "presetSeed", seedsOfInterest);
@@ -157,8 +166,7 @@ const infiniteChaos = (sketch) => {
         !isChaotic(params, modifiers[sx.xModifier], modifiers[sx.yModifier])
       );
 
-      const endTime = performance.now();
-      const elapsedTime = endTime - startTime;
+      const elapsedTime = performance.now() - startTime;
       console.log(
         `Found chaotic seed ${sx.seed} in ${elapsedTime.toFixed(2)}ms`
       );
@@ -261,11 +269,21 @@ const infiniteChaos = (sketch) => {
   function updateAttractorData() {
     const rand = namedLcg(sx.seed);
     params = createAttractorParams(rand);
+
+    const startTime = performance.now();
+
     attractorData = generateAttractor(
       params,
       sx.length,
       modifiers[sx.xModifier],
       modifiers[sx.yModifier]
+    );
+
+    const elapsedTime = performance.now() - startTime;
+    console.log(
+      `Generated attractors with params ${JSON.stringify(
+        params
+      )} in ${elapsedTime.toFixed(2)}ms`
     );
   }
 };
