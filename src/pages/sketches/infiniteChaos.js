@@ -1,6 +1,6 @@
 import { GUI } from "dat.gui";
 import autoStretchP5 from "../../utils/autoStretchP5";
-import { numericalRecipesLcg as lcg } from "../../utils/lcg";
+import { numericalRecipesLcg } from "../../utils/lcg";
 
 export const meta = {
   slug: "infinite-chaos",
@@ -112,6 +112,8 @@ const infiniteChaos = (sketch) => {
     sketch.draw();
   });
   seedController.onFinishChange(() => {
+    sx.presetSeed = "";
+    gui.updateDisplay();
     updateAttractorData();
     sketch.draw();
   });
@@ -127,7 +129,7 @@ const infiniteChaos = (sketch) => {
 
       do {
         sx.seed = randomString();
-        const rand = lcg(Math.abs(hashCode(sx.seed)));
+        const rand = namedLcg(sx.seed);
         params = createAttractorParams(rand);
       } while (!isChaotic(params));
 
@@ -210,7 +212,7 @@ const infiniteChaos = (sketch) => {
   };
 
   function updateAttractorData() {
-    const rand = lcg(Math.abs(hashCode(sx.seed)));
+    const rand = namedLcg(sx.seed);
     params = createAttractorParams(rand);
     attractorData = generateAttractor(params, sx.length);
   }
@@ -237,8 +239,8 @@ function isChaotic(params) {
     lyapunovEnd
   );
   let lyapunov = 0;
-  let dRand = lcg(Math.abs(hashCode("disturbance")));
-  let d0, dd, dx, dy, xe, ye;
+  let dRand = namedLcg("disturbance");
+  let d0, xe, ye;
 
   do {
     xe = x[0] + (dRand() - 0.5) / 1000.0;
@@ -275,7 +277,7 @@ function isChaotic(params) {
       const [newXe, newYe] = attractor(xe, ye, params.ax, params.ay);
       dx = x[i] - newXe;
       dy = y[i] - newYe;
-      dd = Math.sqrt(dx * dx + dy * dy);
+      const dd = Math.sqrt(dx * dx + dy * dy);
       lyapunov += Math.log(Math.abs(dd / d0));
       xe = x[i] + (d0 * dx) / dd;
       ye = y[i] + (d0 * dy) / dd;
@@ -324,6 +326,10 @@ function opacityToHex(opacity) {
 
 function truncateFloat(num, decimalPlaces = 4) {
   return Number.parseFloat(num.toFixed(decimalPlaces));
+}
+
+function namedLcg(seed) {
+  return numericalRecipesLcg(Math.abs(hashCode(seed)));
 }
 
 function hashCode(s) {
