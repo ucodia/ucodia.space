@@ -185,40 +185,28 @@ const infiniteChaos = (sketch) => {
       sketch.save(`infinite-chaos-${sx.seed}${mod}.png`);
     },
     shareUrl: () => {
-      const {
-        seed,
-        background,
-        color,
-        length,
-        opacity,
-        xModifier,
-        yModifier,
-        highRes,
-      } = sx;
-      const params = { seed };
-      if (background !== defaultSx.background) {
-        params.background = background;
-      }
-      if (color !== defaultSx.color) {
-        params.color = color;
-      }
-      if (length !== defaultSx.length) {
-        params.length = length;
-      }
-      if (opacity !== defaultSx.opacity) {
-        params.opacity = opacity;
-      }
-      if (xModifier !== defaultSx.xModifier) {
-        params.xModifier = xModifier;
-      }
-      if (yModifier !== defaultSx.yModifier) {
-        params.yModifier = yModifier;
-      }
-      if (highRes !== defaultSx.highRes) {
-        params.highRes = highRes;
-      }
+      const allowedParams = [
+        "seed",
+        "length",
+        "background",
+        "color",
+        "particleSize",
+        "opacity",
+        "marginRatio",
+        "xModifier",
+        "yModifier",
+        "highRes",
+      ];
 
-      setURLParams(params);
+      const urlParams = { seed: sx.seed };
+      allowedParams.forEach((key) => {
+        const value = sx[key];
+        if (value !== defaultSx[key]) {
+          urlParams[key] =
+            typeof value === "number" ? truncateFloat(value) : value;
+        }
+      });
+      setURLParams(urlParams);
     },
   };
   Object.keys(actions).forEach((name) => gui.add(actions, name));
