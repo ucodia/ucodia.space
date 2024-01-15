@@ -53,8 +53,8 @@ const defaultSx = {
   particleSize: 1,
   opacity: 0.3,
   marginRatio: 0.1,
-  xModifier: "none",
-  yModifier: "none",
+  xModifier: "noop",
+  yModifier: "noop",
   seed: "3vg11h8l6",
   presetSeed: "",
   highRes: true,
@@ -71,9 +71,11 @@ const seedsOfInterest = [
 ];
 
 const modifiers = {
-  none: (v) => v,
+  noop: (v) => v,
   sin: Math.sin,
   cos: Math.cos,
+  sqrt: Math.sqrt,
+  log: Math.log,
 };
 
 const infiniteChaos = (sketch) => {
@@ -93,7 +95,7 @@ const infiniteChaos = (sketch) => {
   const bgController = gui.addColor(sx, "background");
   const colorController = gui.addColor(sx, "color");
   const particleSizeController = gui.add(sx, "particleSize", 0, 2, 0.1);
-  const opacityController = gui.add(sx, "opacity", 0, 1, 0.01);
+  const opacityController = gui.add(sx, "opacity", 0, 1, 0.05);
   const marginRatioController = gui.add(sx, "marginRatio", 0, 0.5, 0.05);
   const xModifierController = gui.add(sx, "xModifier", Object.keys(modifiers));
   const yModifierController = gui.add(sx, "yModifier", Object.keys(modifiers));
@@ -167,11 +169,24 @@ const infiniteChaos = (sketch) => {
       sketch.draw();
     },
     save: () => {
-      sketch.save(`infinite-chaos-${sx.seed}.png`);
+      const mod =
+        sx.xModifier !== defaultSx.xModifier ||
+        sx.yModifier !== defaultSx.yModifier
+          ? `-${sx.xModifier}-${sx.yModifier}`
+          : "";
+      sketch.save(`infinite-chaos-${sx.seed}${mod}.png`);
     },
     shareUrl: () => {
-      const { seed, background, color, length, xModifier, yModifier, highRes } =
-        sx;
+      const {
+        seed,
+        background,
+        color,
+        length,
+        opacity,
+        xModifier,
+        yModifier,
+        highRes,
+      } = sx;
       const params = { seed };
       if (background !== defaultSx.background) {
         params.background = background;
@@ -181,6 +196,9 @@ const infiniteChaos = (sketch) => {
       }
       if (length !== defaultSx.length) {
         params.length = length;
+      }
+      if (opacity !== defaultSx.opacity) {
+        params.opacity = opacity;
       }
       if (xModifier !== defaultSx.xModifier) {
         params.xModifier = xModifier;
