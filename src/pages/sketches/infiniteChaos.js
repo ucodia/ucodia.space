@@ -48,12 +48,11 @@ const defaultSx = {
   length: 100000,
   background: colors.darkgrey,
   color: colors.white,
+  particleSize: 1,
   opacity: 0.3,
   marginRatio: 0.3,
   seed: "3vg11h8l6",
   presetSeed: "",
-  params: {},
-  attractorData: {},
   highRes: true,
 };
 
@@ -69,6 +68,8 @@ const seedsOfInterest = [
 const infiniteChaos = (sketch) => {
   const urlSx = getURLParams();
   const sx = { ...defaultSx, ...urlSx };
+  let params = {};
+  let attractorData = {};
 
   if (!sx.seed) {
     sx.seed = randomString();
@@ -80,6 +81,7 @@ const infiniteChaos = (sketch) => {
   const lengthController = gui.add(sx, "length", 1000, 1000000, 1000);
   const bgController = gui.addColor(sx, "background");
   const colorController = gui.addColor(sx, "color");
+  const particleSizeController = gui.add(sx, "particleSize", 0, 2, 0.1);
   const opacityController = gui.add(sx, "opacity", 0, 1, 0.01);
   const highResController = gui.add(sx, "highRes");
   const seedController = gui.add(sx, "seed");
@@ -96,6 +98,9 @@ const infiniteChaos = (sketch) => {
     sketch.draw();
   });
   opacityController.onFinishChange(() => {
+    sketch.draw();
+  });
+  particleSizeController.onFinishChange(() => {
     sketch.draw();
   });
   highResController.onFinishChange(() => {
@@ -118,8 +123,8 @@ const infiniteChaos = (sketch) => {
       do {
         sx.seed = randomString();
         const rand = lcg(Math.abs(hashCode(sx.seed)));
-        sx.params = createAttractorParams(rand);
-      } while (!isChaotic(sx.params));
+        params = createAttractorParams(rand);
+      } while (!isChaotic(params));
 
       const endTime = performance.now();
       const elapsedTime = endTime - startTime;
@@ -157,7 +162,7 @@ const infiniteChaos = (sketch) => {
     ctx.noStroke();
     ctx.fill(`${sx.color}${opacityToHex(sx.opacity)}`);
 
-    const { x, y, xMin, xMax, yMin, yMax } = sx.attractorData;
+    const { x, y, xMin, xMax, yMin, yMax } = attractorData;
 
     const margin = ctx.width * sx.marginRatio;
     const attractorWidth = xMax - xMin;
@@ -173,9 +178,9 @@ const infiniteChaos = (sketch) => {
       let iy = centerY + (y[i] - yMin) * scale;
 
       if (sx.highRes) {
-        ctx.ellipse(ix, iy, 1, 1);
+        ctx.ellipse(ix, iy, sx.particleSize, sx.particleSize);
       } else {
-        ctx.rect(ix, iy, 1, 1);
+        ctx.rect(ix, iy, sx.particleSize, sx.particleSize);
       }
     }
   };
@@ -186,8 +191,8 @@ const infiniteChaos = (sketch) => {
 
   function updateAttractorData() {
     const rand = lcg(Math.abs(hashCode(sx.seed)));
-    sx.params = createAttractorParams(rand);
-    sx.attractorData = generateAttractor(sx.params, sx.length);
+    params = createAttractorParams(rand);
+    attractorData = generateAttractor(params, sx.length);
   }
 };
 
@@ -218,8 +223,8 @@ function isChaotic(params) {
   do {
     xe = x[0] + (dRand() - 0.5) / 1000.0;
     ye = y[0] + (dRand() - 0.5) / 1000.0;
-    dx = x[0] - xe;
-    dy = y[0] - ye;
+    const dx = x[0] - xe;
+    const dy = y[0] - ye;
     d0 = Math.sqrt(dx * dx + dy * dy);
   } while (d0 <= 0);
 
@@ -238,8 +243,8 @@ function isChaotic(params) {
   }
 
   for (let i = 1; i < lyapunovEnd; i++) {
-    dx = x[i] - x[i - 1];
-    dy = y[i] - y[i - 1];
+    let dx = x[i] - x[i - 1];
+    let dy = y[i] - y[i - 1];
 
     if (Math.abs(dx) < 1e-10 && Math.abs(dy) < 1e-10) {
       // attracted towards a single point
