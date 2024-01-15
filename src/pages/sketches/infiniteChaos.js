@@ -63,6 +63,7 @@ const seedsOfInterest = [
   "miiigngbt",
   "sp57s52kv",
   "unnxuw7ol",
+  "t6yerjusf",
 ];
 
 const infiniteChaos = (sketch) => {
@@ -136,6 +137,7 @@ const infiniteChaos = (sketch) => {
         `Found chaotic seed ${sx.seed} in ${elapsedTime.toFixed(2)}ms`
       );
 
+      sx.presetSeed = "";
       gui.updateDisplay();
       updateAttractorData();
       sketch.draw();
@@ -366,13 +368,20 @@ function setURLParams(obj) {
   copyToClipboard(url.toString());
 }
 
-function copyToClipboard(text) {
-  const textarea = document.createElement("textarea");
-  textarea.value = text;
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand("copy");
-  document.body.removeChild(textarea);
+// function copyToClipboard(text) {
+//   const textarea = document.createElement("textarea");
+//   textarea.value = text;
+//   document.body.appendChild(textarea);
+//   textarea.select();
+//   document.execCommand("copy");
+//   document.body.removeChild(textarea);
+// }
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    console.error("Unable to copy text to clipboard", err);
+  }
 }
 
 export default infiniteChaos;
