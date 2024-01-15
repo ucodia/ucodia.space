@@ -51,16 +51,13 @@ const defaultSx = {
   opacity: 0.3,
   marginRatio: 0.3,
   seed: "3vg11h8l6",
-  paramsSet: {},
+  params: {},
   attractorData: {},
   lyapunovStart: 1000,
   lyapunovEnd: 2000,
 };
 
-// seeds of interests
-// 3vg11h8l6
-// 1mr99uuz9
-// 3r3anjk2v
+const seedsOfInterest = ["3vg11h8l6", "1mr99uuz9", "3r3anjk2v"];
 
 const infiniteChaos = (sketch) => {
   const urlSx = getURLParams();
@@ -77,7 +74,7 @@ const infiniteChaos = (sketch) => {
   const bgController = gui.addColor(sx, "background");
   const colorController = gui.addColor(sx, "color");
   const opacityController = gui.add(sx, "opacity", 0, 1, 0.01);
-  const seedController = gui.add(sx, "seed");
+  const seedController = gui.add(sx, "seed", seedsOfInterest);
 
   lengthController.onFinishChange(() => {
     updateAttractorData();
@@ -99,20 +96,23 @@ const infiniteChaos = (sketch) => {
 
   const actions = {
     randomize: () => {
-      debugger;
-      sx.seed = randomString();
+      do {
+        sx.seed = randomString();
+        const rand = lcg(Math.abs(hashCode(sx.seed)));
+        sx.params = createAttractorParams(rand);
+      } while (isChaotic(sx.params));
+
+      gui.updateDisplay();
       updateAttractorData();
       sketch.draw();
     },
     save: () => {
-      // const svg = sketch.createGraphics(
-      //   sketch.windowWidth,
-      //   sketch.windowHeight,
-      //   sketch.SVG
-      // );
-      // sketch.draw(svg);
-      // svg.save(`infinite-chaos-${sx.seed}.svg`);
       sketch.save(`infinite-chaos-${sx.seed}.png`);
+    },
+    shareUrl: () => {
+      const { length, background, color, opacity, seed } = sx;
+      const params = { length, background, color, opacity, seed };
+      setURLParams(params);
     },
   };
   Object.keys(actions).forEach((name) => gui.add(actions, name));
@@ -149,18 +149,6 @@ const infiniteChaos = (sketch) => {
       let iy = centerY + (y[i] - yMin) * scale;
       ctx.ellipse(ix, iy, 1, 1);
     }
-
-    sketch.noLoop();
-  };
-
-  sketch.keyPressed = () => {
-    switch (sketch.key) {
-      case "s": {
-        break;
-      }
-      default: {
-      }
-    }
   };
 
   sketch.cleanup = () => {
@@ -169,8 +157,8 @@ const infiniteChaos = (sketch) => {
 
   function updateAttractorData() {
     const rand = lcg(Math.abs(hashCode(sx.seed)));
-    sx.paramsSet = createAttractorParams(rand);
-    sx.attractorData = generateAttractor(sx.paramsSet, sx.length);
+    sx.params = createAttractorParams(rand);
+    sx.attractorData = generateAttractor(sx.params, sx.length);
   }
 
   function createAttractorParams(rand) {
@@ -186,7 +174,59 @@ const infiniteChaos = (sketch) => {
     return { ax, ay, x0, y0 };
   }
 
-  function isChaotic() {}
+  function isChaotic({ ax, ay, x0, y0 }) {
+    const { x, y, xMin, xMax, yMin, yMax } = generateAttractor(
+      sx.params,
+      sx.lyapunovEnd
+    );
+
+    let lyapunov = 0;
+    let dRand = lcg(Math.abs(hashCode("disturbance")));
+    let d0, dd, dx, dy, xe, ye;
+
+    do {
+      xe = x[0] + (dRand() - 0.5) / 1000.0;
+      ye = y[0] + (dRand() - 0.5) / 1000.0;
+      dx = x[0] - xe;
+      dy = y[0] - ye;
+      d0 = Math.sqrt(dx * dx + dy * dy);
+    } while (d0 <= 0);
+
+    if (xMin < -1e10 || yMin < -1e10 || xMax > 1e10 || yMax > 1e10) {
+      // attracted towards infinity
+      return false;
+    }
+
+    for (let i = 1; i < sx.lyapunovEnd; i++) {
+      dx = x[i] - x[i - 1];
+      dy = y[i] - y[i - 1];
+
+      if (Math.abs(dx) < 1e-10 && Math.abs(dy) < 1e-10) {
+        // attracted towards a single point
+        return false;
+      }
+
+      if (i > sx.lyapunovStart) {
+        const [newXe, newYe] = attractor(xe, ye, ax, ay);
+        dx = x[i] - newXe;
+        dy = y[i] - newYe;
+        dd = Math.sqrt(dx * dx + dy * dy);
+        lyapunov += Math.log(Math.abs(dd / d0));
+        xe = x[i] + (d0 * dx) / dd;
+        ye = y[i] + (d0 * dy) / dd;
+      }
+    }
+
+    if (Math.abs(lyapunov) < 10) {
+      // neutral stable attractor
+      return false;
+    } else if (lyapunov < 0) {
+      // periodic attractor
+      return false;
+    }
+
+    return true;
+  }
 
   function generateAttractor({ ax, ay, x0, y0 }, n) {
     let x = [x0];
