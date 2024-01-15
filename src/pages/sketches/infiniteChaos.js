@@ -51,12 +51,20 @@ const defaultSx = {
   opacity: 0.3,
   marginRatio: 0.3,
   seed: "3vg11h8l6",
+  presetSeed: "",
   params: {},
   attractorData: {},
   highRes: true,
 };
 
-const seedsOfInterest = ["3vg11h8l6", "1mr99uuz9", "3r3anjk2v"];
+const seedsOfInterest = [
+  "3vg11h8l6",
+  "1mr99uuz9",
+  "3r3anjk2v",
+  "miiigngbt",
+  "sp57s52kv",
+  "unnxuw7ol",
+];
 
 const infiniteChaos = (sketch) => {
   const urlSx = getURLParams();
@@ -75,6 +83,7 @@ const infiniteChaos = (sketch) => {
   const opacityController = gui.add(sx, "opacity", 0, 1, 0.01);
   const highResController = gui.add(sx, "highRes");
   const seedController = gui.add(sx, "seed");
+  const presetSeedController = gui.add(sx, "presetSeed", seedsOfInterest);
 
   lengthController.onFinishChange(() => {
     updateAttractorData();
@@ -93,6 +102,11 @@ const infiniteChaos = (sketch) => {
     sketch.draw();
   });
   seedController.onFinishChange(() => {
+    updateAttractorData();
+    sketch.draw();
+  });
+  presetSeedController.onFinishChange(() => {
+    sx.seed = sx.presetSeed;
     updateAttractorData();
     sketch.draw();
   });
