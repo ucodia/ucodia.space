@@ -50,7 +50,7 @@ const defaultSx = {
   color: colors.white,
   particleSize: 1,
   opacity: 0.3,
-  marginRatio: 0.3,
+  marginRatio: 0.1,
   seed: "3vg11h8l6",
   presetSeed: "",
   highRes: true,
@@ -83,6 +83,7 @@ const infiniteChaos = (sketch) => {
   const colorController = gui.addColor(sx, "color");
   const particleSizeController = gui.add(sx, "particleSize", 0, 2, 0.1);
   const opacityController = gui.add(sx, "opacity", 0, 1, 0.01);
+  const marginRatioController = gui.add(sx, "marginRatio", 0, 0.5, 0.05);
   const highResController = gui.add(sx, "highRes");
   const seedController = gui.add(sx, "seed");
   const presetSeedController = gui.add(sx, "presetSeed", seedsOfInterest);
@@ -98,6 +99,9 @@ const infiniteChaos = (sketch) => {
     sketch.draw();
   });
   opacityController.onFinishChange(() => {
+    sketch.draw();
+  });
+  marginRatioController.onFinishChange(() => {
     sketch.draw();
   });
   particleSizeController.onFinishChange(() => {
@@ -140,8 +144,20 @@ const infiniteChaos = (sketch) => {
       sketch.save(`infinite-chaos-${sx.seed}.png`);
     },
     shareUrl: () => {
-      const { seed } = sx;
-      setURLParams({ seed });
+      const { background, color, seed, highRes } = sx;
+      const params = { seed };
+      if (background !== defaultSx.background) {
+        params.background = background;
+      }
+      if (color !== defaultSx.color) {
+        params.color = color;
+      }
+      debugger;
+      if (highRes !== defaultSx.highRes) {
+        params.highRes = highRes;
+      }
+
+      setURLParams(params);
     },
   };
   Object.keys(actions).forEach((name) => gui.add(actions, name));
@@ -326,6 +342,8 @@ function getURLParams() {
   for (const [key, value] of params) {
     if (/^-?\d+(\.\d+)?$/.test(value)) {
       parsedParams[key] = parseFloat(value);
+    } else if (["true", "false"].includes(value.toLowerCase())) {
+      parsedParams[key] = value.toLowerCase() === "true";
     } else {
       parsedParams[key] = value;
     }
@@ -345,6 +363,16 @@ function setURLParams(obj) {
     url.searchParams.set(key, value);
   }
   window.history.pushState(null, "", url);
+  copyToClipboard(url.toString());
+}
+
+function copyToClipboard(text) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
 }
 
 export default infiniteChaos;
