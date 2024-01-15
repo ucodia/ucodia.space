@@ -15,6 +15,7 @@ import * as circleClock from "./circleClock";
 import * as lorenz from "./lorenz";
 import * as cmyDance from "./cmyDance";
 import * as squircle from "./squircle";
+import * as infiniteChaos from "./infiniteChaos";
 
 const sketches = [
   diamonds,
@@ -32,6 +33,7 @@ const sketches = [
   lorenz,
   cmyDance,
   squircle,
+  infiniteChaos,
 ];
 
 const wrappedSketches = sketches.reduce((acc, cur) => {
