@@ -5,7 +5,7 @@ import { numericalRecipesLcg as lcg } from "../../utils/lcg";
 export const meta = {
   slug: "infinite-chaos",
   name: "Infinite Chaos",
-  created: "2023-02-12",
+  created: "2024-01-10",
 };
 
 /**
