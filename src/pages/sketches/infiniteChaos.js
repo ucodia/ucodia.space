@@ -281,6 +281,28 @@ function createAttractorParams(rand) {
   return { ax, ay, x0, y0 };
 }
 
+function generateAttractor({ ax, ay, x0, y0 }, n, xFn, yFn) {
+  let x = [x0];
+  let y = [y0];
+  let xMin = Number.MAX_VALUE;
+  let xMax = Number.MIN_VALUE;
+  let yMin = Number.MAX_VALUE;
+  let yMax = Number.MIN_VALUE;
+
+  for (let i = 1; i < n; i++) {
+    const [nextX, nextY] = attractor(x[i - 1], y[i - 1], ax, ay, xFn, yFn);
+    x[i] = nextX;
+    y[i] = nextY;
+
+    xMin = Math.min(xMin, x[i]);
+    yMin = Math.min(yMin, y[i]);
+    xMax = Math.max(xMax, x[i]);
+    yMax = Math.max(yMax, y[i]);
+  }
+
+  return { x, y, xMin, xMax, yMin, yMax };
+}
+
 const lyapunovStart = 1000;
 const lyapunovEnd = 2000;
 function isChaotic(params, xFn, yFn) {
@@ -345,28 +367,6 @@ function isChaotic(params, xFn, yFn) {
   }
 
   return true;
-}
-
-function generateAttractor({ ax, ay, x0, y0 }, n, xFn, yFn) {
-  let x = [x0];
-  let y = [y0];
-  let xMin = Number.MAX_VALUE;
-  let xMax = Number.MIN_VALUE;
-  let yMin = Number.MAX_VALUE;
-  let yMax = Number.MIN_VALUE;
-
-  for (let i = 1; i < n; i++) {
-    const [nextX, nextY] = attractor(x[i - 1], y[i - 1], ax, ay, xFn, yFn);
-    x[i] = nextX;
-    y[i] = nextY;
-
-    xMin = Math.min(xMin, x[i]);
-    yMin = Math.min(yMin, y[i]);
-    xMax = Math.max(xMax, x[i]);
-    yMax = Math.max(yMax, y[i]);
-  }
-
-  return { x, y, xMin, xMax, yMin, yMax };
 }
 
 function opacityToHex(opacity) {
