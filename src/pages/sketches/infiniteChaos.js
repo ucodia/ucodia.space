@@ -52,7 +52,7 @@ const defaultSx = {
   color: colors.white,
   particleSize: 1,
   opacity: 0.3,
-  marginRatio: 0.2,
+  marginRatio: 0.25,
   xModifier: "noop",
   yModifier: "noop",
   seed: "3vg11h8l6",
