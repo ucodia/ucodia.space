@@ -53,8 +53,7 @@ const defaultSx = {
   seed: "3vg11h8l6",
   params: {},
   attractorData: {},
-  lyapunovStart: 1000,
-  lyapunovEnd: 2000,
+  highRes: true,
 };
 
 const seedsOfInterest = ["3vg11h8l6", "1mr99uuz9", "3r3anjk2v"];
@@ -70,11 +69,12 @@ const infiniteChaos = (sketch) => {
 
   const gui = new GUI();
   gui.close();
-  const lengthController = gui.add(sx, "length", 1000, 500000, 1);
+  const lengthController = gui.add(sx, "length", 1000, 1000000, 1000);
   const bgController = gui.addColor(sx, "background");
   const colorController = gui.addColor(sx, "color");
   const opacityController = gui.add(sx, "opacity", 0, 1, 0.01);
-  const seedController = gui.add(sx, "seed", seedsOfInterest);
+  const highResController = gui.add(sx, "highRes");
+  const seedController = gui.add(sx, "seed");
 
   lengthController.onFinishChange(() => {
     updateAttractorData();
@@ -89,6 +89,9 @@ const infiniteChaos = (sketch) => {
   opacityController.onFinishChange(() => {
     sketch.draw();
   });
+  highResController.onFinishChange(() => {
+    sketch.draw();
+  });
   seedController.onFinishChange(() => {
     updateAttractorData();
     sketch.draw();
@@ -96,11 +99,19 @@ const infiniteChaos = (sketch) => {
 
   const actions = {
     randomize: () => {
+      const startTime = performance.now();
+
       do {
         sx.seed = randomString();
         const rand = lcg(Math.abs(hashCode(sx.seed)));
         sx.params = createAttractorParams(rand);
-      } while (isChaotic(sx.params));
+      } while (!isChaotic(sx.params));
+
+      const endTime = performance.now();
+      const elapsedTime = endTime - startTime;
+      console.log(
+        `Found chaotic seed ${sx.seed} in ${elapsedTime.toFixed(2)}ms`
+      );
 
       gui.updateDisplay();
       updateAttractorData();
@@ -110,9 +121,8 @@ const infiniteChaos = (sketch) => {
       sketch.save(`infinite-chaos-${sx.seed}.png`);
     },
     shareUrl: () => {
-      const { length, background, color, opacity, seed } = sx;
-      const params = { length, background, color, opacity, seed };
-      setURLParams(params);
+      const { seed } = sx;
+      setURLParams({ seed });
     },
   };
   Object.keys(actions).forEach((name) => gui.add(actions, name));
@@ -147,7 +157,12 @@ const infiniteChaos = (sketch) => {
     for (let i = 0; i < x.length; i++) {
       let ix = centerX + (x[i] - xMin) * scale;
       let iy = centerY + (y[i] - yMin) * scale;
-      ctx.ellipse(ix, iy, 1, 1);
+
+      if (sx.highRes) {
+        ctx.ellipse(ix, iy, 1, 1);
+      } else {
+        ctx.rect(ix, iy, 1, 1);
+      }
     }
   };
 
@@ -160,96 +175,106 @@ const infiniteChaos = (sketch) => {
     sx.params = createAttractorParams(rand);
     sx.attractorData = generateAttractor(sx.params, sx.length);
   }
-
-  function createAttractorParams(rand) {
-    const ax = [];
-    const ay = [];
-    for (let i = 0; i < 6; i++) {
-      ax[i] = truncateFloat(4 * (rand() - 0.5));
-      ay[i] = truncateFloat(4 * (rand() - 0.5));
-    }
-    const x0 = truncateFloat(rand() - 0.5);
-    const y0 = truncateFloat(rand() - 0.5);
-
-    return { ax, ay, x0, y0 };
-  }
-
-  function isChaotic({ ax, ay, x0, y0 }) {
-    const { x, y, xMin, xMax, yMin, yMax } = generateAttractor(
-      sx.params,
-      sx.lyapunovEnd
-    );
-
-    let lyapunov = 0;
-    let dRand = lcg(Math.abs(hashCode("disturbance")));
-    let d0, dd, dx, dy, xe, ye;
-
-    do {
-      xe = x[0] + (dRand() - 0.5) / 1000.0;
-      ye = y[0] + (dRand() - 0.5) / 1000.0;
-      dx = x[0] - xe;
-      dy = y[0] - ye;
-      d0 = Math.sqrt(dx * dx + dy * dy);
-    } while (d0 <= 0);
-
-    if (xMin < -1e10 || yMin < -1e10 || xMax > 1e10 || yMax > 1e10) {
-      // attracted towards infinity
-      return false;
-    }
-
-    for (let i = 1; i < sx.lyapunovEnd; i++) {
-      dx = x[i] - x[i - 1];
-      dy = y[i] - y[i - 1];
-
-      if (Math.abs(dx) < 1e-10 && Math.abs(dy) < 1e-10) {
-        // attracted towards a single point
-        return false;
-      }
-
-      if (i > sx.lyapunovStart) {
-        const [newXe, newYe] = attractor(xe, ye, ax, ay);
-        dx = x[i] - newXe;
-        dy = y[i] - newYe;
-        dd = Math.sqrt(dx * dx + dy * dy);
-        lyapunov += Math.log(Math.abs(dd / d0));
-        xe = x[i] + (d0 * dx) / dd;
-        ye = y[i] + (d0 * dy) / dd;
-      }
-    }
-
-    if (Math.abs(lyapunov) < 10) {
-      // neutral stable attractor
-      return false;
-    } else if (lyapunov < 0) {
-      // periodic attractor
-      return false;
-    }
-
-    return true;
-  }
-
-  function generateAttractor({ ax, ay, x0, y0 }, n) {
-    let x = [x0];
-    let y = [y0];
-    let xMin = Number.MAX_VALUE;
-    let xMax = Number.MIN_VALUE;
-    let yMin = Number.MAX_VALUE;
-    let yMax = Number.MIN_VALUE;
-
-    for (let i = 1; i < n; i++) {
-      const [nextX, nextY] = attractor(x[i - 1], y[i - 1], ax, ay);
-      x[i] = nextX;
-      y[i] = nextY;
-
-      xMin = Math.min(xMin, x[i]);
-      yMin = Math.min(yMin, y[i]);
-      xMax = Math.max(xMax, x[i]);
-      yMax = Math.max(yMax, y[i]);
-    }
-
-    return { x, y, xMin, xMax, yMin, yMax };
-  }
 };
+
+function createAttractorParams(rand) {
+  const ax = [];
+  const ay = [];
+  for (let i = 0; i < 6; i++) {
+    ax[i] = truncateFloat(4 * (rand() - 0.5));
+    ay[i] = truncateFloat(4 * (rand() - 0.5));
+  }
+  const x0 = truncateFloat(rand() - 0.5);
+  const y0 = truncateFloat(rand() - 0.5);
+
+  return { ax, ay, x0, y0 };
+}
+
+const lyapunovStart = 1000;
+const lyapunovEnd = 2000;
+function isChaotic(params) {
+  const { x, y, xMin, xMax, yMin, yMax } = generateAttractor(
+    params,
+    lyapunovEnd
+  );
+  let lyapunov = 0;
+  let dRand = lcg(Math.abs(hashCode("disturbance")));
+  let d0, dd, dx, dy, xe, ye;
+
+  do {
+    xe = x[0] + (dRand() - 0.5) / 1000.0;
+    ye = y[0] + (dRand() - 0.5) / 1000.0;
+    dx = x[0] - xe;
+    dy = y[0] - ye;
+    d0 = Math.sqrt(dx * dx + dy * dy);
+  } while (d0 <= 0);
+
+  if (
+    xMin < -1e10 ||
+    yMin < -1e10 ||
+    xMax > 1e10 ||
+    yMax > 1e10 ||
+    Number.isNaN(xMin) ||
+    Number.isNaN(xMax) ||
+    Number.isNaN(yMin) ||
+    Number.isNaN(yMax)
+  ) {
+    // attracted towards infinity
+    return false;
+  }
+
+  for (let i = 1; i < lyapunovEnd; i++) {
+    dx = x[i] - x[i - 1];
+    dy = y[i] - y[i - 1];
+
+    if (Math.abs(dx) < 1e-10 && Math.abs(dy) < 1e-10) {
+      // attracted towards a single point
+      return false;
+    }
+
+    if (i > lyapunovStart) {
+      const [newXe, newYe] = attractor(xe, ye, params.ax, params.ay);
+      dx = x[i] - newXe;
+      dy = y[i] - newYe;
+      dd = Math.sqrt(dx * dx + dy * dy);
+      lyapunov += Math.log(Math.abs(dd / d0));
+      xe = x[i] + (d0 * dx) / dd;
+      ye = y[i] + (d0 * dy) / dd;
+    }
+  }
+
+  if (Math.abs(lyapunov) < 10) {
+    // neutral stable attractor
+    return false;
+  } else if (lyapunov < 0) {
+    // periodic attractor
+    return false;
+  }
+
+  return true;
+}
+
+function generateAttractor({ ax, ay, x0, y0 }, n) {
+  let x = [x0];
+  let y = [y0];
+  let xMin = Number.MAX_VALUE;
+  let xMax = Number.MIN_VALUE;
+  let yMin = Number.MAX_VALUE;
+  let yMax = Number.MIN_VALUE;
+
+  for (let i = 1; i < n; i++) {
+    const [nextX, nextY] = attractor(x[i - 1], y[i - 1], ax, ay);
+    x[i] = nextX;
+    y[i] = nextY;
+
+    xMin = Math.min(xMin, x[i]);
+    yMin = Math.min(yMin, y[i]);
+    xMax = Math.max(xMax, x[i]);
+    yMax = Math.max(yMax, y[i]);
+  }
+
+  return { x, y, xMin, xMax, yMin, yMax };
+}
 
 function opacityToHex(opacity) {
   return Math.round(Math.max(0, Math.min(1, opacity)) * 255)
