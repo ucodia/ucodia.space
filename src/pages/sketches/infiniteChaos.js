@@ -9,28 +9,30 @@ export const meta = {
 };
 
 /**
- * Computes the next position in a system
+ * Computes the next coordinate in a system
  * as defined by a 2D quadratic function
- * @param {*} x Current x position
- * @param {*} y Current y position
+ * @param {*} x Current x coordinate
+ * @param {*} y Current y coordinate
  * @param {*} ax a parameters of the system
  * @param {*} ay b parameters of the system
+ * @param {*} xFn function to apply to x coordinate
+ * @param {*} yFn function to apply to y coordinate
  * @returns The next coordinate [x, y]
  */
-function attractor(x, y, ax, ay) {
+function attractor(x, y, ax, ay, xFn = (v) => v, yFn = (v) => v) {
   return [
     ax[0] +
-      ax[1] * x +
-      ax[2] * x * x +
-      ax[3] * x * y +
-      ax[4] * y +
-      ax[5] * y * y,
+      ax[1] * xFn(x) +
+      ax[2] * xFn(x) * xFn(x) +
+      ax[3] * xFn(x) * yFn(y) +
+      ax[4] * yFn(y) +
+      ax[5] * yFn(y) * yFn(y),
     ay[0] +
-      ay[1] * x +
-      ay[2] * x * x +
-      ay[3] * x * y +
-      ay[4] * y +
-      ay[5] * y * y,
+      ay[1] * xFn(x) +
+      ay[2] * xFn(x) * xFn(x) +
+      ay[3] * xFn(x) * yFn(y) +
+      ay[4] * yFn(y) +
+      ay[5] * yFn(y) * yFn(y),
   ];
 }
 
@@ -51,6 +53,8 @@ const defaultSx = {
   particleSize: 1,
   opacity: 0.3,
   marginRatio: 0.1,
+  xModifier: "none",
+  yModifier: "none",
   seed: "3vg11h8l6",
   presetSeed: "",
   highRes: true,
@@ -65,6 +69,12 @@ const seedsOfInterest = [
   "unnxuw7ol",
   "t6yerjusf",
 ];
+
+const modifiers = {
+  none: (v) => v,
+  sin: Math.sin,
+  cos: Math.cos,
+};
 
 const infiniteChaos = (sketch) => {
   const urlSx = getURLParams();
@@ -85,6 +95,8 @@ const infiniteChaos = (sketch) => {
   const particleSizeController = gui.add(sx, "particleSize", 0, 2, 0.1);
   const opacityController = gui.add(sx, "opacity", 0, 1, 0.01);
   const marginRatioController = gui.add(sx, "marginRatio", 0, 0.5, 0.05);
+  const xModifierController = gui.add(sx, "xModifier", Object.keys(modifiers));
+  const yModifierController = gui.add(sx, "yModifier", Object.keys(modifiers));
   const highResController = gui.add(sx, "highRes");
   const seedController = gui.add(sx, "seed");
   const presetSeedController = gui.add(sx, "presetSeed", seedsOfInterest);
@@ -103,6 +115,14 @@ const infiniteChaos = (sketch) => {
     sketch.draw();
   });
   marginRatioController.onFinishChange(() => {
+    sketch.draw();
+  });
+  xModifierController.onFinishChange(() => {
+    updateAttractorData();
+    sketch.draw();
+  });
+  yModifierController.onFinishChange(() => {
+    updateAttractorData();
     sketch.draw();
   });
   particleSizeController.onFinishChange(() => {
@@ -131,7 +151,9 @@ const infiniteChaos = (sketch) => {
         sx.seed = randomString();
         const rand = namedLcg(sx.seed);
         params = createAttractorParams(rand);
-      } while (!isChaotic(params));
+      } while (
+        !isChaotic(params, modifiers[sx.xModifier], modifiers[sx.yModifier])
+      );
 
       const endTime = performance.now();
       const elapsedTime = endTime - startTime;
@@ -148,7 +170,8 @@ const infiniteChaos = (sketch) => {
       sketch.save(`infinite-chaos-${sx.seed}.png`);
     },
     shareUrl: () => {
-      const { seed, background, color, length, highRes } = sx;
+      const { seed, background, color, length, xModifier, yModifier, highRes } =
+        sx;
       const params = { seed };
       if (background !== defaultSx.background) {
         params.background = background;
@@ -158,6 +181,12 @@ const infiniteChaos = (sketch) => {
       }
       if (length !== defaultSx.length) {
         params.length = length;
+      }
+      if (xModifier !== defaultSx.xModifier) {
+        params.xModifier = xModifier;
+      }
+      if (yModifier !== defaultSx.yModifier) {
+        params.yModifier = yModifier;
       }
       if (highRes !== defaultSx.highRes) {
         params.highRes = highRes;
@@ -214,7 +243,12 @@ const infiniteChaos = (sketch) => {
   function updateAttractorData() {
     const rand = namedLcg(sx.seed);
     params = createAttractorParams(rand);
-    attractorData = generateAttractor(params, sx.length);
+    attractorData = generateAttractor(
+      params,
+      sx.length,
+      modifiers[sx.xModifier],
+      modifiers[sx.yModifier]
+    );
   }
 };
 
@@ -233,10 +267,12 @@ function createAttractorParams(rand) {
 
 const lyapunovStart = 1000;
 const lyapunovEnd = 2000;
-function isChaotic(params) {
+function isChaotic(params, xFn, yFn) {
   const { x, y, xMin, xMax, yMin, yMax } = generateAttractor(
     params,
-    lyapunovEnd
+    lyapunovEnd,
+    xFn,
+    yFn
   );
   let lyapunov = 0;
   let dRand = namedLcg("disturbance");
@@ -295,7 +331,7 @@ function isChaotic(params) {
   return true;
 }
 
-function generateAttractor({ ax, ay, x0, y0 }, n) {
+function generateAttractor({ ax, ay, x0, y0 }, n, xFn, yFn) {
   let x = [x0];
   let y = [y0];
   let xMin = Number.MAX_VALUE;
@@ -304,7 +340,7 @@ function generateAttractor({ ax, ay, x0, y0 }, n) {
   let yMax = Number.MIN_VALUE;
 
   for (let i = 1; i < n; i++) {
-    const [nextX, nextY] = attractor(x[i - 1], y[i - 1], ax, ay);
+    const [nextX, nextY] = attractor(x[i - 1], y[i - 1], ax, ay, xFn, yFn);
     x[i] = nextX;
     y[i] = nextY;
 
