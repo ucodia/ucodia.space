@@ -79,7 +79,7 @@ const infiniteChaos = (sketch) => {
 
   const gui = new GUI();
   gui.close();
-  const lengthController = gui.add(sx, "length", 1000, 1000000, 1000);
+  const lengthController = gui.add(sx, "length", 10000, 1000000, 10000);
   const bgController = gui.addColor(sx, "background");
   const colorController = gui.addColor(sx, "color");
   const particleSizeController = gui.add(sx, "particleSize", 0, 2, 0.1);
@@ -146,7 +146,7 @@ const infiniteChaos = (sketch) => {
       sketch.save(`infinite-chaos-${sx.seed}.png`);
     },
     shareUrl: () => {
-      const { background, color, seed, highRes } = sx;
+      const { seed, background, color, length, highRes } = sx;
       const params = { seed };
       if (background !== defaultSx.background) {
         params.background = background;
@@ -154,7 +154,9 @@ const infiniteChaos = (sketch) => {
       if (color !== defaultSx.color) {
         params.color = color;
       }
-      debugger;
+      if (length !== defaultSx.length) {
+        params.length = length;
+      }
       if (highRes !== defaultSx.highRes) {
         params.highRes = highRes;
       }
@@ -344,7 +346,10 @@ function getURLParams() {
   for (const [key, value] of params) {
     if (/^-?\d+(\.\d+)?$/.test(value)) {
       parsedParams[key] = parseFloat(value);
-    } else if (["true", "false"].includes(value.toLowerCase())) {
+    } else if (
+      value.toLowerCase() === "true" ||
+      value.toLowerCase() === "false"
+    ) {
       parsedParams[key] = value.toLowerCase() === "true";
     } else {
       parsedParams[key] = value;
