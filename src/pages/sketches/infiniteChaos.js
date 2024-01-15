@@ -185,18 +185,10 @@ const infiniteChaos = (sketch) => {
       sketch.save(`infinite-chaos-${sx.seed}${mod}.png`);
     },
     shareUrl: () => {
-      const allowedParams = [
-        "seed",
-        "length",
-        "background",
-        "color",
-        "particleSize",
-        "opacity",
-        "marginRatio",
-        "xModifier",
-        "yModifier",
-        "highRes",
-      ];
+      const filteredParams = ["presetSeed"];
+      const allowedParams = Object.keys(defaultSx).filter(
+        (v) => !filteredParams.includes(filteredParams)
+      );
 
       const urlParams = { seed: sx.seed };
       allowedParams.forEach((key) => {
