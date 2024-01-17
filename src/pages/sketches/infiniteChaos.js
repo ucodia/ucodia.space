@@ -47,7 +47,7 @@ const colors = {
 };
 
 const defaultSx = {
-  length: 100000,
+  pointCount: 100000,
   background: colors.darkgrey,
   color: colors.white,
   particleSize: 1,
@@ -91,7 +91,7 @@ const infiniteChaos = (sketch) => {
 
   const gui = new GUI();
   gui.close();
-  const lengthController = gui.add(sx, "length", 10000, 1000000, 10000);
+  const pointCountController = gui.add(sx, "pointCount", 10000, 1000000, 10000);
   const bgController = gui.addColor(sx, "background");
   const colorController = gui.addColor(sx, "color");
   const particleSizeController = gui.add(sx, "particleSize", 0, 2, 0.1);
@@ -112,7 +112,7 @@ const infiniteChaos = (sketch) => {
   const seedController = gui.add(sx, "seed");
   const presetSeedController = gui.add(sx, "presetSeed", seedsOfInterest);
 
-  lengthController.onFinishChange(() => {
+  pointCountController.onFinishChange(() => {
     updateAttractorData();
     sketch.draw();
   });
@@ -254,7 +254,7 @@ const infiniteChaos = (sketch) => {
 
     attractorData = generateAttractor(
       params,
-      sx.length,
+      sx.pointCount,
       modifiers[sx.xModifier],
       modifiers[sx.yModifier]
     );
