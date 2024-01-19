@@ -75,7 +75,10 @@ const modifiers = {
   sin: Math.sin,
   cos: Math.cos,
   sqrt: Math.sqrt,
+  cbrt: Math.cbrt,
   log: Math.log,
+  asinh: Math.asinh,
+  atan: Math.atan,
 };
 
 const infiniteChaos = (sketch) => {
