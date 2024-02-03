@@ -1,6 +1,6 @@
 import { GUI } from "dat.gui";
 import autoStretchP5 from "../../utils/autoStretchP5";
-import { numericalRecipesLcg } from "../../utils/lcg";
+import { numericalRecipesLcg } from "../../utils/random";
 import presets from "./cmyDancePresets.json";
 
 export const meta = {

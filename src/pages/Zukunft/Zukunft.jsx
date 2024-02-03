@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { withSize } from "react-sizeme";
-import id from "../../utils/id";
+import { randomString } from "../../utils/random";
 import downloadSvgElement from "../../utils/downloadSvgElement";
 import Dice from "./Dice";
 
@@ -16,7 +16,7 @@ const createDice = (face = 1, orientation = 0, primary = false) => ({
   face,
   orientation,
   primary,
-  id: id(),
+  id: randomString(8),
 });
 const randomDice = () => createDice(randomInt(1, 6), randomInt(0, 1));
 const generateDices = (columns, rows) => {

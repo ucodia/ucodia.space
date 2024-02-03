@@ -1,4 +1,13 @@
-const lcg = (seed, modulus, multiplier, increment) => {
+const BASE36_CHARSET = "0123456789abcdefghijkmnopqrstuvwxyz";
+
+export const randomString = (n) => {
+  return Array(n)
+    .fill(0)
+    .map(() => BASE36_CHARSET[(Math.random() * BASE36_CHARSET.length) | 0])
+    .join("");
+};
+
+export const lcg = (seed, modulus, multiplier, increment) => {
   const m = modulus;
   const a = multiplier;
   const c = increment;
@@ -16,5 +25,3 @@ export const numericalRecipesLcg = (seed) =>
 
 // values from MINSTD
 export const minstdLcg = (seed) => lcg(seed, 2147483647, 48271, 0);
-
-export default lcg;

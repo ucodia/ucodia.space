@@ -1,6 +1,6 @@
 import { GUI } from "dat.gui";
 import autoStretchP5 from "../../utils/autoStretchP5";
-import { numericalRecipesLcg } from "../../utils/lcg";
+import { numericalRecipesLcg, randomString } from "../../utils/random";
 
 export const meta = {
   slug: "infinite-chaos",
@@ -86,10 +86,6 @@ const infiniteChaos = (sketch) => {
   const sx = { ...defaultSx, ...urlSx };
   let params = {};
   let attractorData = {};
-
-  if (!sx.seed) {
-    sx.seed = randomString();
-  }
   updateAttractorData();
 
   const gui = new GUI();
@@ -162,7 +158,7 @@ const infiniteChaos = (sketch) => {
       const startTime = performance.now();
 
       do {
-        sx.seed = randomString();
+        sx.seed = randomString(8);
         const rand = namedLcg(sx.seed);
         params = createAttractorParams(rand);
       } while (
@@ -391,14 +387,6 @@ function hashCode(s) {
   for (var i = 0, h = 0; i < s.length; i++)
     h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
   return h;
-}
-
-function randomInt(min, max, lcg) {
-  return Math.floor(lcg() * (max - min + 1)) + min;
-}
-
-function randomString() {
-  return Math.random().toString(36).substr(2, 9);
 }
 
 function getURLParams() {
