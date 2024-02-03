@@ -158,6 +158,10 @@ const squircle = (sketch) => {
     // ctx.noLoop();
   };
 
+  sketch.cleanup = () => {
+    gui.destroy();
+  };
+
   function getMinSide() {
     return Math.min(sketch.width, sketch.height);
   }
