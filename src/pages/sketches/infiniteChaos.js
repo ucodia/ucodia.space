@@ -346,7 +346,7 @@ function isChaotic(params, xFn, yFn) {
     }
 
     if (i > lyapunovStart) {
-      const [newXe, newYe] = attractor(xe, ye, params.ax, params.ay);
+      const [newXe, newYe] = attractor(xe, ye, params.ax, params.ay, xFn, yFn);
       dx = x[i] - newXe;
       dy = y[i] - newYe;
       const dd = Math.sqrt(dx * dx + dy * dy);
