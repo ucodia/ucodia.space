@@ -58,6 +58,7 @@ const defaultSx = {
   seed: "3vg11h8l6",
   presetSeed: "",
   highRes: true,
+  swapColors: false,
 };
 
 const seedsOfInterest = [
@@ -93,6 +94,7 @@ const infiniteChaos = (sketch) => {
   const pointCountController = gui.add(sx, "pointCount", 10000, 1000000, 10000);
   const bgController = gui.addColor(sx, "background");
   const colorController = gui.addColor(sx, "color");
+  const swapColorsController = gui.add(sx, "swapColors");
   const particleSizeController = gui.add(sx, "particleSize", 0, 2, 0.1);
   const opacityController = gui.add(sx, "opacity", 0, 1, 0.05);
   const marginRatioController = gui.add(sx, "marginRatio", 0, 0.5, 0.05);
@@ -119,6 +121,9 @@ const infiniteChaos = (sketch) => {
     sketch.draw();
   });
   colorController.onFinishChange(() => {
+    sketch.draw();
+  });
+  swapColorsController.onFinishChange(() => {
     sketch.draw();
   });
   opacityController.onFinishChange(() => {
@@ -213,10 +218,13 @@ const infiniteChaos = (sketch) => {
   sketch.draw = (ctx) => {
     if (!ctx) ctx = sketch;
 
+    const fg = sx.swapColors ? sx.background : sx.color;
+    const bg = sx.swapColors ? sx.color : sx.background;
+
     ctx.clear();
-    ctx.background(sx.background);
+    ctx.background(bg);
     ctx.noStroke();
-    ctx.fill(`${sx.color}${opacityToHex(sx.opacity)}`);
+    ctx.fill(`${fg}${opacityToHex(sx.opacity)}`);
 
     const { x, y, xMin, xMax, yMin, yMax } = attractorData;
 
