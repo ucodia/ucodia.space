@@ -152,19 +152,20 @@ const infiniteChaos = (sketch) => {
   const actions = {
     randomize: () => {
       const startTime = performance.now();
+      const modNames = Object.keys(modifiers);
 
       do {
         sx.seed = randomString(8);
         const rand = namedLcg(sx.seed);
         params = createAttractorParams(rand);
+        sx.xModifier = modNames[(rand() * modNames.length) | 0];
+        sx.yModifier = modNames[(rand() * modNames.length) | 0];
       } while (
         !isChaotic(params, modifiers[sx.xModifier], modifiers[sx.yModifier])
       );
 
       const elapsedTime = performance.now() - startTime;
-      console.log(
-        `Found chaotic seed ${sx.seed} in ${elapsedTime.toFixed(2)}ms`
-      );
+      console.log(`Found chaotic seed ${sx.seed} in ${elapsedTime}ms`);
 
       sx.presetSeed = "";
       gui.updateDisplay();
@@ -258,11 +259,7 @@ const infiniteChaos = (sketch) => {
     );
 
     const elapsedTime = performance.now() - startTime;
-    console.log(
-      `Generated attractors with params ${JSON.stringify(
-        params
-      )} in ${elapsedTime.toFixed(2)}ms`
-    );
+    console.log(`Generated attractors in ${elapsedTime}ms`);
   }
 };
 
