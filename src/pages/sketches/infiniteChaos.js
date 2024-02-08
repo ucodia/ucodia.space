@@ -98,19 +98,10 @@ const infiniteChaos = (sketch) => {
   const particleSizeController = gui.add(sx, "particleSize", 0, 2, 0.1);
   const opacityController = gui.add(sx, "opacity", 0, 1, 0.05);
   const marginRatioController = gui.add(sx, "marginRatio", 0, 0.5, 0.05);
-  const advancedFolder = gui.addFolder("advanced");
-  const xModifierController = advancedFolder.add(
-    sx,
-    "xModifier",
-    Object.keys(modifiers)
-  );
-  const yModifierController = advancedFolder.add(
-    sx,
-    "yModifier",
-    Object.keys(modifiers)
-  );
   const highResController = gui.add(sx, "highRes");
   const seedController = gui.add(sx, "seed");
+  const xModifierController = gui.add(sx, "xModifier", Object.keys(modifiers));
+  const yModifierController = gui.add(sx, "yModifier", Object.keys(modifiers));
   const presetSeedController = gui.add(sx, "presetSeed", seedsOfInterest);
 
   pointCountController.onFinishChange(() => {
