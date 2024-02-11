@@ -34,7 +34,7 @@ const lookAbove = (sketch) => {
   };
 
   sketch.draw = () => {
-    sketch.background(0);
+    sketch.background("#000C1A");
     sketch.noStroke();
     sketch.fill(`hsl(0 ,0% ,${(1 - sx.lightPolution) * 100}%)`);
 
