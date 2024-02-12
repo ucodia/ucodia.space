@@ -12,6 +12,7 @@ const defaultSx = {
   universeSize: 16000,
   starDensity: 0.0005,
   lightPolution: 0.1,
+  showUniverseEdge: false,
 };
 
 const lookAbove = (sketch) => {
@@ -31,6 +32,7 @@ const lookAbove = (sketch) => {
   gui.add(sx, "universeSize", 16000, 32000, 1000).onFinishChange(update);
   gui.add(sx, "starDensity", 0.00001, 0.001).onFinishChange(update);
   gui.add(sx, "lightPolution", 0, 0.8, 0.05);
+  gui.add(sx, "showUniverseEdge");
   // prevent mouseDragged when using sliders
   gui.domElement.addEventListener("mousedown", (event) => {
     event.stopPropagation();
@@ -117,20 +119,22 @@ const lookAbove = (sketch) => {
       }
     }
 
-    // draw the edge of the universe
-    // sketch.stroke(255, 0, 0);
-    // sketch.line(
-    //   sketch.width - deltaEdgeX,
-    //   0,
-    //   sketch.width - deltaEdgeX,
-    //   sketch.height
-    // );
-    // sketch.line(
-    //   0,
-    //   sketch.height - deltaEdgeY,
-    //   sketch.width,
-    //   sketch.height - deltaEdgeY
-    // );
+    if (sx.showUniverseEdge) {
+      // draw the edge of the universe
+      sketch.stroke(255, 0, 0);
+      sketch.line(
+        sketch.width - deltaEdgeX,
+        0,
+        sketch.width - deltaEdgeX,
+        sketch.height
+      );
+      sketch.line(
+        0,
+        sketch.height - deltaEdgeY,
+        sketch.width,
+        sketch.height - deltaEdgeY
+      );
+    }
   };
 
   sketch.mousePressed = () => {
