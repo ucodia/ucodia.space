@@ -11,20 +11,25 @@ const lookAbove = (sketch) => {
   let stars = [];
   let posX = 0;
   let posY = 0;
+  let velocityX = 0;
+  let velocityY = 0;
+  const damping = 0.95;
+  const inertia = 0.2;
 
   const sx = {
-    universeSize: 1080 * 4,
-    starDensity: 0.001,
+    universeSize: 16000,
+    starDensity: 0.0005,
     lightPolution: 0.1,
   };
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
 
+    randomizeFeatures();
+
     const centerPos = Math.round(sx.universeSize / 2);
     posX = centerPos;
     posY = centerPos;
-
     const starCount = Math.round(
       sx.universeSize * sx.universeSize * sx.starDensity
     );
@@ -34,6 +39,17 @@ const lookAbove = (sketch) => {
   };
 
   sketch.draw = () => {
+    // update position
+    posX += velocityX;
+    posY += velocityY;
+    if (posX > sx.universeSize) posX -= sx.universeSize;
+    if (posX < 0) posX += sx.universeSize;
+    if (posY > sx.universeSize) posY -= sx.universeSize;
+    if (posY < 0) posY += sx.universeSize;
+    velocityX *= damping;
+    velocityY *= damping;
+
+    // draw sky
     sketch.background("#000C1A");
     sketch.noStroke();
     sketch.fill(`hsl(0 ,0% ,${(1 - sx.lightPolution) * 100}%)`);
@@ -100,13 +116,14 @@ const lookAbove = (sketch) => {
     // );
   };
 
+  sketch.mousePressed = () => {
+    velocityX = 0;
+    velocityY = 0;
+  };
+
   sketch.mouseDragged = () => {
-    posX += sketch.pmouseX - sketch.mouseX;
-    posY += sketch.pmouseY - sketch.mouseY;
-    if (posX > sx.universeSize) posX -= sx.universeSize;
-    if (posX < 0) posX += sx.universeSize;
-    if (posY > sx.universeSize) posY -= sx.universeSize;
-    if (posY < 0) posY += sx.universeSize;
+    velocityX += (sketch.pmouseX - sketch.mouseX) * inertia;
+    velocityY += (sketch.pmouseY - sketch.mouseY) * inertia;
   };
 
   function generateStars(n) {
@@ -132,6 +149,87 @@ const lookAbove = (sketch) => {
 
   function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function randomRange(start, end) {
+    return sketch.map(Math.random(), 0, 1, start, end);
+  }
+
+  function getFeature(variants) {
+    const variantsByRarity = variants.sort((a, b) => a.rarity - b.rarity);
+    const value = Math.random();
+    let runningSum = 0;
+
+    for (let i = 0; i < variantsByRarity.length; i++) {
+      const variant = variantsByRarity[i];
+      runningSum += variant.rarity;
+      if (value < runningSum) {
+        return {
+          name: variant.name,
+          value: variant.value(),
+        };
+      }
+    }
+  }
+
+  function randomizeFeatures() {
+    const universeSizeFeature = getFeature([
+      {
+        name: "32K",
+        rarity: 1 / 10,
+        value: () => 32000,
+      },
+      {
+        name: "24K",
+        rarity: 1 / 5,
+        value: () => 24000,
+      },
+      {
+        name: "16K",
+        rarity: 1,
+        value: () => 16000,
+      },
+    ]);
+    const starDensityFeature = getFeature([
+      {
+        name: "High",
+        rarity: 1 / 10,
+        value: () => randomRange(0.0008, 0.001),
+      },
+      {
+        name: "Medium",
+        rarity: 1,
+        value: () => randomRange(0.0002, 0.0005),
+      },
+      {
+        name: "Low",
+        rarity: 1 / 5,
+        value: () => randomRange(0.00001, 0.0001),
+      },
+    ]);
+    const lightPolutionFeature = getFeature([
+      {
+        name: "High",
+        rarity: 1 / 10,
+        value: () => randomRange(0.4, 0.7),
+      },
+      {
+        name: "Medium",
+        rarity: 1 / 5,
+        value: () => randomRange(0.1, 0.4),
+      },
+      {
+        name: "Low",
+        rarity: 1,
+        value: () => randomRange(0.05, 0.1),
+      },
+    ]);
+
+    sx.universeSize = universeSizeFeature.value;
+    sx.starDensity = starDensityFeature.value;
+    sx.lightPolution = lightPolutionFeature.value;
+
+    console.log(sx);
   }
 };
 
