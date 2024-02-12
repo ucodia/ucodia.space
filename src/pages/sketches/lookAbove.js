@@ -1,3 +1,4 @@
+import { GUI } from "dat.gui";
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
@@ -7,7 +8,15 @@ export const meta = {
   updated: "2024-02-09",
 };
 
+const defaultSx = {
+  universeSize: 16000,
+  starDensity: 0.0005,
+  lightPolution: 0.1,
+};
+
 const lookAbove = (sketch) => {
+  const sx = { ...defaultSx };
+
   let stars = [];
   let posX = 0;
   let posY = 0;
@@ -16,17 +25,27 @@ const lookAbove = (sketch) => {
   const damping = 0.95;
   const inertia = 0.2;
 
-  const sx = {
-    universeSize: 16000,
-    starDensity: 0.0005,
-    lightPolution: 0.1,
-  };
+  const gui = new GUI();
+  gui.width = 300;
+  gui.hide();
+  gui.add(sx, "universeSize", 16000, 32000, 1000).onFinishChange(update);
+  gui.add(sx, "starDensity", 0.00001, 0.001).onFinishChange(update);
+  gui.add(sx, "lightPolution", 0, 0.8, 0.05);
+  // prevent mouseDragged when using sliders
+  gui.domElement.addEventListener("mousedown", (event) => {
+    event.stopPropagation();
+  });
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
+    autoStretchP5(sketch);
 
     randomizeFeatures();
+    gui.updateDisplay();
+    update();
+  };
 
+  function update() {
     const centerPos = Math.round(sx.universeSize / 2);
     posX = centerPos;
     posY = centerPos;
@@ -34,9 +53,7 @@ const lookAbove = (sketch) => {
       sx.universeSize * sx.universeSize * sx.starDensity
     );
     generateStars(starCount);
-
-    autoStretchP5(sketch);
-  };
+  }
 
   sketch.draw = () => {
     // update position
@@ -124,6 +141,10 @@ const lookAbove = (sketch) => {
   sketch.mouseDragged = () => {
     velocityX += (sketch.pmouseX - sketch.mouseX) * inertia;
     velocityY += (sketch.pmouseY - sketch.mouseY) * inertia;
+  };
+
+  sketch.cleanup = () => {
+    gui.destroy();
   };
 
   function generateStars(n) {
@@ -228,8 +249,6 @@ const lookAbove = (sketch) => {
     sx.universeSize = universeSizeFeature.value;
     sx.starDensity = starDensityFeature.value;
     sx.lightPolution = lightPolutionFeature.value;
-
-    console.log(sx);
   }
 };
 
