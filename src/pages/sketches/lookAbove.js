@@ -24,7 +24,7 @@ const lookAbove = (sketch) => {
   let velocityX = 0;
   let velocityY = 0;
   const damping = 0.95;
-  const inertia = 0.2;
+  const inertia = 0.15;
 
   const gui = new GUI();
   gui.width = 300;
