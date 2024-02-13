@@ -12,7 +12,10 @@ const defaultSx = {
   universeSize: 16000,
   starDensity: 0.0005,
   lightPolution: 0.1,
-  showUniverseEdge: false,
+  showUniverseBounds: false,
+  wanderTimeout: 30000,
+  wanderAfterTimeout: true,
+  maxWanderSpeed: 3,
 };
 
 const lookAbove = (sketch) => {
@@ -23,8 +26,11 @@ const lookAbove = (sketch) => {
   let posY = 0;
   let velocityX = 0;
   let velocityY = 0;
+  let wanderNoiseX = 0;
+  let wanderNoiseY = 0;
+  let lastInteraction = 0;
   const damping = 0.95;
-  const inertia = 0.15;
+  const inertia = 0.2;
 
   const gui = new GUI();
   gui.width = 300;
@@ -32,7 +38,10 @@ const lookAbove = (sketch) => {
   gui.add(sx, "universeSize", 16000, 32000, 1000).onFinishChange(update);
   gui.add(sx, "starDensity", 0.00001, 0.001).onFinishChange(update);
   gui.add(sx, "lightPolution", 0, 0.8, 0.05);
-  gui.add(sx, "showUniverseEdge");
+  gui.add(sx, "showUniverseBounds");
+  gui.add(sx, "wanderTimeout", 0, 60000, 1000);
+  gui.add(sx, "wanderAfterTimeout");
+  gui.add(sx, "maxWanderSpeed", 1, 50, 0.5);
   // prevent mouseDragged when using sliders
   gui.domElement.addEventListener("mousedown", (event) => {
     event.stopPropagation();
@@ -41,10 +50,13 @@ const lookAbove = (sketch) => {
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
     autoStretchP5(sketch);
-
     randomizeFeatures();
     gui.updateDisplay();
     update();
+
+    wanderNoiseX = randomInt(0, 1000);
+    wanderNoiseY = randomInt(0, 1000);
+    lastInteraction = sketch.millis();
   };
 
   function update() {
@@ -61,12 +73,39 @@ const lookAbove = (sketch) => {
     // update position
     posX += velocityX;
     posY += velocityY;
+    velocityX *= damping;
+    velocityY *= damping;
+
+    if (
+      sx.wanderAfterTimeout &&
+      sketch.millis() - lastInteraction > sx.wanderTimeout
+    ) {
+      // wander around using noise
+      let deltaX = sketch.map(
+        sketch.noise(wanderNoiseX),
+        0,
+        1,
+        -sx.maxWanderSpeed,
+        sx.maxWanderSpeed
+      );
+      let deltaY = sketch.map(
+        sketch.noise(wanderNoiseY),
+        0,
+        1,
+        -sx.maxWanderSpeed,
+        sx.maxWanderSpeed
+      );
+      posX += deltaX;
+      posY += deltaY;
+      wanderNoiseX += 0.0001;
+      wanderNoiseY += 0.0001;
+    }
+
+    // keep position within universe bounds
     if (posX > sx.universeSize) posX -= sx.universeSize;
     if (posX < 0) posX += sx.universeSize;
     if (posY > sx.universeSize) posY -= sx.universeSize;
     if (posY < 0) posY += sx.universeSize;
-    velocityX *= damping;
-    velocityY *= damping;
 
     // draw sky
     sketch.background("#000C1A");
@@ -119,7 +158,7 @@ const lookAbove = (sketch) => {
       }
     }
 
-    if (sx.showUniverseEdge) {
+    if (sx.showUniverseBounds) {
       // draw the edge of the universe
       sketch.stroke(255, 0, 0);
       sketch.line(
@@ -140,11 +179,13 @@ const lookAbove = (sketch) => {
   sketch.mousePressed = () => {
     velocityX = 0;
     velocityY = 0;
+    lastInteraction = sketch.millis();
   };
 
   sketch.mouseDragged = () => {
     velocityX += (sketch.pmouseX - sketch.mouseX) * inertia;
     velocityY += (sketch.pmouseY - sketch.mouseY) * inertia;
+    lastInteraction = sketch.millis();
     return false;
   };
 
