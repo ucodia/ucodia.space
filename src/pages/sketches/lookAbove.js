@@ -145,6 +145,7 @@ const lookAbove = (sketch) => {
   sketch.mouseDragged = () => {
     velocityX += (sketch.pmouseX - sketch.mouseX) * inertia;
     velocityY += (sketch.pmouseY - sketch.mouseY) * inertia;
+    return false;
   };
 
   sketch.cleanup = () => {
