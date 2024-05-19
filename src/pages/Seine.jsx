@@ -12,8 +12,9 @@ const Container = styled.div`
 `;
 
 const SvgCanvas = styled.svg`
-  max-height: 80vh;
-  max-width: 80vw;
+  max-height: 80%;
+  max-width: 80%;
+  width: 100%;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 
   @media (prefers-color-scheme: dark) {
