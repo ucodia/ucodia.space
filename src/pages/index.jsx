@@ -6,6 +6,7 @@ import Flowtime from "./Flowtime";
 import Conundrum from "./Conundrum";
 import LorenzSvg from "./LorenzSvg";
 import sketches from "./sketches";
+import Seine from "./Seine";
 
 const pages = {
   "giphy-vox": <GiphyVox />,
@@ -14,6 +15,7 @@ const pages = {
   flowtime: <Flowtime />,
   conundrum: <Conundrum />,
   "lorenz-svg": <LorenzSvg />,
+  seine: <Seine />,
   ...sketches,
 };
 
