@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import downloadSvgElement from "../utils/downloadSvgElement";
 
 const Container = styled.div`
   width: 100%;
@@ -51,11 +52,34 @@ function randomInt(min, max, rand = Math.random) {
 }
 
 const Seine = () => {
+  const svgRef = useRef(null);
   const [grid, setGrid] = useState(generateGrid());
+
+  useEffect(() => {
+    const handleKeyDown = ({ key }) => {
+      switch (key) {
+        case "s": {
+          downloadSvgElement(svgRef.current, `seine-${new Date().getTime()}`);
+          break;
+        }
+        case "n": {
+          setGrid(generateGrid());
+          break;
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <Container>
       <SvgCanvas
+        ref={svgRef}
         viewBox={`0 0 ${columns * cellWidth} ${rows * cellHeight}`}
         onClick={() => setGrid(generateGrid())}
       >
@@ -63,6 +87,7 @@ const Seine = () => {
           return column.map((cell, y) => {
             return (
               <rect
+                key={`${x}-${y}`}
                 x={x * cellWidth}
                 y={y * cellHeight}
                 width={cellWidth}
