@@ -8,10 +8,10 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 `;
 
 const SvgCanvas = styled.svg`
+  cursor: pointer;
   max-height: 80%;
   max-width: 80%;
   width: 100%;
