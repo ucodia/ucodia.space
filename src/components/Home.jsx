@@ -38,6 +38,9 @@ const List = styled.div`
   align-items: center;
   justify-content: center;
 
+  // TODO: remove this after applying Tailwind for layout
+  line-height: normal;
+
   font-size: 3rem;
   @media only screen and (max-width: 425px) {
     font-size: 2rem;
