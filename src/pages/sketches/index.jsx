@@ -16,6 +16,7 @@ import * as lorenz from "./lorenz";
 import * as cmyDance from "./cmyDance";
 import * as squircle from "./squircle";
 import * as infiniteChaos from "./infiniteChaos";
+import * as spinnySquares from "./spinnySquares";
 
 const sketches = [
   diamonds,
@@ -34,6 +35,7 @@ const sketches = [
   cmyDance,
   squircle,
   infiniteChaos,
+  spinnySquares,
 ];
 
 const wrappedSketches = sketches.reduce((acc, cur) => {
