@@ -5,6 +5,7 @@ import Page from "./Page";
 import Home from "./Home";
 import Alert from "./Alert";
 import pages from "../pages";
+import ExternalRedirect from "./ExternalRedirect";
 
 const FullScreen = styled.div`
   width: 100vw;
@@ -40,6 +41,11 @@ const App = () => {
           />
         );
       })}
+      <Route
+        path="/contact"
+        exact
+        element={<ExternalRedirect to="https://linktr.ee/ucodia" />}
+      />
       <Route
         path="*"
         element={
