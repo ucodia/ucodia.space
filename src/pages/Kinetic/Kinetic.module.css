@@ -1,0 +1,28 @@
+@keyframes zinnia1-anim {
+  100% {
+    transform: rotate(-1080deg);
+  }
+}
+
+@keyframes zinnia2-anim {
+  70% {
+    transform: rotate(720deg);
+  }
+  100% {
+    transform: rotate(540deg);
+  }
+}
+
+.zinnia1 {
+  animation-name: zinnia1-anim;
+  animation-duration: 18s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.zinnia2 {
+  animation-name: zinnia2-anim;
+  animation-duration: 12s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
