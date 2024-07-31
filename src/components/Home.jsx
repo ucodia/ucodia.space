@@ -63,11 +63,6 @@ const links = Object.keys(pages)
     name: page,
     to: page,
   }))
-  .concat({
-    type: "link",
-    name: "about",
-    to: "https://ucodia.notion.site/Who-is-Ucodia-15cd507c414146c098df52f557a1c1d5",
-  })
   .sort((a, b) => a.name.localeCompare(b.name));
 
 const Home = () => {

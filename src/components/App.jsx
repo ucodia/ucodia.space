@@ -38,11 +38,6 @@ const App = () => {
         );
       })}
       <Route
-        path="/contact"
-        exact
-        element={<ExternalRedirect to="https://linktr.ee/ucodia" />}
-      />
-      <Route
         path="*"
         element={
           <Page title="404">
