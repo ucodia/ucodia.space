@@ -1,12 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 import u5 from "u5js";
 import Alert from "./Alert";
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-`;
 
 const U5Wrapper = ({ sketch }) => {
   const [error, setError] = useState(undefined);
@@ -30,7 +24,7 @@ const U5Wrapper = ({ sketch }) => {
     );
   }
 
-  return <Container ref={containerRef} />;
+  return <div ref={containerRef} className="w-full h-full"></div>;
 };
 
 export default U5Wrapper;

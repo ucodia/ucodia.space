@@ -1,20 +1,16 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import styled from "styled-components";
 import Page from "./Page";
 import Home from "./Home";
 import Alert from "./Alert";
 import pages from "../pages";
 import ExternalRedirect from "./ExternalRedirect";
 
-const FullScreen = styled.div`
-  width: 100vw;
-  height: 100vh;
-  height: 100svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+const FullScreen = ({ children }) => (
+  <div className="w-screen h-screen flex items-center justify-center">
+    {children}
+  </div>
+);
 
 const App = () => {
   return (

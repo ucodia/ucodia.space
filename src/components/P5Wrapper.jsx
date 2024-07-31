@@ -1,15 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import p5 from "p5";
 import p5Svg from "p5.js-svg";
-import styled from "styled-components";
 
 // add SVG renderer to p5;
 p5Svg(p5);
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-`;
 
 const P5Wrapper = ({ sketch }) => {
   const containerRef = useRef(null);
@@ -36,7 +30,7 @@ const P5Wrapper = ({ sketch }) => {
     };
   }, [sketch]);
 
-  return <Container ref={containerRef} />;
+  return <div ref={containerRef} className="w-full h-full"></div>;
 };
 
 export default P5Wrapper;
