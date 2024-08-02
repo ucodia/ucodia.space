@@ -15,6 +15,7 @@ const pages = {
   ),
   contact: <ExternalRedirect to="https://linktr.ee/ucodia" />,
   shop: <ExternalRedirect to="https://ucodia.square.site" />,
+  mycologue: <ExternalRedirect to="https://mycologue.org" />,
   "giphy-vox": <GiphyVox />,
   kinetic: <Kinetic />,
   zukunft: <Zukunft />,
