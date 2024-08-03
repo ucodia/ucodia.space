@@ -5,6 +5,7 @@ import Page from "./Page";
 import Home from "./Home";
 import Alert from "./Alert";
 import pages from "../pages";
+import routes from "@/routes";
 
 const FullScreen = ({ children }) => (
   <div className="w-screen h-screen flex items-center justify-center">
@@ -38,6 +39,9 @@ const App = () => {
                 }
               />
             );
+          })}
+          {routes.map(({ path, element }, i) => {
+            return <Route key={path} path={path} element={element} />;
           })}
           <Route
             path="*"

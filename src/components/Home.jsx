@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { singleDiamond } from "../pages/sketches/diamonds";
 import pages from "../pages";
 import U5Wrapper from "./U5Wrapper";
+import routes from "@/routes";
 
 const Container = styled.div`
   padding: 50px 0;
@@ -59,10 +60,15 @@ const PageLink = styled(Link)`
 
 const links = Object.keys(pages)
   .map((page) => ({
-    type: "page",
     name: page,
-    to: page,
+    to: `/${page}`,
   }))
+  .concat(
+    routes.map(({ name, path, override }) => ({
+      name,
+      to: override ? override : path,
+    }))
+  )
   .sort((a, b) => a.name.localeCompare(b.name));
 
 const Home = () => {
@@ -85,14 +91,10 @@ const Home = () => {
           const inc = Math.round(360 / items.length);
           const color = `hsl(${index * inc}, 80%, 60%)`;
 
-          return type === "page" ? (
-            <PageLink color={color} key={name} to={`/${to}`}>
+          return (
+            <PageLink color={color} key={name} to={to}>
               {name}
             </PageLink>
-          ) : (
-            <ExternalLink color={color} key={name} href={to} target="_blank">
-              {name}
-            </ExternalLink>
           );
         })}
       </List>
