@@ -17,8 +17,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
-
-const CDN_URL = "https://cdn.ucodia.space";
+import { CDN_URL } from "@/utils/cdn";
 
 const ColorAdjustmentShader = {
   uniforms: {
