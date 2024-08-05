@@ -1,12 +1,10 @@
-import Skybox from "@/pages/skybox";
-
 const routes = [
-  {
-    path: "/skybox/:hdrId",
-    override: "/skybox/1",
-    name: "skybox",
-    element: <Skybox />,
-  },
+  // {
+  //   path: "/pokedex/:pokemonId",
+  //   override: "/pokedex/25",
+  //   name: "pokedex",
+  //   element: <Pokedex />,
+  // },
 ];
 
 export default routes;
