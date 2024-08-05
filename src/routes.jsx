@@ -74,12 +74,12 @@ const routes = [
     element: <ExternalRedirect to="https://linktr.ee/ucodia" />,
   },
   {
-    name: "shop",
+    name: "shop ✨",
     path: "/shop",
     element: <ExternalRedirect to="https://ucodia.square.site" />,
   },
   {
-    name: "mycologue",
+    name: "mycologue 🍄",
     path: "/mycologue",
     element: <ExternalRedirect to="https://mycologue.org" />,
   },
