@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { singleDiamond } from "../pages/sketches/diamonds";
-import pages from "../pages";
 import U5Wrapper from "./U5Wrapper";
 import routes from "@/routes";
 
@@ -58,17 +57,11 @@ const PageLink = styled(Link)`
   color: ${(props) => props.color};
 `;
 
-const links = Object.keys(pages)
-  .map((page) => ({
-    name: page,
-    to: `/${page}`,
+const links = routes
+  .map(({ name, path, override }) => ({
+    name,
+    to: override ? override : path,
   }))
-  .concat(
-    routes.map(({ name, path, override }) => ({
-      name,
-      to: override ? override : path,
-    }))
-  )
   .sort((a, b) => a.name.localeCompare(b.name));
 
 const Home = () => {

@@ -4,14 +4,7 @@ import { ThemeProvider } from "@/contexts/theme";
 import Page from "./Page";
 import Home from "./Home";
 import Alert from "./Alert";
-import pages from "../pages";
 import routes from "@/routes";
-
-const FullScreen = ({ children }) => (
-  <div className="w-screen h-screen flex items-center justify-center">
-    {children}
-  </div>
-);
 
 const App = () => {
   return (
@@ -27,19 +20,6 @@ const App = () => {
               </Page>
             }
           />
-          {Object.keys(pages).map((page) => {
-            return (
-              <Route
-                key={page}
-                path={`/${page}`}
-                element={
-                  <Page title={page}>
-                    <FullScreen>{pages[page]}</FullScreen>
-                  </Page>
-                }
-              />
-            );
-          })}
           {routes.map(({ path, element }, i) => {
             return <Route key={path} path={path} element={element} />;
           })}
@@ -47,11 +27,11 @@ const App = () => {
             path="*"
             element={
               <Page title="404">
-                <FullScreen>
+                <div className="w-screen h-screen flex items-center justify-center">
                   <Alert title="404">
                     <p>Ceci n'est pas une page.</p>
                   </Alert>
-                </FullScreen>
+                </div>
               </Page>
             }
           />
