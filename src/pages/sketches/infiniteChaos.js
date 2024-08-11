@@ -3,7 +3,6 @@ import autoStretchP5 from "../../utils/autoStretchP5";
 import { numericalRecipesLcg, randomString } from "../../utils/random";
 
 export const meta = {
-  slug: "infinite-chaos",
   name: "Infinite Chaos",
   created: "2024-01-10",
 };

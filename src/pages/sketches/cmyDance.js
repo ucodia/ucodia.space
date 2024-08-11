@@ -4,7 +4,6 @@ import { numericalRecipesLcg } from "../../utils/random";
 import presets from "./cmyDancePresets.json";
 
 export const meta = {
-  slug: "cmy-dance",
   name: "CMY Dance",
   created: "2023-02-12",
 };

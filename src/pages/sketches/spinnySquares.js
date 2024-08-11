@@ -1,7 +1,6 @@
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
-  slug: "spinny-squares",
   name: "Spinny Squares",
   created: "2014-07-30",
   renderer: "p5",

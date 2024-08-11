@@ -5,7 +5,6 @@ import cyclicIterator from "../../utils/cyclicIterator";
 const gradientIterator = cyclicIterator(shuffle(gradients));
 
 export const meta = {
-  slug: "scales",
   name: "Scales",
   created: "2016-03-21",
 };

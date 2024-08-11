@@ -2,7 +2,6 @@ import { GUI } from "dat.gui";
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
-  slug: "squircle",
   name: "Squircle",
   created: "2021-11-16",
 };

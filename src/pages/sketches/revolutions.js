@@ -1,7 +1,6 @@
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
-  slug: "revolutions",
   name: "Revolutions",
   created: "2014-09-16",
 };

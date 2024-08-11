@@ -1,7 +1,6 @@
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
-  slug: "dizzy-waves",
   name: "Dizzy Waves",
   created: "2015",
 };

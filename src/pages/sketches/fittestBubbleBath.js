@@ -1,7 +1,6 @@
 import autoStretchP5 from "../../utils/autoStretchP5";
 
 export const meta = {
-  slug: "fittest-bubble-bath",
   name: "Fittest Bubble Bath",
   created: "2016-06-13",
 };
