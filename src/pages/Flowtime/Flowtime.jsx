@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { fromDate } from "flowtime";
-import useInterval from "../../hooks/useInterval";
+import useInterval from "@/hooks/useInterval";
 import styles from "./Flowtime.module.css";
 
 export const meta = {

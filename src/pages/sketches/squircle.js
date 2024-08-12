@@ -1,5 +1,5 @@
 import { GUI } from "dat.gui";
-import autoStretchP5 from "../../utils/autoStretchP5";
+import autoStretchP5 from "@/utils/autoStretchP5";
 
 export const meta = {
   name: "Squircle",

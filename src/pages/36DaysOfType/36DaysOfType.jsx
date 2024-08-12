@@ -1,5 +1,5 @@
 import React from "react";
-import P5Wrapper from "../../components/P5Wrapper";
+import P5Wrapper from "@/components/P5Wrapper";
 // import D from "./2020/D";
 // import e from "./2020/e";
 import f from "./2020/f";

@@ -1,5 +1,5 @@
-import autoStretchP5 from "../../../utils/autoStretchP5";
-import pointsToSegments from "../utils/pointsToSegments";
+import autoStretchP5 from "@/utils/autoStretchP5";
+import pointsToSegments from "@/utils/pointsToSegments";
 
 export default (sketch) => {
   let letter = "e";

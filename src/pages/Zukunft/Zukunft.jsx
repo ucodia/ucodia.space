@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useResizeDetector } from "react-resize-detector";
-import { randomString } from "../../utils/random";
-import downloadSvgElement from "../../utils/downloadSvgElement";
+import { randomString } from "@/utils/random";
+import downloadSvgElement from "@/utils/downloadSvgElement";
 import Dice from "./Dice";
 
 export const meta = {

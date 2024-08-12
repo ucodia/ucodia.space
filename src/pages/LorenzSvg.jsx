@@ -1,5 +1,5 @@
 import { useMemo, useRef } from "react";
-import useGui from "../hooks/useGui";
+import useGui from "@/hooks/useGui";
 
 export const meta = {
   name: "Lorenz (for plotters)",

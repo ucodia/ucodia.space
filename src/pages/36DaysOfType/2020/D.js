@@ -1,6 +1,6 @@
-import autoStretchP5 from "../../../utils/autoStretchP5";
-import pointsToSegments from "../utils/pointsToSegments";
-import cyclicIterator from "../../../utils/cyclicIterator";
+import autoStretchP5 from "@/utils/autoStretchP5";
+import pointsToSegments from "@/utils/pointsToSegments";
+import cyclicIterator from "@/utils/cyclicIterator";
 
 export default (sketch) => {
   let letter = "D";

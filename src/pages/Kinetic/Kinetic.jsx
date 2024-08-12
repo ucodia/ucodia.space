@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SvgPath from "./SvgPath";
-import gradients from "../../data/gradients";
+import gradients from "@/data/gradients";
 import shapes from "./data/shapes";
 import cyclicIterator from "@/utils/cyclicIterator";
 import styles from "./Kinetic.module.css";

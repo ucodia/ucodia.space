@@ -1,6 +1,6 @@
 import React from "react";
-import useURLParams from "../hooks/useURLParams";
-import U5Wrapper from "./U5Wrapper";
+import useURLParams from "@/hooks/useURLParams";
+import U5Wrapper from "@/components/U5Wrapper";
 
 const P5Wrapper = React.lazy(() => import(`./P5Wrapper`));
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import shuffle from "../../utils/shuffle";
-import cyclicIterator from "../../utils/cyclicIterator";
+import shuffle from "@/utils/shuffle";
+import cyclicIterator from "@/utils/cyclicIterator";
 import sentences from "./sentences";
 
 export const meta = {

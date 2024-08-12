@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import u5 from "u5js";
-import Alert from "./Alert";
+import Alert from "@/components/Alert";
 
 const U5Wrapper = ({ sketch }) => {
   const [error, setError] = useState(undefined);

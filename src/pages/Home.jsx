@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { singleDiamond } from "./sketches/diamonds";
-import U5Wrapper from "../components/U5Wrapper";
+import U5Wrapper from "@/components/U5Wrapper";
 import routes from "@/routes";
 
 const links = routes

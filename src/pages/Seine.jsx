@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import downloadSvgElement from "../utils/downloadSvgElement";
+import downloadSvgElement from "@/utils/downloadSvgElement";
 
 const rows = 41;
 const columns = (rows + 1) * 2;

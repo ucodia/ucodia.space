@@ -1,6 +1,6 @@
 import { GUI } from "dat.gui";
-import autoStretchP5 from "../../utils/autoStretchP5";
-import { numericalRecipesLcg, randomString } from "../../utils/random";
+import autoStretchP5 from "@/utils/autoStretchP5";
+import { numericalRecipesLcg, randomString } from "@/utils/random";
 
 export const meta = {
   name: "Infinite Chaos",
