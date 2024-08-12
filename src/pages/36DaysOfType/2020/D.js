@@ -1,6 +1,6 @@
 import autoStretchP5 from "@/utils/autoStretchP5";
-import pointsToSegments from "@/utils/pointsToSegments";
 import cyclicIterator from "@/utils/cyclicIterator";
+import pointsToSegments from "../utils/pointsToSegments";
 
 export default (sketch) => {
   let letter = "D";
@@ -12,7 +12,7 @@ export default (sketch) => {
   let yoff;
 
   sketch.preload = () => {
-    font = sketch.loadFont("fonts/Righteous-Regular.ttf");
+    font = sketch.loadFont("/fonts/Righteous-Regular.ttf");
   };
 
   function layout() {

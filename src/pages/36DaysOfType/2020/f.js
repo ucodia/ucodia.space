@@ -1,6 +1,6 @@
 import cyclicIterator from "@/utils/cyclicIterator";
 import autoStretchP5 from "@/utils/autoStretchP5";
-import pointsToSegments from "@/utils/pointsToSegments";
+import pointsToSegments from "../utils/pointsToSegments";
 
 const f = (sketch) => {
   let letter = "f";
@@ -17,7 +17,7 @@ const f = (sketch) => {
   ];
 
   sketch.preload = () => {
-    font = sketch.loadFont("fonts/Righteous-Regular.ttf");
+    font = sketch.loadFont("/fonts/Righteous-Regular.ttf");
   };
 
   sketch.setup = () => {
@@ -88,12 +88,6 @@ const f = (sketch) => {
         );
       }
     }
-
-    // if (sketch.frameCount < 735) {
-    //   sketch.save(
-    //     `${letter}_${sketch.frameCount.toString().padStart(4, "0")}.png`
-    //   );
-    // }
   };
 
   sketch.keyTyped = () => {

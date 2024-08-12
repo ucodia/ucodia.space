@@ -1,5 +1,5 @@
 import autoStretchP5 from "@/utils/autoStretchP5";
-import pointsToSegments from "@/utils/pointsToSegments";
+import pointsToSegments from "../utils/pointsToSegments";
 
 export default (sketch) => {
   let letter = "e";
@@ -16,7 +16,7 @@ export default (sketch) => {
   let segmentsOffsets = [];
 
   sketch.preload = () => {
-    font = sketch.loadFont("fonts/Righteous-Regular.ttf");
+    font = sketch.loadFont("/fonts/Righteous-Regular.ttf");
   };
 
   function layout() {

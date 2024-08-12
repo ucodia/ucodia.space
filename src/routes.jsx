@@ -7,6 +7,7 @@ import Flowtime from "@/pages/Flowtime";
 import Conundrum from "@/pages/Conundrum";
 import LorenzSvg from "@/pages/LorenzSvg";
 import Seine from "@/pages/Seine";
+import ThirtySixDaysOfType from "@/pages/36DaysOfType";
 import * as diamonds from "@/pages/sketches/diamonds";
 import * as circuit from "@/pages/sketches/circuit";
 import * as dizzyWaves from "@/pages/sketches/dizzyWaves";
@@ -67,6 +68,12 @@ const routes = [
   { name: "conundrum", path: "/conundrum", element: <Conundrum /> },
   { name: "lorenz-svg", path: "/lorenz-svg", element: <LorenzSvg /> },
   { name: "seine", path: "/seine", element: <Seine /> },
+  {
+    name: "36 days of type",
+    path: "/36days/2020",
+    element: <ThirtySixDaysOfType />,
+    disabled: true,
+  },
   {
     name: "diamonds",
     path: "/diamonds",
@@ -154,4 +161,4 @@ const routes = [
   },
 ];
 
-export default routes;
+export default routes.filter(({ disabled }) => !disabled);

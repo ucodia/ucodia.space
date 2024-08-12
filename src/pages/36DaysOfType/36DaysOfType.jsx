@@ -1,41 +1,26 @@
 import React from "react";
-import P5Wrapper from "@/components/P5Wrapper";
-// import D from "./2020/D";
-// import e from "./2020/e";
+import SketchWrapper from "@/components/SketchWrapper";
+import D from "./2020/D";
+import e from "./2020/e";
 import f from "./2020/f";
-import styled from "styled-components";
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  jusitify-content: center;
-
-  flex-direction: row;
-  @media only screen and (max-width: 425px) {
-    flex-direction: column;
-  }
-`;
-const Frame = styled.div`
-  margin: 30px;
-  height: 60vh;
-  width: 60vh;
-  // height: 540px;
-  // width: 540px;
-  @media only screen and (max-width: 425px) {
-    height: 60vw;
-    width: 60vw;
-  }
-`;
+const letters = { D: D, e: e, f: f };
 
 const ThirtySixDaysOfType = () => {
   return (
-    <Container>
-      <Frame>
-        {/* <P5Wrapper sketch={D} /> */}
-        {/* <P5Wrapper sketch={e} /> */}
-        <P5Wrapper sketch={f} />
-      </Frame>
-    </Container>
+    <div className="flex items-center justify-center flex-col">
+      {Object.keys(letters).map((letter) => {
+        console.log("render sketch", letter);
+        return (
+          <div
+            key={letter}
+            className="m-[30px]"
+            style={{ width: 300, height: 300 }}
+          >
+            <SketchWrapper sketch={letters[letter]} />
+          </div>
+        );
+      })}
+    </div>
   );
 };
 
