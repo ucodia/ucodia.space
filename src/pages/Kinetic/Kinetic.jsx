@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import SvgPath from "./SvgPath";
-import backgrounds from "./data/backgrounds";
 import gradients from "../../data/gradients";
 import shapes from "./data/shapes";
-import cyclicIterator from "../../utils/cyclicIterator";
+import cyclicIterator from "@/utils/cyclicIterator";
 import styles from "./Kinetic.module.css";
 
 export const meta = {
@@ -12,7 +11,7 @@ export const meta = {
 };
 
 const Kinetic = () => {
-  const [backgroundIterator] = useState(cyclicIterator(backgrounds));
+  const [backgroundIterator] = useState(cyclicIterator(["#000000", "#ffffff"]));
   const [gradientIterator] = useState(cyclicIterator(gradients));
   const [shapeIterator] = useState(cyclicIterator(shapes));
   const [background, setBackground] = useState(backgroundIterator.peek());
@@ -56,7 +55,7 @@ const Kinetic = () => {
       </svg>
       <svg
         viewBox="0 0 100 100"
-        className="fixed w-1/10 h-1/10 fill-transparent stroke-transparent z-10"
+        className="fixed w-2/12 h-2/12 fill-transparent stroke-transparent z-20"
       >
         <ellipse cx="50" cy="50" rx="50" ry="50" onClick={handleCenterTouch} />
       </svg>
