@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { singleDiamond } from "../pages/sketches/diamonds";
-import U5Wrapper from "./U5Wrapper";
+import { singleDiamond } from "./sketches/diamonds";
+import U5Wrapper from "../components/U5Wrapper";
 import routes from "@/routes";
 
 const links = routes
@@ -13,9 +13,9 @@ const links = routes
 
 const Home = () => {
   return (
-    <div className="py-[50px]">
+    <div className="py-12 sm:py-[50px]">
       <div className="flex flex-row items-center justify-center">
-        <div className="mr-[50px] h-[200px] w-[200px] max-[425px]:mr-[25px] max-[425px]:h-[100px] max-[425px]:w-[100px]">
+        <div className="mr-6 h-[100px] w-[100px] sm:mr-[50px] sm:h-[200px] sm:w-[200px]">
           <U5Wrapper sketch={singleDiamond} />
         </div>
         <picture>
@@ -26,18 +26,18 @@ const Home = () => {
           <img
             src="/light-ucodia-logo.svg"
             alt="website logo"
-            className="h-[100px] max-[425px]:h-[50px]"
+            className="h-[50px] sm:h-[100px]"
           />
         </picture>
       </div>
-      <div className="my-[50px] flex flex-col items-center justify-center text-5xl max-[425px]:text-4xl leading-normal">
+      <div className="my-12 sm:my-[50px] flex flex-col items-center justify-center">
         {links.map(({ name, to }, index, items) => {
           const inc = Math.round(360 / items.length);
           const color = `hsl(${index * inc},80%,60%)`;
           return (
             <Link
               key={name}
-              className="no-underline"
+              className="text-4xl sm:text-6xl p-2 sm:p-4 no-underline"
               style={{ color: color }}
               to={to}
             >

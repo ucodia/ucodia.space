@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/theme";
-import Page from "./Page";
-import Home from "./Home";
-import Alert from "./Alert";
+import Page from "@/components/Page";
+import Alert from "@/components/Alert";
+import Home from "@/pages/Home";
 import routes from "@/routes";
 
 const App = () => {
