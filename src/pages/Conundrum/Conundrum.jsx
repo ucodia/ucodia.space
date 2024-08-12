@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
 import shuffle from "@/utils/shuffle";
 import cyclicIterator from "@/utils/cyclicIterator";
 import sentences from "./sentences";
@@ -12,43 +11,6 @@ export const meta = {
 const numberOfWords = 3;
 const offsetRatio = 0.1;
 const wordRatio = (1 - offsetRatio) / numberOfWords;
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  flex-direction: column;
-  user-select: none;
-  cursor: pointer;
-  overflow: scroll;
-
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  & > div {
-    width: 100%;
-    height: ${wordRatio * 100}%;
-
-    font-size: 4rem;
-    @media only screen and (min-width: 768px) {
-      font-size: 7rem;
-    }
-    @media only screen and (min-width: 1024px) {
-      font-size: 9rem;
-    }
-  }
-`;
-
-const Cell = styled.div`
-  color: black;
-  background-color: white;
-  ${(props) => props.invert && "filter: invert(100%);"}
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-`;
 
 const repeatItems = (items, times = 1) => {
   const result = [];
@@ -77,19 +39,26 @@ const Conundrum = () => {
   useEffect(() => scrollToCenter(containerRef), []);
 
   return (
-    <Container ref={containerRef}>
+    <div
+      ref={containerRef}
+      className="w-full h-full flex flex-col select-none cursor-pointer overflow-scroll scrollbar-hide"
+    >
       {sentence.map((word, index) => {
         return (
-          <Cell
+          <div
             key={index}
-            invert={index % 2 === 0}
+            className={`
+              p-4 md:p-8 lg:p-10
+              text-center text-7xl md:text-8xl lg:text-9xl
+              ${index % 2 === 0 ? "text-white bg-black" : "text-black bg-white"}
+            `}
             onClick={() => setSentence(sentenceIterator.next())}
           >
             {word}
-          </Cell>
+          </div>
         );
       })}
-    </Container>
+    </div>
   );
 };
 
