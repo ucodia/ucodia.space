@@ -1,39 +1,12 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import useSpeechToText from "@/hooks/useSpeechToText";
 import giphy from "@/apis/giphy";
+import Alert from "@/components/Alert";
 
 export const meta = {
   name: "Giphy Vox",
   created: "2017-11-13",
 };
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-const Alert = styled.div`
-  max-width: 70%;
-`;
-
-const Gif = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-`;
-
-const Keyword = styled.div`
-  padding: 20px;
-  font-size: 3rem;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  color: black;
-  background-color: white;
-  opacity: 0.5;
-  text-align: center;
-  z-index: 99;
-`;
 
 const GiphyVox = () => {
   const [gifUrl, setGifUrl] = useState("");
@@ -52,26 +25,37 @@ const GiphyVox = () => {
 
   if (!speech) {
     return (
-      <Alert>
-        <h1>Sorry!</h1>
-        <p>
-          This experience requires speech recognition which is not available in
-          your browser ¯\_(ツ)_/¯
-        </p>
-        <p>PS: You can try it in Chrome desktop.</p>
-      </Alert>
+      <div className="w-screen h-screen flex items-center justify-center">
+        <Alert title="Sorry!">
+          <p>
+            This experience requires speech recognition which is not available
+            in your browser ¯\_(ツ)_/¯
+          </p>
+          <p>PS: You can try it on Chrome desktop.</p>
+        </Alert>
+      </div>
     );
   }
 
   return (
-    <Container>
-      {gifUrl ? (
-        <Gif src={gifUrl} alt={`gif for keyword "${transcript}"`} />
-      ) : (
-        <Container />
+    <div className="w-full h-full">
+      {gifUrl && (
+        <img
+          src={gifUrl}
+          alt={`gif for keyword "${transcript}"`}
+          className="w-full h-full object-contain"
+        />
       )}
-      <Keyword>{transcript ? transcript : "say something..."}</Keyword>
-    </Container>
+      <div
+        className="
+        p-6 text-5xl absolute bottom-0 w-full
+        text-black bg-white bg-opacity-50 text-center
+        z-[99]
+      "
+      >
+        {transcript ? transcript : "say something..."}
+      </div>
+    </div>
   );
 };
 
