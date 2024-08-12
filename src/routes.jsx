@@ -58,7 +58,7 @@ const routes = [
   },
   { name: "giphy vox", path: "/giphy-vox", element: <GiphyVox /> },
   { name: "kinetic", path: "/kinetic", element: <Kinetic /> },
-  { name: "zukunft", path: "/zukunft", element: <Zukunft /> },
+  // { name: "zukunft", path: "/zukunft", element: <Zukunft /> },
   { name: "flowtime", path: "/flowtime", element: <Flowtime /> },
   { name: "conundrum", path: "/conundrum", element: <Conundrum /> },
   { name: "lorenz-svg", path: "/lorenz-svg", element: <LorenzSvg /> },
