@@ -1,26 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 import downloadSvgElement from "../utils/downloadSvgElement";
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const SvgCanvas = styled.svg`
-  cursor: pointer;
-  max-height: 80%;
-  max-width: 80%;
-  width: 100%;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-
-  @media (prefers-color-scheme: dark) {
-    box-shadow: 0 10px 20px rgba(180, 180, 180, 0.5);
-  }
-`;
 
 const rows = 41;
 const columns = (rows + 1) * 2;
@@ -78,8 +57,15 @@ const Seine = () => {
   }, []);
 
   return (
-    <Container>
-      <SvgCanvas
+    <div className="w-screen h-screen flex items-center justify-center">
+      {" "}
+      <svg
+        className="
+          cursor-pointer
+          max-h-[80%] max-w-[80%] w-full
+          shadow-[0_10px_20px_rgba(0,0,0,0.5)]
+          dark:shadow-[0_10px_20px_rgba(180,180,180,0.5)]
+         "
         ref={svgRef}
         viewBox={`0 0 ${columns * cellWidth} ${rows * cellHeight}`}
         onClick={() => setGrid(generateGrid())}
@@ -99,8 +85,8 @@ const Seine = () => {
             );
           });
         })}
-      </SvgCanvas>
-    </Container>
+      </svg>
+    </div>
   );
 };
 
