@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { withSize } from "react-sizeme";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useResizeDetector } from "react-resize-detector";
 import { randomString } from "../../utils/random";
 import downloadSvgElement from "../../utils/downloadSvgElement";
 import Dice from "./Dice";
@@ -35,17 +35,25 @@ const generateDices = (columns, rows) => {
 
 const fullSizeStyle = { width: "100%", height: "100%" };
 
-const Zukunft = ({ size }) => {
+const Zukunft = () => {
   const svgRef = useRef(null);
-  const diceSize = size.width >= 1024 ? 40 : 30;
+  const { width, height, ref } = useResizeDetector({
+    refreshMode: "debounce",
+    refreshRate: 100,
+  });
+  const diceSize = useMemo(() => {
+    return width >= 1024 ? 40 : 30;
+  }, [width, height]);
   const [grid, setGrid] = useState({ dices: [], columns: 0, rows: 0 });
 
   useEffect(() => {
-    const columns = Math.floor(size.width / diceSize) - 1;
-    const rows = Math.floor(size.height / diceSize) - 1;
-    const dices = generateDices(columns, rows);
-    setGrid({ dices, columns, rows });
-  }, [size, diceSize]);
+    if (width !== undefined) {
+      const columns = Math.floor(width / diceSize) - 1;
+      const rows = Math.floor(height / diceSize) - 1;
+      const dices = generateDices(columns, rows);
+      setGrid({ dices, columns, rows });
+    }
+  }, [width, height, diceSize]);
 
   const handleRandomizeCanvas = () => {
     setGrid((g) => {
@@ -59,52 +67,44 @@ const Zukunft = ({ size }) => {
   };
 
   return (
-    <div style={fullSizeStyle}>
-      <svg
-        style={fullSizeStyle}
-        viewBox={`0 0 ${size.width} ${size.height}`}
-        ref={svgRef}
-      >
-        <rect
-          fill="black"
-          stroke="none"
-          width={size.width}
-          height={size.height}
-        />
-        {grid.dices.map((dice, i) => {
-          const x = i % grid.columns;
-          const xOff = (size.width - grid.columns * diceSize) / 2;
-          const yOff = (size.height - grid.rows * diceSize) / 2;
-          const y = Math.floor(i / grid.columns);
-          const translate = `translate(${x * diceSize + xOff}, ${
-            y * diceSize + yOff
-          })`;
-          const rotate = `rotate(${dice.orientation * 90}, ${diceSize / 2}, ${
-            diceSize / 2
-          })`;
+    <div className="w-screen h-screen" ref={ref}>
+      {width !== undefined && (
+        <svg
+          style={fullSizeStyle}
+          viewBox={`0 0 ${width} ${height}`}
+          ref={svgRef}
+        >
+          <rect fill="black" stroke="none" width={width} height={height} />
+          {grid.dices.map((dice, i) => {
+            const x = i % grid.columns;
+            const xOff = (width - grid.columns * diceSize) / 2;
+            const yOff = (height - grid.rows * diceSize) / 2;
+            const y = Math.floor(i / grid.columns);
+            const translate = `translate(${x * diceSize + xOff}, ${
+              y * diceSize + yOff
+            })`;
+            const rotate = `rotate(${dice.orientation * 90}, ${diceSize / 2}, ${
+              diceSize / 2
+            })`;
 
-          return (
-            <Dice
-              key={dice.id}
-              face={dice.face}
-              size={diceSize}
-              transform={`${translate} ${rotate}`}
-              onClick={
-                i === grid.dices.length - 1
-                  ? () => handleDownloadSvg()
-                  : () => handleRandomizeCanvas(i)
-              }
-            />
-          );
-        })}
-      </svg>
+            return (
+              <Dice
+                key={dice.id}
+                face={dice.face}
+                size={diceSize}
+                transform={`${translate} ${rotate}`}
+                onClick={
+                  i === grid.dices.length - 1
+                    ? () => handleDownloadSvg()
+                    : () => handleRandomizeCanvas(i)
+                }
+              />
+            );
+          })}
+        </svg>
+      )}
     </div>
   );
 };
 
-export default withSize({
-  monitorHeight: true,
-  refreshRate: 100,
-  refreshMode: "debounce",
-  // noPlaceholder: true,
-})(Zukunft);
+export default Zukunft;
