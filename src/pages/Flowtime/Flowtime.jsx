@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { fromDate } from "flowtime";
 import useInterval from "../../hooks/useInterval";
+import styles from "./Flowtime.module.css";
 
 export const meta = {
   name: "Flowtime",
@@ -12,60 +12,6 @@ const timeFormatter = new Intl.DateTimeFormat(
   Intl.DateTimeFormat().resolvedOptions().locale,
   { timeStyle: "medium" }
 );
-
-const Container = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto;
-  grid-auto-rows: 1fr;
-  width: 100%;
-  height: 100%;
-  user-select: none;
-  cursor: pointer;
-  color: #000000;
-
-  animation-name: background-gradient;
-  animation-duration: 10s;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-
-  @keyframes background-gradient {
-    from {
-      background-color: #00c3ff;
-    }
-    to {
-      background-color: #ffff1c;
-    }
-  }
-`;
-
-const Header = styled.h1`
-  text-align: center;
-  font-weight: 100;
-  background-color: white;
-  margin: 0;
-  padding 16px;
-  box-shadow: rgb(51, 51, 51) 0px 0px 10px;
-  font-size: 3rem;
-
-  @media only screen and (min-width: 1024px) {
-    font-size: 4rem;
-  }
-`;
-
-const Time = styled.code`
-  text-align: center;
-  align-self: center;
-  font-size: 3rem;
-
-  @media only screen and (min-width: 768px) {
-    font-size: 5rem;
-  }
-
-  @media only screen and (min-width: 1024px) {
-    font-size: 7rem;
-  }
-`;
 
 const Flowtime = () => {
   const [time, setTime] = useState(fromDate(new Date()).toDate());
@@ -85,15 +31,37 @@ const Flowtime = () => {
 
   return (
     <div className="w-screen h-screen">
-      <Container
+      <div
+        className={`
+          grid grid-rows-[auto_1fr] grid-cols-1
+          w-full h-full
+          select-none cursor-pointer
+          text-black
+          ${styles.backgroundGradient}
+        `}
         onMouseDown={showReality}
         onTouchStart={showReality}
         onMouseUp={showFlowtime}
         onTouchEnd={showFlowtime}
       >
-        <Header>~ flowtime ~</Header>
-        <Time>{timeFormatter.format(time)}</Time>
-      </Container>
+        <h1
+          className="
+          text-center font-thin bg-white m-0 p-8
+          shadow-[0_0_10px_rgb(51,51,51)]
+          text-5xl lg:text-6xl
+        "
+        >
+          ~ flowtime ~
+        </h1>
+        <code
+          className="
+          text-center self-center
+          text-5xl md:text-7xl lg:text-8xl
+        "
+        >
+          {timeFormatter.format(time)}
+        </code>
+      </div>
     </div>
   );
 };

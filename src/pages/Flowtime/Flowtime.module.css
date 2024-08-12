@@ -1,0 +1,12 @@
+@keyframes background-gradient {
+  from {
+    background-color: #00c3ff;
+  }
+  to {
+    background-color: #ffff1c;
+  }
+}
+
+.backgroundGradient {
+  animation: background-gradient 10s infinite alternate;
+}
