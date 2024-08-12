@@ -1,41 +1,10 @@
-import { GUI } from "dat.gui";
-import { useEffect, useMemo, useRef, useState } from "react";
-import styled from "styled-components";
+import { useMemo, useRef } from "react";
 import useGui from "../hooks/useGui";
 
 export const meta = {
   name: "Lorenz (for plotters)",
   created: "2021-01-13",
 };
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
-
-  @media (prefers-color-scheme: dark) {
-    background-color: #121212;
-  }
-`;
-
-const Plot = styled.svg`
-  width: 90%;
-  height: 90%;
-
-  path {
-    fill: none;
-    stroke: #121212;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    path {
-      stroke: white;
-    }
-  }
-`;
 
 export const saveSVG = (svgElement, settings) => {
   if (svgElement) {
@@ -212,20 +181,21 @@ const LorenzSvg = () => {
   const strokeWidth = Math.min(bounds.width, bounds.height) * 0.001;
 
   return (
-    <Container>
-      <Plot
+    <div className="w-screen h-screen flex items-center justify-center">
+      <svg
+        className="w-[90%] h-[90%]"
         ref={svgRef}
-        viewBox={`${bounds.min0} ${bounds.min1}
-         ${bounds.width} ${bounds.height}`}
+        viewBox={`${bounds.min0} ${bounds.min1} ${bounds.width} ${bounds.height}`}
       >
         <g>
           <path
+            className="fill-none stroke-[#121212] dark:stroke-white"
             d={getPathData(points, settings.projection)}
             strokeWidth={strokeWidth}
           />
         </g>
-      </Plot>
-    </Container>
+      </svg>
+    </div>
   );
 };
 

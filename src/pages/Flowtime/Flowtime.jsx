@@ -84,15 +84,17 @@ const Flowtime = () => {
   };
 
   return (
-    <Container
-      onMouseDown={showReality}
-      onTouchStart={showReality}
-      onMouseUp={showFlowtime}
-      onTouchEnd={showFlowtime}
-    >
-      <Header>~ flowtime ~</Header>
-      <Time>{timeFormatter.format(time)}</Time>
-    </Container>
+    <div className="w-screen h-screen">
+      <Container
+        onMouseDown={showReality}
+        onTouchStart={showReality}
+        onMouseUp={showFlowtime}
+        onTouchEnd={showFlowtime}
+      >
+        <Header>~ flowtime ~</Header>
+        <Time>{timeFormatter.format(time)}</Time>
+      </Container>
+    </div>
   );
 };
 

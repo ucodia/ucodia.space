@@ -33,7 +33,7 @@ const Kinetic = () => {
 
   return (
     <div
-      className={`w-full h-full flex items-center justify-center cursor-pointer`}
+      className={`w-screen h-screen flex items-center justify-center cursor-pointer`}
       style={{ backgroundColor: background }}
       onClick={handleBackgroundTouch}
     >
