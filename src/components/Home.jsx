@@ -1,61 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 import { singleDiamond } from "../pages/sketches/diamonds";
 import U5Wrapper from "./U5Wrapper";
 import routes from "@/routes";
-
-const Container = styled.div`
-  padding: 50px 0;
-`;
-const Heading = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-`;
-const Sketch = styled.div`
-  margin-right: 50px;
-  height: 200px;
-  width: 200px;
-
-  @media only screen and (max-width: 425px) {
-    margin-right: 25px;
-    height: 100px;
-    width: 100px;
-  }
-`;
-const LogoImg = styled.img`
-  height: 100px;
-  @media only screen and (max-width: 425px) {
-    height: 50px;
-  }
-`;
-const List = styled.div`
-  margin: 50px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  // TODO: remove this after applying Tailwind for layout
-  line-height: normal;
-
-  font-size: 3rem;
-  @media only screen and (max-width: 425px) {
-    font-size: 2rem;
-  }
-`;
-const ExternalLink = styled.a`
-  padding: 10px;
-  text-decoration: none;
-  color: ${(props) => props.color};
-`;
-const PageLink = styled(Link)`
-  padding: 10px;
-  text-decoration: none;
-  color: ${(props) => props.color};
-`;
 
 const links = routes
   .map(({ name, path, override }) => ({
@@ -66,32 +13,40 @@ const links = routes
 
 const Home = () => {
   return (
-    <Container>
-      <Heading>
-        <Sketch>
+    <div className="py-[50px]">
+      <div className="flex flex-row items-center justify-center">
+        <div className="mr-[50px] h-[200px] w-[200px] max-[425px]:mr-[25px] max-[425px]:h-[100px] max-[425px]:w-[100px]">
           <U5Wrapper sketch={singleDiamond} />
-        </Sketch>
+        </div>
         <picture>
           <source
             srcSet="/dark-ucodia-logo.svg"
             media="(prefers-color-scheme: dark)"
           />
-          <LogoImg src="/light-ucodia-logo.svg" alt="website logo" />
+          <img
+            src="/light-ucodia-logo.svg"
+            alt="website logo"
+            className="h-[100px] max-[425px]:h-[50px]"
+          />
         </picture>
-      </Heading>
-      <List>
-        {links.map(({ type, name, to }, index, items) => {
+      </div>
+      <div className="my-[50px] flex flex-col items-center justify-center text-5xl max-[425px]:text-4xl leading-normal">
+        {links.map(({ name, to }, index, items) => {
           const inc = Math.round(360 / items.length);
-          const color = `hsl(${index * inc}, 80%, 60%)`;
-
+          const color = `hsl(${index * inc},80%,60%)`;
           return (
-            <PageLink color={color} key={name} to={to}>
+            <Link
+              key={name}
+              className="no-underline"
+              style={{ color: color }}
+              to={to}
+            >
               {name}
-            </PageLink>
+            </Link>
           );
         })}
-      </List>
-    </Container>
+      </div>
+    </div>
   );
 };
 
