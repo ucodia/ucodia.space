@@ -1,5 +1,6 @@
 import ExternalRedirect from "@/components/ExternalRedirect";
 import SketchWrapper from "@/components/SketchWrapper";
+import MDXLayout from "@/components/MdxLayout";
 import GiphyVox from "@/pages/GiphyVox";
 import Kinetic from "@/pages/Kinetic";
 import Zukunft from "@/pages/Zukunft";
@@ -25,6 +26,7 @@ import * as cmyDance from "@/pages/sketches/cmyDance";
 import * as squircle from "@/pages/sketches/squircle";
 import * as infiniteChaos from "@/pages/sketches/infiniteChaos";
 import * as spinnySquares from "@/pages/sketches/spinnySquares";
+import ComputerObservingItselfMdx from "@/mdx-pages/computer-observing-itself.mdx";
 
 const FullscreenSketch = ({ sketch }) => {
   return (
@@ -35,6 +37,15 @@ const FullscreenSketch = ({ sketch }) => {
 };
 
 const routes = [
+  {
+    name: "computer observing itself",
+    path: "/computer-observing-itself",
+    element: (
+      <MDXLayout>
+        <ComputerObservingItselfMdx />
+      </MDXLayout>
+    ),
+  },
   {
     name: "about",
     path: "/about",
