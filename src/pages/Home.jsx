@@ -37,7 +37,7 @@ const Home = () => {
           return (
             <Link
               key={name}
-              className="text-4xl sm:text-6xl p-2 sm:p-4 no-underline"
+              className="text-center text-4xl sm:text-6xl p-2 sm:p-4 no-underline"
               style={{ color: color }}
               to={to}
             >
