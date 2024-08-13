@@ -21,3 +21,17 @@ npm run dev
 ```
 
 The website will be available at the following address: http://localhost:5173/
+
+### Synchronizing the CDN
+
+To push
+
+```
+aws s3 sync ./public/cdn/ s3://cdn.ucodia.space/ --exclude "*.DS_Store"
+```
+
+To pull
+
+```
+aws s3 sync s3://cdn.ucodia.space/ ./public/cdn/
+```
