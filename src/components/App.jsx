@@ -22,8 +22,14 @@ const App = () => {
                 </Page>
               }
             />
-            {routes.map(({ path, element }, i) => {
-              return <Route key={path} path={path} element={element} />;
+            {routes.map(({ path, name, element }, i) => {
+              return (
+                <Route
+                  key={path}
+                  path={path}
+                  element={<Page title={name}>{element}</Page>}
+                />
+              );
             })}
             <Route
               path="*"
