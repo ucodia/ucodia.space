@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/theme";
-import Page from "@/components/Page";
-import Alert from "@/components/Alert";
-import Home from "@/pages/Home";
+import Page from "@/components/page";
+import Alert from "@/components/alert";
+import Home from "@/pages/home";
 import routes from "@/routes";
 import { MDXProvider } from "@mdx-js/react";
 

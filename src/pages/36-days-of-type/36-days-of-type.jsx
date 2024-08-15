@@ -1,5 +1,5 @@
 import React from "react";
-import SketchWrapper from "@/components/SketchWrapper";
+import SketchWrapper from "@/components/sketch-wrapper";
 import D from "./2020/D";
 import e from "./2020/e";
 import f from "./2020/f";

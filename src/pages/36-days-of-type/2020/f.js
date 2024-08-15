@@ -1,6 +1,6 @@
-import cyclicIterator from "@/utils/cyclicIterator";
-import autoStretchP5 from "@/utils/autoStretchP5";
-import pointsToSegments from "../utils/pointsToSegments";
+import cyclicIterator from "@/utils/cyclic-iterator";
+import autoStretchP5 from "@/utils/auto-stretch-p5";
+import pointsToSegments from "../utils/points-to-segments";
 
 const f = (sketch) => {
   let letter = "f";

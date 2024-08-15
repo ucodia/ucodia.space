@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import useSpeechToText from "@/hooks/useSpeechToText";
+import useSpeechToText from "@/hooks/use-speech-to-text";
 import giphy from "@/apis/giphy";
-import Alert from "@/components/Alert";
+import Alert from "@/components/alert";
 
 export const meta = {
   name: "Giphy Vox",

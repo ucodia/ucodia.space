@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SvgGradient from "./SvgGradient";
+import SvgGradient from "./svg-gradient";
 import { randomString } from "@/utils/random";
 
 const SvgPath = ({ viewBox, data, gradient, flipped, className }) => {

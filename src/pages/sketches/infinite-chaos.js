@@ -1,5 +1,5 @@
 import { GUI } from "dat.gui";
-import autoStretchP5 from "@/utils/autoStretchP5";
+import autoStretchP5 from "@/utils/auto-stretch-p5";
 import { numericalRecipesLcg, randomString } from "@/utils/random";
 
 export const meta = {
