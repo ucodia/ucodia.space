@@ -39,7 +39,7 @@ const FullscreenSketch = ({ sketch }) => {
 const routes = [
   {
     name: "computer observing itself",
-    path: "/computer-observing-itself",
+    path: "computer-observing-itself",
     element: (
       <MDXLayout>
         <ComputerObservingItselfMdx />
@@ -48,126 +48,126 @@ const routes = [
   },
   {
     name: "about",
-    path: "/about",
+    path: "about",
     element: (
       <ExternalRedirect to="https://ucodia.notion.site/Who-is-Ucodia-15cd507c414146c098df52f557a1c1d5" />
     ),
   },
   {
     name: "contact",
-    path: "/contact",
+    path: "contact",
     element: <ExternalRedirect to="https://linktr.ee/ucodia" />,
   },
   {
     name: "shop ✨",
-    path: "/shop",
+    path: "shop",
     element: <ExternalRedirect to="https://ucodia.square.site" />,
   },
   {
     name: "mycologue 🍄",
-    path: "/mycologue",
+    path: "mycologue",
     element: <ExternalRedirect to="https://mycologue.org" />,
   },
-  { name: "giphy vox", path: "/giphy-vox", element: <GiphyVox /> },
-  { name: "kinetic", path: "/kinetic", element: <Kinetic /> },
+  { name: "giphy vox", path: "giphy-vox", element: <GiphyVox /> },
+  { name: "kinetic", path: "kinetic", element: <Kinetic /> },
   {
     name: "zukunft",
-    path: "/zukunft",
+    path: "zukunft",
     element: <Zukunft />,
   },
-  { name: "flowtime", path: "/flowtime", element: <Flowtime /> },
-  { name: "conundrum", path: "/conundrum", element: <Conundrum /> },
-  { name: "lorenz-svg", path: "/lorenz-svg", element: <LorenzSvg /> },
-  { name: "seine", path: "/seine", element: <Seine /> },
+  { name: "flowtime", path: "flowtime", element: <Flowtime /> },
+  { name: "conundrum", path: "conundrum", element: <Conundrum /> },
+  { name: "lorenz-svg", path: "lorenz-svg", element: <LorenzSvg /> },
+  { name: "seine", path: "seine", element: <Seine /> },
   {
     name: "36 days of type",
-    path: "/36days/2020",
+    path: "36days/2020",
     element: <ThirtySixDaysOfType />,
     disabled: true,
   },
   {
     name: "diamonds",
-    path: "/diamonds",
+    path: "diamonds",
     element: <FullscreenSketch sketch={diamonds} />,
   },
   {
     name: "circle clock",
-    path: "/circle-clock",
+    path: "circle-clock",
     element: <FullscreenSketch sketch={circleClock} />,
   },
   {
     name: "circuit",
-    path: "/circuit",
+    path: "circuit",
     element: <FullscreenSketch sketch={circuit} />,
   },
   {
     name: "dizzy waves",
-    path: "/dizzy-waves",
+    path: "dizzy-waves",
     element: <FullscreenSketch sketch={dizzyWaves} />,
   },
   {
     name: "area715",
-    path: "/area715",
+    path: "area715",
     element: <FullscreenSketch sketch={area715} />,
   },
   {
     name: "illusions",
-    path: "/illusions",
+    path: "illusions",
     element: <FullscreenSketch sketch={illusions} />,
   },
   {
     name: "look above",
-    path: "/look-above",
+    path: "look-above",
     element: <FullscreenSketch sketch={lookAbove} />,
   },
   {
     name: "vintage",
-    path: "/vintage",
+    path: "vintage",
     element: <FullscreenSketch sketch={vintage} />,
   },
   {
     name: "scales",
-    path: "/scales",
+    path: "scales",
     element: <FullscreenSketch sketch={scales} />,
   },
   {
     name: "drawbot",
-    path: "/drawbot",
+    path: "drawbot",
     element: <FullscreenSketch sketch={drawbot} />,
   },
   {
     name: "revolutions",
-    path: "/revolutions",
+    path: "revolutions",
     element: <FullscreenSketch sketch={revolutions} />,
   },
   {
     name: "fittest bubble bath",
-    path: "/fittest-bubble-bath",
+    path: "fittest-bubble-bath",
     element: <FullscreenSketch sketch={fittestBubleBath} />,
   },
   {
     name: "lorenz",
-    path: "/lorenz",
+    path: "lorenz",
     element: <FullscreenSketch sketch={lorenz} />,
   },
   {
     name: "cmy dance",
-    path: "/cmy-dance",
+    path: "cmy-dance",
     element: <FullscreenSketch sketch={cmyDance} />,
   },
   {
     name: "squircle",
-    path: "/squircle",
+    path: "squircle",
     element: <FullscreenSketch sketch={squircle} />,
   },
   {
     name: "infinite chaos",
-    path: "/infinite-chaos",
+    path: "infinite-chaos",
     element: <FullscreenSketch sketch={infiniteChaos} />,
   },
   {
     name: "spinny squares",
-    path: "/spinny-squares",
+    path: "spinny-squares",
     element: <FullscreenSketch sketch={spinnySquares} />,
   },
 ];
