@@ -59,6 +59,11 @@ const routes = [
     element: <ExternalRedirect to="https://linktr.ee/ucodia" />,
   },
   {
+    name: "compovision",
+    path: "compovision",
+    element: <ExternalRedirect to="https://www.instagram.com/reel/C7fOHZpS9Ut/" />,
+  },
+  {
     name: "shop ✨",
     path: "shop",
     element: <ExternalRedirect to="https://ucodia.square.site" />,
