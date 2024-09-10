@@ -27,6 +27,7 @@ import * as squircle from "@/pages/sketches/squircle";
 import * as infiniteChaos from "@/pages/sketches/infinite-chaos";
 import * as spinnySquares from "@/pages/sketches/spinny-squares";
 import ComputerObservingItselfMdx from "@/mdx-pages/computer-observing-itself.mdx";
+import EventsMdx from "@/mdx-pages/events.mdx";
 
 const FullscreenSketch = ({ sketch }) => {
   return (
@@ -47,6 +48,15 @@ const routes = [
     ),
   },
   {
+    name: "events 📅",
+    path: "events",
+    element: (
+      <MDXLayout>
+        <EventsMdx />
+      </MDXLayout>
+    ),
+  },
+  {
     name: "about",
     path: "about",
     element: (
@@ -61,7 +71,9 @@ const routes = [
   {
     name: "compovision",
     path: "compovision",
-    element: <ExternalRedirect to="https://www.instagram.com/reel/C7fOHZpS9Ut/" />,
+    element: (
+      <ExternalRedirect to="https://www.instagram.com/reel/C7fOHZpS9Ut/" />
+    ),
   },
   {
     name: "shop ✨",
