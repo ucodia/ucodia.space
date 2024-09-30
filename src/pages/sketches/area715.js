@@ -230,8 +230,8 @@ const area715 = (sketch) => {
   function updateWanderingPosition() {
     noiseOffsetX += 0.001;
     noiseOffsetY += 0.001;
-    posX += sketch.noise(noiseOffsetX) * 0.1;
-    posY += sketch.noise(noiseOffsetY) * 0.1;
+    posX = sketch.map(sketch.noise(noiseOffsetX), 0, 1, 0, sketch.width / 2);
+    posY = sketch.map(sketch.noise(noiseOffsetY), 0, 1, 0, sketch.height / 2);
     capRotation += rotationInc / 4;
   }
 
