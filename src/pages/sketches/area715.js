@@ -183,6 +183,10 @@ const area715 = (sketch) => {
     else if (k === " ") paused = !paused;
   };
 
+  sketch.doubleClicked = () => {
+    borderAuto = !borderAuto;
+  };
+
   sketch.mouseWheel = (event) => {
     borderWeight += event.delta * weightInc;
 
