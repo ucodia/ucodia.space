@@ -48,9 +48,8 @@ const area715 = (sketch) => {
     sketch.frameRate(30);
 
     // defaults
-    posX = 0;
-    posY = 0;
-    capRotation = 0;
+
+    capRotation = sketch.QUARTER_PI;
     rotationInc = sketch.TWO_PI / 180;
     borderWeight = 3;
     weightInc = 0.5;
@@ -59,11 +58,14 @@ const area715 = (sketch) => {
     borderCursor = new Looper(0, 10);
     overlay = "rect";
     mirror = "hv";
-    posLock = false;
-    borderAuto = false;
+    posLock = true;
+    borderAuto = true;
     paused = false;
 
     autoStretchP5(sketch, layout);
+
+    posX = sketch.width / 4.1;
+    posY = sketch.height / 2;
   };
 
   sketch.draw = () => {
@@ -76,6 +78,15 @@ const area715 = (sketch) => {
       graphics();
       capture();
     }
+
+    console.log(
+      sketch.width,
+      posX,
+      posX / sketch.width,
+      sketch.height,
+      posY,
+      posY / sketch.height
+    );
   };
 
   function project() {
@@ -140,18 +151,22 @@ const area715 = (sketch) => {
   // input hooks
 
   function input() {
-    if (!posLock) {
-      posX = sketch.mouseX;
-      posY = sketch.mouseY;
-    }
-
     if (sketch.mouseIsPressed) {
+      if (posLock) {
+        posLock = false;
+      }
+
       if (sketch.mouseButton === sketch.LEFT) capRotation -= rotationInc;
       else capRotation += rotationInc;
 
       if (capRotation < 0) capRotation = sketch.TWO_PI + capRotation;
       else if (capRotation > sketch.TWO_PI)
         capRotation = sketch.TWO_PI - capRotation;
+    }
+
+    if (!posLock) {
+      posX = sketch.mouseX;
+      posY = sketch.mouseY;
     }
 
     if (sketch.keyPressed) {
