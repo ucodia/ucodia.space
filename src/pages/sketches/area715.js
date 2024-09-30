@@ -1,4 +1,5 @@
 import autoStretchP5 from "@/utils/auto-stretch-p5";
+import debounce from "@/utils/debounce";
 
 export const meta = {
   name: "Area 715",
@@ -20,10 +21,30 @@ const area715 = (sketch) => {
   var posLock;
   var borderAuto;
   var paused;
+  var isWandering;
+  var noiseOffsetX;
+  var noiseOffsetY;
+  var showCursor;
 
   var cap;
   var capWidth;
   var capHeight;
+
+  const startWandering = debounce(() => {
+    posLock = true;
+    isWandering = true;
+    hideCursors();
+  }, 10000);
+
+  const showCursors = () => {
+    sketch.noCursor();
+    showCursor = true;
+  };
+
+  const hideCursors = () => {
+    sketch.noCursor();
+    showCursor = false;
+  };
 
   function layout() {
     if (mirror === "hv") {
@@ -46,9 +67,9 @@ const area715 = (sketch) => {
   sketch.setup = () => {
     sketch.createCanvas(100, 100);
     sketch.frameRate(30);
+    sketch.noCursor();
 
     // defaults
-
     capRotation = sketch.QUARTER_PI;
     rotationInc = sketch.TWO_PI / 180;
     borderWeight = 3;
@@ -61,11 +82,17 @@ const area715 = (sketch) => {
     posLock = true;
     borderAuto = true;
     paused = false;
+    isWandering = false;
+    noiseOffsetX = 0;
+    noiseOffsetY = 1000;
+    showCursor = false;
 
     autoStretchP5(sketch, layout);
 
     posX = sketch.width / 4.1;
     posY = sketch.height / 2;
+
+    startWandering();
   };
 
   sketch.draw = () => {
@@ -79,14 +106,15 @@ const area715 = (sketch) => {
       capture();
     }
 
-    console.log(
-      sketch.width,
-      posX,
-      posX / sketch.width,
-      sketch.height,
-      posY,
-      posY / sketch.height
-    );
+    if (showCursor) {
+      sketch.fill("white");
+      sketch.noStroke();
+      sketch.ellipse(posX, posY, 10, 10);
+    }
+
+    if (isWandering) {
+      updateWanderingPosition();
+    }
   };
 
   function project() {
@@ -148,23 +176,26 @@ const area715 = (sketch) => {
     sketch.pop();
   }
 
-  // input hooks
-
   function input() {
     if (sketch.mouseIsPressed) {
+      showCursors();
+
       if (posLock) {
         posLock = false;
+        isWandering = false;
       }
 
-      if (sketch.mouseButton === sketch.LEFT) capRotation -= rotationInc;
-      else capRotation += rotationInc;
+      if (sketch.mouseButton === sketch.LEFT) capRotation += rotationInc;
+      else capRotation -= rotationInc;
 
       if (capRotation < 0) capRotation = sketch.TWO_PI + capRotation;
       else if (capRotation > sketch.TWO_PI)
         capRotation = sketch.TWO_PI - capRotation;
+
+      startWandering();
     }
 
-    if (!posLock) {
+    if (!posLock && !isWandering) {
       posX = sketch.mouseX;
       posY = sketch.mouseY;
     }
@@ -181,19 +212,28 @@ const area715 = (sketch) => {
     if (k === "w") borderAuto = !borderAuto;
     else if (k === "l") posLock = !posLock;
     else if (k === " ") paused = !paused;
+
+    startWandering();
   };
 
   sketch.doubleClicked = () => {
     borderAuto = !borderAuto;
+    startWandering();
   };
 
   sketch.mouseWheel = (event) => {
     borderWeight += event.delta * weightInc;
-
     if (borderWeight < 0) borderWeight = 0;
+    startWandering();
   };
 
-  // other stuff
+  function updateWanderingPosition() {
+    noiseOffsetX += 0.001;
+    noiseOffsetY += 0.001;
+    posX += sketch.noise(noiseOffsetX) * 0.1;
+    posY += sketch.noise(noiseOffsetY) * 0.1;
+    capRotation += rotationInc / 4;
+  }
 
   function getTimestamp() {
     return new Date()
@@ -231,10 +271,7 @@ const area715 = (sketch) => {
     };
   }
 
-  // equilateral primitive
-
   function equi(x, y, size, mode) {
-    // the mode changes vertical centering
     const m = mode | 0;
     const h = triHeight(size, size / 2);
     const h3 = h / 3;
@@ -255,7 +292,7 @@ const area715 = (sketch) => {
       y3 = y + h / 2;
     }
 
-    this.triangle(x1, y1, x2, y2, x3, y3);
+    sketch.triangle(x1, y1, x2, y2, x3, y3);
   }
 
   function triHeight(hypo, a) {
