@@ -413,7 +413,7 @@ function setURLParams(obj) {
   for (const [key, value] of Object.entries(obj)) {
     url.searchParams.set(key, value);
   }
-  window.history.pushState(null, "", url);
+  window.history.replaceState(null, "", url);
   copyToClipboard(url.toString());
 }
 
