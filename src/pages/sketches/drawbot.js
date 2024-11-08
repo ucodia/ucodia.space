@@ -1,4 +1,4 @@
-import { GUI } from "dat.gui";
+import { GUI } from "lil-gui";
 import autoStretchP5 from "@/utils/auto-stretch-p5";
 
 export const meta = {
@@ -111,7 +111,7 @@ const drawbot001 = (sketch) => {
     settings.showBot = rollDice(8);
     settings.contrast = rollDice(12);
 
-    gui.updateDisplay();
+    gui.controllersRecursive().forEach((c) => c.updateDisplay());
   }
 
   function reset() {

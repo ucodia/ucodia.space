@@ -1,4 +1,4 @@
-import { GUI } from "dat.gui";
+import { GUI } from "lil-gui";
 import autoStretchP5 from "@/utils/auto-stretch-p5";
 
 export const meta = {
@@ -33,7 +33,7 @@ const lookAbove = (sketch) => {
 
   const gui = new GUI();
   gui.width = 300;
-  gui.hide();
+  gui.close();
   gui.add(sx, "universeSize", 16000, 32000, 1000).onFinishChange(update);
   gui.add(sx, "starDensity", 0.00001, 0.001).onFinishChange(update);
   gui.add(sx, "lightPolution", 0, 0.8, 0.05);
@@ -50,7 +50,7 @@ const lookAbove = (sketch) => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
     autoStretchP5(sketch);
     randomizeFeatures();
-    gui.updateDisplay();
+    gui.controllersRecursive().forEach((c) => c.updateDisplay());
     update();
 
     wanderNoiseX = randomInt(0, 1000);

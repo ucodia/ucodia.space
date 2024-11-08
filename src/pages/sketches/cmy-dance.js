@@ -1,4 +1,4 @@
-import { GUI } from "dat.gui";
+import { GUI } from "lil-gui";
 import autoStretchP5 from "@/utils/auto-stretch-p5";
 import { numericalRecipesLcg } from "@/utils/random";
 import presets from "./cmy-dance-presets.json";

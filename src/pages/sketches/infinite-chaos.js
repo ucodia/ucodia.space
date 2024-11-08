@@ -1,4 +1,4 @@
-import { GUI } from "dat.gui";
+import { GUI } from "lil-gui";
 import autoStretchP5 from "@/utils/auto-stretch-p5";
 import { numericalRecipesLcg, randomString } from "@/utils/random";
 
@@ -138,7 +138,7 @@ const infiniteChaos = (sketch) => {
   });
   seedController.onFinishChange(() => {
     sx.presetSeed = "";
-    gui.updateDisplay();
+    gui.controllersRecursive().forEach((c) => c.updateDisplay());
     updateAttractorData();
     sketch.draw();
   });
@@ -167,7 +167,7 @@ const infiniteChaos = (sketch) => {
       console.log(`Found chaotic seed ${sx.seed} in ${elapsedTime}ms`);
 
       sx.presetSeed = "";
-      gui.updateDisplay();
+      gui.controllersRecursive().forEach((c) => c.updateDisplay());
       updateAttractorData();
       sketch.draw();
     },
