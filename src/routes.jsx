@@ -94,7 +94,7 @@ const routes = [
   },
   { name: "flowtime", path: "flowtime", element: <Flowtime /> },
   { name: "conundrum", path: "conundrum", element: <Conundrum /> },
-  { name: "lorenz-svg", path: "lorenz-svg", element: <LorenzSvg /> },
+  { name: "lorenz (for plotters)", path: "lorenz-svg", element: <LorenzSvg /> },
   { name: "seine", path: "seine", element: <Seine /> },
   {
     name: "36 days of type",
