@@ -14,7 +14,13 @@ const attractors = {
       y: y + (x * (b - z) - y) * dt,
       z: z + (x * y - c * z) * dt,
     }),
-    default: { x: 0.1, y: 0, z: -1, a: 10, b: 28, c: 8 / 3 },
+    default: { x: 0.1, y: 0, z: -1, a: 10, b: 28, c: 8 / 3, dt: 0.003 },
+    ranges: {
+      a: { min: 0, max: 30, step: 0.1 },
+      b: { min: 0, max: 100, step: 0.1 },
+      c: { min: 0, max: 10, step: 0.1 },
+    },
+    params: ["a", "b", "c"],
   },
   halvorsen: {
     fn: ({ x, y, z, a, dt }) => ({
@@ -22,7 +28,11 @@ const attractors = {
       y: y + (-a * y - 4 * z - 4 * x - z * z) * dt,
       z: z + (-a * z - 4 * x - 4 * y - x * x) * dt,
     }),
-    default: { x: 0.1, y: 0, z: 0, a: 1.4 },
+    default: { x: 1, y: 0, z: 0, a: 1.4, dt: 0.004 },
+    ranges: {
+      a: { min: 0, max: 4, step: 0.01 },
+    },
+    params: ["a"],
   },
   sprott: {
     fn: ({ x, y, z, a, b, dt }) => ({
@@ -30,7 +40,12 @@ const attractors = {
       y: y + (1 - b * (x * x) + y * z) * dt,
       z: z + (x - x * x - y * y) * dt,
     }),
-    default: { x: 0.1, y: 0, z: 0, a: 0.5, b: 2 },
+    default: { x: 0.1, y: 0.1, z: 0.1, a: 2.07, b: 1.79, dt: 0.008 },
+    ranges: {
+      a: { min: 0, max: 4, step: 0.01 },
+      b: { min: 0, max: 4, step: 0.01 },
+    },
+    params: ["a", "b"],
   },
   thomas: {
     fn: ({ x, y, z, b, dt }) => ({
@@ -38,7 +53,11 @@ const attractors = {
       y: y + (Math.sin(z) - b * y) * dt,
       z: z + (Math.sin(x) - b * z) * dt,
     }),
-    default: { x: 0.1, y: 0, z: 0, b: 0.208186 },
+    default: { x: 1, y: 0, z: 0, b: 0.19, dt: 0.05 },
+    ranges: {
+      b: { min: 0, max: 1, step: 0.001 },
+    },
+    params: ["b"],
   },
   chen: {
     fn: ({ x, y, z, a, b, c, dt }) => ({
@@ -46,7 +65,13 @@ const attractors = {
       y: y + ((c - a) * x - x * z + c * y) * dt,
       z: z + (x * y - b * z) * dt,
     }),
-    default: { x: 0.1, y: 0, z: 0, a: 35, b: 3, c: 28 },
+    default: { x: 1, y: 1, z: 1, a: 40, b: 3, c: 28, dt: 0.002 },
+    ranges: {
+      a: { min: 20, max: 60, step: 0.1 },
+      b: { min: 1, max: 10, step: 0.1 },
+      c: { min: 10, max: 50, step: 0.1 },
+    },
+    params: ["a", "b", "c"],
   },
   rossler: {
     fn: ({ x, y, z, a, b, c, dt }) => ({
@@ -54,7 +79,13 @@ const attractors = {
       y: y + (x + a * y) * dt,
       z: z + (b + z * (x - c)) * dt,
     }),
-    default: { x: 0.1, y: 0, z: 0, a: 0.2, b: 0.2, c: 5.7 },
+    default: { x: 1, y: 1, z: 1, a: 0.2, b: 0.2, c: 5.7, dt: 0.01 },
+    ranges: {
+      a: { min: 0, max: 1, step: 0.01 },
+      b: { min: 0, max: 2, step: 0.01 },
+      c: { min: 0, max: 20, step: 0.1 },
+    },
+    params: ["a", "b", "c"],
   },
 };
 
@@ -119,9 +150,10 @@ const uiConfig = {
     default: 10000,
     min: 100,
     max: 100000,
+    step: 1,
   },
   offset: {
-    default: 0,
+    default: 100,
     min: 0,
     max: 10000,
   },
@@ -133,7 +165,7 @@ const uiConfig = {
   },
   projection: {
     default: "xy",
-    options: ["xy", "yx", "xz", "zx", "yz", "zy"],
+    options: ["xy", "xz", "yz"],
   },
   x: {
     default: attractors.lorenz.default.x,
@@ -152,18 +184,15 @@ const uiConfig = {
   },
   a: {
     default: attractors.lorenz.default.a,
-    min: 0,
-    max: 60,
+    ...attractors.lorenz.ranges.a,
   },
   b: {
     default: attractors.lorenz.default.b,
-    min: 0,
-    max: 100,
+    ...attractors.lorenz.ranges.b,
   },
   c: {
     default: attractors.lorenz.default.c,
-    min: 0,
-    max: 10,
+    ...attractors.lorenz.ranges.c,
   },
 };
 
@@ -171,32 +200,60 @@ const defaultSettings = Object.fromEntries(
   Object.entries(uiConfig).map(([key, value]) => [key, value.default])
 );
 
-const getDefaultSettingsForAttractor = (attractorName, currentSettings) => {
-  const attractorDefaults = attractors[attractorName].default;
-  return {
-    ...currentSettings,
-    ...attractorDefaults,
-    attractor: attractorName,
-  };
-};
-
 const LorenzSvg = () => {
+  const guiRef = useRef(null);
+  const controllersRef = useRef({}); // Add controllers ref
   const svgRef = useRef(null);
   const [settings, setSettings] = useState(defaultSettings);
 
   useEffect(() => {
-    const gui = new GUI();
+    guiRef.current = new GUI();
+    const allParams = ["a", "b", "c"];
 
     Object.entries(uiConfig).forEach(([key, config]) => {
       const control = config.options
-        ? gui.add(settings, key, config.options)
-        : gui.add(settings, key, config.min, config.max, config.step);
+        ? guiRef.current.add(settings, key, config.options)
+        : guiRef.current.add(
+            settings,
+            key,
+            config.min,
+            config.max,
+            config.step
+          );
+
+      controllersRef.current[key] = control;
+
+      // Hide parameter controls initially if not used by current attractor
+      if (
+        allParams.includes(key) &&
+        !attractors[settings.attractor].params.includes(key)
+      ) {
+        control.hide();
+      }
 
       control.onChange((value) => {
         if (key === "attractor") {
-          setSettings((prev) => getDefaultSettingsForAttractor(value, prev));
-          Object.keys(gui.controllers).forEach((key) => {
-            gui.controllers[key].updateDisplay();
+          const newAttractor = attractors[value];
+          setSettings((prev) => ({
+            ...prev,
+            ...newAttractor.default,
+            attractor: value,
+          }));
+
+          // Show/hide and update parameter controls
+          allParams.forEach((param) => {
+            const ctrl = controllersRef.current[param];
+            if (newAttractor.params.includes(param)) {
+              ctrl.show();
+              if (newAttractor.ranges?.[param]) {
+                ctrl.min(newAttractor.ranges[param].min);
+                ctrl.max(newAttractor.ranges[param].max);
+                ctrl.step(newAttractor.ranges[param].step);
+                ctrl.setValue(newAttractor.default[param]);
+              }
+            } else {
+              ctrl.hide();
+            }
           });
         } else {
           setSettings((prev) => ({ ...prev, [key]: value }));
@@ -204,22 +261,27 @@ const LorenzSvg = () => {
       });
     });
 
-    gui
+    guiRef.current
       .add(
         {
           reset: () => {
-            setSettings((prev) =>
-              getDefaultSettingsForAttractor(prev.attractor, prev)
-            );
-            Object.keys(gui.controllers).forEach((key) => {
-              gui.controllers[key].updateDisplay();
+            const newValues = attractors[settings.attractor].default;
+            setSettings((prev) => ({
+              ...prev,
+              ...newValues,
+            }));
+            // Update displayed values after reset
+            Object.entries(newValues).forEach(([key, value]) => {
+              if (controllersRef.current[key]) {
+                controllersRef.current[key].setValue(value);
+              }
             });
           },
         },
         "reset"
       )
       .name("Reset Attractor");
-    gui
+    guiRef.current
       .add(
         {
           save: () => {
@@ -232,7 +294,7 @@ const LorenzSvg = () => {
       )
       .name("Save SVG");
 
-    return () => gui.destroy();
+    return () => guiRef.current.destroy();
   }, []);
 
   const points = useMemo(() => getAttractorPoints(settings), [settings]);
