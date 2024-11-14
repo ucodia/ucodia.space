@@ -8,17 +8,92 @@ export const meta = {
 };
 
 const attractors = {
-  lorenz: {
+  aizawa: {
+    fn: ({ x, y, z, a, b, c, d, e, f, dt }) => ({
+      x: x + ((z - b) * x - d * y) * dt,
+      y: y + (d * x + (z - b) * y) * dt,
+      z:
+        z +
+        (c +
+          a * z -
+          (z * z * z) / 3 -
+          (x * x + y * y) * (1 + e * z) +
+          f * z * x * x * x) *
+          dt,
+    }),
+    default: {
+      x: 0.1,
+      y: 0,
+      z: 0,
+      a: 0.95,
+      b: 0.7,
+      c: 0.6,
+      d: 3.5,
+      e: 0.25,
+      f: 0.1,
+      dt: 0.01,
+    },
+    ranges: {
+      a: { min: 0, max: 2, step: 0.01 },
+      b: { min: 0, max: 2, step: 0.01 },
+      c: { min: 0, max: 2, step: 0.01 },
+      d: { min: 0, max: 5, step: 0.1 },
+      e: { min: 0, max: 1, step: 0.01 },
+      f: { min: 0, max: 1, step: 0.01 },
+    },
+    params: ["a", "b", "c", "d", "e", "f"],
+  },
+  chen: {
     fn: ({ x, y, z, a, b, c, dt }) => ({
       x: x + a * (y - x) * dt,
-      y: y + (x * (b - z) - y) * dt,
-      z: z + (x * y - c * z) * dt,
+      y: y + ((c - a) * x - x * z + c * y) * dt,
+      z: z + (x * y - b * z) * dt,
     }),
-    default: { x: 0.1, y: 0, z: -1, a: 10, b: 28, c: 8 / 3, dt: 0.003 },
+    default: { x: 1, y: 1, z: 1, a: 40, b: 3, c: 28, dt: 0.002 },
     ranges: {
-      a: { min: 0, max: 30, step: 0.1 },
-      b: { min: 0, max: 100, step: 0.1 },
-      c: { min: 0, max: 10, step: 0.1 },
+      a: { min: 20, max: 60, step: 0.1 },
+      b: { min: 1, max: 10, step: 0.1 },
+      c: { min: 10, max: 50, step: 0.1 },
+    },
+    params: ["a", "b", "c"],
+  },
+  dadras: {
+    fn: ({ x, y, z, a, b, c, d, e, dt }) => ({
+      x: x + (y - a * x + b * y * z) * dt,
+      y: y + (c * y - x * z + z) * dt,
+      z: z + (d * x * y - e * z) * dt,
+    }),
+    default: {
+      x: 0.1,
+      y: 0.1,
+      z: 0.1,
+      a: 3,
+      b: 2.7,
+      c: 1.7,
+      d: 2,
+      e: 9,
+      dt: 0.01,
+    },
+    ranges: {
+      a: { min: 0, max: 5, step: 0.1 },
+      b: { min: 0, max: 5, step: 0.1 },
+      c: { min: 0, max: 5, step: 0.1 },
+      d: { min: 0, max: 5, step: 0.1 },
+      e: { min: 0, max: 15, step: 0.1 },
+    },
+    params: ["a", "b", "c", "d", "e"],
+  },
+  four_wing: {
+    fn: ({ x, y, z, a, b, c, dt }) => ({
+      x: x + (a * x - b * y * z) * dt,
+      y: y + (b * x * z - c * y) * dt,
+      z: z + (-z + x * y) * dt,
+    }),
+    default: { x: 1, y: 1, z: 1, a: 4, b: 6, c: 10, dt: 0.01 },
+    ranges: {
+      a: { min: 0, max: 10, step: 0.1 },
+      b: { min: 0, max: 10, step: 0.1 },
+      c: { min: 0, max: 20, step: 0.1 },
     },
     params: ["a", "b", "c"],
   },
@@ -33,6 +108,71 @@ const attractors = {
       a: { min: 0, max: 4, step: 0.01 },
     },
     params: ["a"],
+  },
+  lorenz: {
+    fn: ({ x, y, z, a, b, c, dt }) => ({
+      x: x + a * (y - x) * dt,
+      y: y + (x * (b - z) - y) * dt,
+      z: z + (x * y - c * z) * dt,
+    }),
+    default: { x: 0.1, y: 0, z: -1, a: 10, b: 28, c: 8 / 3, dt: 0.003 },
+    ranges: {
+      a: { min: 0, max: 30, step: 0.1 },
+      b: { min: 0, max: 100, step: 0.1 },
+      c: { min: 0, max: 10, step: 0.1 },
+    },
+    params: ["a", "b", "c"],
+  },
+  lorenz83: {
+    fn: ({ x, y, z, a, b, c, d, dt }) => ({
+      x: x + (-a * x - y * y - z * z + a * c) * dt,
+      y: y + (-y + x * y - b * x * z + d) * dt,
+      z: z + (-z + b * x * y + x * z) * dt,
+    }),
+    default: {
+      x: 0.1,
+      y: 0,
+      z: 0,
+      a: 0.95,
+      b: 7.91,
+      c: 4.83,
+      d: 4.66,
+      dt: 0.01,
+    },
+    ranges: {
+      a: { min: 0, max: 2, step: 0.01 },
+      b: { min: 0, max: 10, step: 0.1 },
+      c: { min: 0, max: 10, step: 0.1 },
+      d: { min: 0, max: 10, step: 0.1 },
+    },
+    params: ["a", "b", "c", "d"],
+  },
+  rabinovich: {
+    fn: ({ x, y, z, a, b, c, dt }) => ({
+      x: x + (y * (z - 1 + x * x) + b * x) * dt,
+      y: y + (x * (3 * z + 1 - x * x) + b * y) * dt,
+      z: z + -2 * z * (a + x * y) * dt,
+    }),
+    default: { x: 0.1, y: 0, z: 0, a: 1.1, b: 0.87, c: 0, dt: 0.01 },
+    ranges: {
+      a: { min: 0, max: 2, step: 0.01 },
+      b: { min: 0, max: 2, step: 0.01 },
+    },
+    params: ["a", "b"],
+  },
+  rossler: {
+    fn: ({ x, y, z, a, b, c, dt }) => ({
+      x: x + (-y - z) * dt,
+      y: y + (x + a * y) * dt,
+      z: z + (b + z * (x - c)) * dt,
+    }),
+    default: { x: 1, y: 1, z: 1, a: 0.2, b: 0.2, c: 5.7, dt: 0.01 },
+    ranges: {
+      a: { min: 0, max: 1, step: 0.01 },
+      b: { min: 0, max: 2, step: 0.01 },
+      c: { min: 0, max: 20, step: 0.1 },
+    },
+    params: ["a", "b", "c"],
   },
   sprott: {
     fn: ({ x, y, z, a, b, dt }) => ({
@@ -59,33 +199,29 @@ const attractors = {
     },
     params: ["b"],
   },
-  chen: {
-    fn: ({ x, y, z, a, b, c, dt }) => ({
-      x: x + a * (y - x) * dt,
-      y: y + ((c - a) * x - x * z + c * y) * dt,
-      z: z + (x * y - b * z) * dt,
+  three_scroll: {
+    fn: ({ x, y, z, a, b, c, d, dt }) => ({
+      x: x + (a * x - y * z) * dt,
+      y: y + (b * y + x * z) * dt,
+      z: z + (c * z + d * x * y) * dt,
     }),
-    default: { x: 1, y: 1, z: 1, a: 40, b: 3, c: 28, dt: 0.002 },
+    default: {
+      x: 0.1,
+      y: 0.1,
+      z: 0.1,
+      a: 40,
+      b: 55,
+      c: 1.833,
+      d: 0.16,
+      dt: 0.001,
+    },
     ranges: {
       a: { min: 20, max: 60, step: 0.1 },
-      b: { min: 1, max: 10, step: 0.1 },
-      c: { min: 10, max: 50, step: 0.1 },
+      b: { min: 20, max: 80, step: 0.1 },
+      c: { min: 0, max: 5, step: 0.001 },
+      d: { min: 0, max: 1, step: 0.01 },
     },
-    params: ["a", "b", "c"],
-  },
-  rossler: {
-    fn: ({ x, y, z, a, b, c, dt }) => ({
-      x: x + (-y - z) * dt,
-      y: y + (x + a * y) * dt,
-      z: z + (b + z * (x - c)) * dt,
-    }),
-    default: { x: 1, y: 1, z: 1, a: 0.2, b: 0.2, c: 5.7, dt: 0.01 },
-    ranges: {
-      a: { min: 0, max: 1, step: 0.01 },
-      b: { min: 0, max: 2, step: 0.01 },
-      c: { min: 0, max: 20, step: 0.1 },
-    },
-    params: ["a", "b", "c"],
+    params: ["a", "b", "c", "d"],
   },
 };
 
@@ -135,6 +271,9 @@ const getAttractorPoints = (settings) => {
       a: settings.a,
       b: settings.b,
       c: settings.c,
+      d: settings.d,
+      e: settings.e,
+      f: settings.f,
       dt: settings.dt,
     },
     settings.offset
@@ -194,11 +333,28 @@ const uiConfig = {
     default: attractors.lorenz.default.c,
     ...attractors.lorenz.ranges.c,
   },
+  d: {
+    default: attractors.lorenz83.default.d,
+    ...attractors.lorenz83.ranges.d,
+  },
+  e: {
+    default: attractors.aizawa.default.e,
+    ...attractors.aizawa.ranges.e,
+  },
+  f: {
+    default: attractors.aizawa.default.f,
+    ...attractors.aizawa.ranges.f,
+  },
 };
 
 const defaultSettings = Object.fromEntries(
   Object.entries(uiConfig).map(([key, value]) => [key, value.default])
 );
+
+const getRandomInRange = (min, max, step) => {
+  const steps = Math.floor((max - min) / step);
+  return min + Math.floor(Math.random() * steps) * step;
+};
 
 const LorenzSvg = () => {
   const guiRef = useRef(null);
@@ -208,7 +364,7 @@ const LorenzSvg = () => {
 
   useEffect(() => {
     guiRef.current = new GUI();
-    const allParams = ["a", "b", "c"];
+    const allParams = ["a", "b", "c", "d", "e", "f"];
 
     Object.entries(uiConfig).forEach(([key, config]) => {
       const control = config.options
@@ -240,6 +396,9 @@ const LorenzSvg = () => {
             attractor: value,
           }));
 
+          // Update dt control with new attractor's default
+          controllersRef.current.dt.setValue(newAttractor.default.dt);
+
           // Show/hide and update parameter controls
           allParams.forEach((param) => {
             const ctrl = controllersRef.current[param];
@@ -260,6 +419,33 @@ const LorenzSvg = () => {
         }
       });
     });
+
+    guiRef.current
+      .add(
+        {
+          randomize: () => {
+            const currentAttractor = attractors[settings.attractor];
+            const randomValues = {};
+
+            currentAttractor.params.forEach((param) => {
+              const range = currentAttractor.ranges[param];
+              randomValues[param] = getRandomInRange(
+                range.min,
+                range.max,
+                range.step
+              );
+              controllersRef.current[param].setValue(randomValues[param]);
+            });
+
+            setSettings((prev) => ({
+              ...prev,
+              ...randomValues,
+            }));
+          },
+        },
+        "randomize"
+      )
+      .name("Randomize Parameters");
 
     guiRef.current
       .add(

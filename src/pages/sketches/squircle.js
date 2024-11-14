@@ -40,7 +40,6 @@ const squircle = (sketch) => {
   const sx = { ...defaultSx };
 
   const gui = new GUI();
-  gui.close();
   gui.add(sx, "lineCount", 3, 500, 1);
   gui.add(sx, "thickness", 0.1, 10, 0.1);
   gui.add(sx, "squareness", 0, 1, 0.01);
