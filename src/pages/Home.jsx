@@ -33,7 +33,7 @@ const Home = () => {
       <div className="my-12 sm:my-[50px] flex flex-col items-center justify-center">
         {links.map(({ name, to }, index, items) => {
           const inc = Math.round(360 / items.length);
-          const color = `hsl(${index * inc},80%,60%)`;
+          const color = `hsl(${index * inc + inc / 2},80%,60%)`;
           return (
             <Link
               key={name}
