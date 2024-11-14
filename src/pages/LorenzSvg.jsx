@@ -1,67 +1,61 @@
-import { useMemo, useRef } from "react";
-import useGui from "@/hooks/useGui";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { GUI } from "lil-gui";
+import saveSVG from "@/utils/saveSvg";
 
 export const meta = {
   name: "Lorenz (for plotters)",
   created: "2021-01-13",
 };
 
-export const saveSVG = (svgElement, settings) => {
-  if (svgElement) {
-    const svgData = new XMLSerializer().serializeToString(svgElement);
-    const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
-
-    const filename = `lorenz-attractor_${Object.values(settings).join(
-      "_"
-    )}.svg`;
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(link.href);
-  }
-};
-
-function lorenz({ x, y, z, a, b, c, dt }) {
-  return {
-    x: x + a * (y - x) * dt,
-    y: y + (x * (b - z) - y) * dt,
-    z: z + (x * y - c * z) * dt,
-  };
-}
-
-function halvorsen({ x, y, z, a, dt }) {
-  return {
-    x: x + (-a * x - 4 * y - 4 * z - y * y) * dt,
-    y: y + (-a * y - 4 * z - 4 * x - z * z) * dt,
-    z: z + (-a * z - 4 * x - 4 * y - x * x) * dt,
-  };
-}
-
-function sprott({ x, y, z, a, b, dt }) {
-  return {
-    x: x + (y + a * x * y + x * z) * dt,
-    y: y + (1 - b * (x * x) + y * z) * dt,
-    z: z + (x - x * x - y * y) * dt,
-  };
-}
-
-function thomas({ x, y, z, a, b, dt }) {
-  return {
-    x: x + (Math.sin(y) - b * x) * dt,
-    y: y + (Math.sin(z) - b * y) * dt,
-    z: z + (Math.sin(x) - b * z) * dt,
-  };
-}
-
 const attractors = {
-  lorenz,
-  halvorsen,
-  sprott,
-  thomas,
+  lorenz: {
+    fn: ({ x, y, z, a, b, c, dt }) => ({
+      x: x + a * (y - x) * dt,
+      y: y + (x * (b - z) - y) * dt,
+      z: z + (x * y - c * z) * dt,
+    }),
+    default: { x: 0.1, y: 0, z: -1, a: 10, b: 28, c: 8 / 3 },
+  },
+  halvorsen: {
+    fn: ({ x, y, z, a, dt }) => ({
+      x: x + (-a * x - 4 * y - 4 * z - y * y) * dt,
+      y: y + (-a * y - 4 * z - 4 * x - z * z) * dt,
+      z: z + (-a * z - 4 * x - 4 * y - x * x) * dt,
+    }),
+    default: { x: 0.1, y: 0, z: 0, a: 1.4 },
+  },
+  sprott: {
+    fn: ({ x, y, z, a, b, dt }) => ({
+      x: x + (y + a * x * y + x * z) * dt,
+      y: y + (1 - b * (x * x) + y * z) * dt,
+      z: z + (x - x * x - y * y) * dt,
+    }),
+    default: { x: 0.1, y: 0, z: 0, a: 0.5, b: 2 },
+  },
+  thomas: {
+    fn: ({ x, y, z, b, dt }) => ({
+      x: x + (Math.sin(y) - b * x) * dt,
+      y: y + (Math.sin(z) - b * y) * dt,
+      z: z + (Math.sin(x) - b * z) * dt,
+    }),
+    default: { x: 0.1, y: 0, z: 0, b: 0.208186 },
+  },
+  chen: {
+    fn: ({ x, y, z, a, b, c, dt }) => ({
+      x: x + a * (y - x) * dt,
+      y: y + ((c - a) * x - x * z + c * y) * dt,
+      z: z + (x * y - b * z) * dt,
+    }),
+    default: { x: 0.1, y: 0, z: 0, a: 35, b: 3, c: 28 },
+  },
+  rossler: {
+    fn: ({ x, y, z, a, b, c, dt }) => ({
+      x: x + (-y - z) * dt,
+      y: y + (x + a * y) * dt,
+      z: z + (b + z * (x - c)) * dt,
+    }),
+    default: { x: 0.1, y: 0, z: 0, a: 0.2, b: 0.2, c: 5.7 },
+  },
 };
 
 function getPathData(points, projection) {
@@ -101,7 +95,7 @@ const getPoints = (fn, n, params, offset) => {
 
 const getAttractorPoints = (settings) => {
   return getPoints(
-    attractors[settings.attractor],
+    attractors[settings.attractor].fn,
     settings.pointCount,
     {
       x: settings.x,
@@ -123,56 +117,124 @@ const uiConfig = {
   },
   pointCount: {
     default: 10000,
-    range: [100, 100000],
+    min: 100,
+    max: 100000,
   },
   offset: {
     default: 0,
-    range: [0, 10000],
+    min: 0,
+    max: 10000,
+  },
+  dt: {
+    default: 0.003,
+    min: 0.001,
+    max: 0.02,
+    step: 0.0001,
   },
   projection: {
     default: "xy",
     options: ["xy", "yx", "xz", "zx", "yz", "zy"],
   },
   x: {
-    default: 0.1,
-    range: [-1, 1],
+    default: attractors.lorenz.default.x,
+    min: -1,
+    max: 1,
   },
   y: {
-    default: 0,
-    range: [-1, 1],
+    default: attractors.lorenz.default.y,
+    min: -1,
+    max: 1,
   },
   z: {
-    default: -1,
-    range: [-1, 1],
+    default: attractors.lorenz.default.z,
+    min: -1,
+    max: 1,
   },
   a: {
-    default: 10,
-    range: [0, 60],
-    step: 0.01,
+    default: attractors.lorenz.default.a,
+    min: 0,
+    max: 60,
   },
   b: {
-    default: 28,
-    range: [0, 100],
-    step: 0.01,
+    default: attractors.lorenz.default.b,
+    min: 0,
+    max: 100,
   },
   c: {
-    default: 8 / 3,
-    range: [0, 10],
-    step: 0.01,
+    default: attractors.lorenz.default.c,
+    min: 0,
+    max: 10,
   },
-  dt: {
-    default: 0.003,
-    range: [0.001, 0.02],
-    step: 0.0001,
-  },
+};
+
+const defaultSettings = Object.fromEntries(
+  Object.entries(uiConfig).map(([key, value]) => [key, value.default])
+);
+
+const getDefaultSettingsForAttractor = (attractorName, currentSettings) => {
+  const attractorDefaults = attractors[attractorName].default;
+  return {
+    ...currentSettings,
+    ...attractorDefaults,
+    attractor: attractorName,
+  };
 };
 
 const LorenzSvg = () => {
   const svgRef = useRef(null);
-  const settings = useGui({
-    ...uiConfig,
-    save: () => saveSVG(svgRef.current, settings),
-  });
+  const [settings, setSettings] = useState(defaultSettings);
+
+  useEffect(() => {
+    const gui = new GUI();
+
+    Object.entries(uiConfig).forEach(([key, config]) => {
+      const control = config.options
+        ? gui.add(settings, key, config.options)
+        : gui.add(settings, key, config.min, config.max, config.step);
+
+      control.onChange((value) => {
+        if (key === "attractor") {
+          setSettings((prev) => getDefaultSettingsForAttractor(value, prev));
+          Object.keys(gui.controllers).forEach((key) => {
+            gui.controllers[key].updateDisplay();
+          });
+        } else {
+          setSettings((prev) => ({ ...prev, [key]: value }));
+        }
+      });
+    });
+
+    gui
+      .add(
+        {
+          reset: () => {
+            setSettings((prev) =>
+              getDefaultSettingsForAttractor(prev.attractor, prev)
+            );
+            Object.keys(gui.controllers).forEach((key) => {
+              gui.controllers[key].updateDisplay();
+            });
+          },
+        },
+        "reset"
+      )
+      .name("Reset Attractor");
+    gui
+      .add(
+        {
+          save: () => {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+            const filename = `lorenz-attractor-${timestamp}.svg`;
+            saveSVG(svgRef.current, filename);
+          },
+        },
+        "save"
+      )
+      .name("Save SVG");
+
+    return () => gui.destroy();
+  }, []);
+
   const points = useMemo(() => getAttractorPoints(settings), [settings]);
   const bounds = useMemo(
     () => getBounds(points, settings.projection),

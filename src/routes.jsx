@@ -12,12 +12,12 @@ const FullscreenSketch = ({ sketch }) => {
 };
 
 const routes = [
-  { name: "lorenz-svg", path: "/lorenz-svg", element: <LorenzSvg /> },
-  {
-    name: "cmy dance",
-    path: "/cmy-dance",
-    element: <FullscreenSketch sketch={cmyDance} />,
-  },
+  { name: "attractors", path: "/attractors", element: <LorenzSvg /> },
+  // {
+  //   name: "cmy dance",
+  //   path: "/cmy-dance",
+  //   element: <FullscreenSketch sketch={cmyDance} />,
+  // },
   {
     name: "squircle",
     path: "/squircle",

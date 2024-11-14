@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { GUI } from "dat.gui";
+import { GUI } from "lil-gui";
 
 const useGui = (config) => {
   const [settings, setSettings] = useState(() => getDefault(config));

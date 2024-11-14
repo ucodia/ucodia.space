@@ -1,4 +1,5 @@
-import { GUI } from "dat.gui";
+import { GUI } from "lil-gui";
+import { hsv } from "chroma-js";
 import autoStretchP5 from "@/utils/autoStretchP5";
 
 export const meta = {
@@ -88,8 +89,8 @@ const squircle = (sketch) => {
     sketch.rectMode(sketch.CENTER);
 
     data.colors = {
-      black: sketch.color(0),
-      white: sketch.color(360),
+      black: "#000000",
+      white: "#ffffff",
     };
     data.palettes = {
       bw: [data.colors.black, data.colors.white],
@@ -238,16 +239,16 @@ const squircle = (sketch) => {
       : data.palettes.bw.slice().reverse();
   }
 
-  function complementary(offset, s = 100, b = 100) {
-    return hueDivisions(offset, 2).map((h) => sketch.color(h, s, b));
+  function complementary(offset) {
+    return hueDivisions(offset, 2).map((h) => hsv(h, 1, 1).hex());
   }
 
-  function triadic(offset, s = 100, b = 100) {
-    return hueDivisions(offset, 3).map((h) => sketch.color(h, s, b));
+  function triadic(offset) {
+    return hueDivisions(offset, 3).map((h) => hsv(h, 1, 1).hex());
   }
 
-  function analogous(offset, s = 100, b = 100) {
-    return hueDivisions(offset, 12).map((h) => sketch.color(h, s, b));
+  function analogous(offset) {
+    return hueDivisions(offset, 12).map((h) => hsv(h, 1, 1).hex());
   }
 
   // feature generation
@@ -387,7 +388,7 @@ const squircle = (sketch) => {
     sx.stroke = inkColorFeature.value[1];
 
     console.log(sx);
-    gui.updateDisplay();
+    gui.controllersRecursive().forEach((c) => c.updateDisplay());
   }
 };
 
