@@ -57,10 +57,10 @@ const routes = [
     ),
   },
   {
-    name: "about",
-    path: "about",
+    name: "cv",
+    path: "cv",
     element: (
-      <ExternalRedirect to="https://ucodia.notion.site/Who-is-Ucodia-15cd507c414146c098df52f557a1c1d5" />
+      <ExternalRedirect to="https://ucodia.notion.site/Ucodia-CV-ca7805ca1c404dc58112ab885fe3f55e" />
     ),
   },
   {
