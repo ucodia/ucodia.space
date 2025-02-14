@@ -43,18 +43,19 @@ const colors = {
   cyan: "#00aeef",
   magenta: "#ec008c",
   yellow: "#fff200",
+  emerald: "#00ffa4",
 };
 
 const defaultSx = {
   pointCount: 100000,
   background: colors.darkgrey,
-  color: colors.white,
+  color: colors.emerald,
   particleSize: 1,
   opacity: 0.3,
   marginRatio: 0.1,
-  xModifier: "noop",
-  yModifier: "noop",
-  seed: "3vg11h8l6",
+  xModifier: "asinh",
+  yModifier: "asinh",
+  seed: "km1rw8720",
   presetSeed: "",
   highRes: true,
   swapColors: false,
