@@ -11,7 +11,7 @@ const events = [
   {
     start: new Date("2024-11-14"),
     end: new Date("2024-11-17"),
-    name: "Human + Machine live installation - Culture Crawl Exhibit",
+    name: "Man + Machine live installation - Culture Crawl Exhibit",
     location: "Slice of Life, 1636 Venables St, Vancouver, BC V5L 2H2",
     description:
       "Come check out unique algorithmic art coming to life as I collaborate with my trusty drawing machine. You may even be able to create your own and bring it home!.",
