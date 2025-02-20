@@ -1,6 +1,7 @@
 import ExternalRedirect from "@/components/external-redirect";
 import SketchWrapper from "@/components/sketch-wrapper";
 import MDXLayout from "@/components/mdx-layout";
+import BadRng from "@/pages/bad-rng";
 import GiphyVox from "@/pages/giphy-vox";
 import Kinetic from "@/pages/kinetic";
 import Zukunft from "@/pages/zukunft";
@@ -85,6 +86,7 @@ const routes = [
     path: "mycologue",
     element: <ExternalRedirect to="https://mycologue.org" />,
   },
+  { name: "bad rng", path: "bad-rng", element: <BadRng /> },
   { name: "giphy vox", path: "giphy-vox", element: <GiphyVox /> },
   { name: "kinetic", path: "kinetic", element: <Kinetic /> },
   {
