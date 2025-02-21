@@ -152,7 +152,7 @@ const BadRng = () => {
       });
 
     generatorFolder
-      .add(config, "pointCount", 1000, 30000, 1000)
+      .add(config, "pointCount", 1000, 500000, 1000)
       .name("Point Count")
       .onChange((value) => {
         setConfig((prev) => ({ ...prev, pointCount: value }));
@@ -160,7 +160,7 @@ const BadRng = () => {
 
     const appearanceFolder = gui.addFolder("Appearance");
     appearanceFolder
-      .add(config, "pointSize", 0.01, 0.05)
+      .add(config, "pointSize", 0.001, 0.05, 0.005)
       .name("Point Size")
       .onChange((value) => {
         setConfig((prev) => ({ ...prev, pointSize: value }));
@@ -232,7 +232,7 @@ const BadRng = () => {
   return (
     <div className="w-screen h-screen">
       <Canvas style={{ background: config.backgroundColor }}>
-        <PerspectiveCamera makeDefault position={[0, 0, 2]} />
+        <PerspectiveCamera makeDefault position={[0, 0, 4]} />
         <OrbitControls enableDamping dampingFactor={0.05} />
         <Points config={config} />
       </Canvas>
