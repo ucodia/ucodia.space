@@ -1,10 +1,6 @@
 import { useRef, useEffect, useState, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import {
-  OrbitControls,
-  PerspectiveCamera,
-  useTexture,
-} from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import * as THREE from "three";
 import GUI from "lil-gui";
 
@@ -35,13 +31,16 @@ const generators = {
   RANDU: (count) => {
     const points = [];
     let x = 1;
+    const a = 65539;
+    const c = 0;
+    const m = 2147483648;
     for (let i = 0; i < count; i++) {
-      x = (65539 * x) % Math.pow(2, 31);
-      const x1 = x / Math.pow(2, 31);
-      x = (65539 * x) % Math.pow(2, 31);
-      const y1 = x / Math.pow(2, 31);
-      x = (65539 * x) % Math.pow(2, 31);
-      const z1 = x / Math.pow(2, 31);
+      x = (a * x + c) % m;
+      const x1 = x / m;
+      x = (a * x + c) % m;
+      const y1 = x / m;
+      x = (a * x + c) % m;
+      const z1 = x / m;
       points.push([x1, y1, z1]);
     }
     return points;
@@ -93,6 +92,26 @@ function Points({ config }) {
       colors[i * 3] = (x + 1) / 2;
       colors[i * 3 + 1] = (y + 1) / 2;
       colors[i * 3 + 2] = (z + 1) / 2;
+    } else if (config.colorMode === "plasma") {
+      // Create a plasma-like effect using sine waves
+      const frequency = 5;
+      const phase =
+        Math.sin(x * frequency) +
+        Math.sin(y * frequency) +
+        Math.sin(z * frequency);
+
+      // Create three different color waves with phase shifts
+      const r = Math.sin(phase) * 0.5 + 0.5;
+      const g = Math.sin(phase + 2.094) * 0.5 + 0.5; // 2.094 is 2π/3
+      const b = Math.sin(phase + 4.189) * 0.5 + 0.5; // 4.189 is 4π/3
+
+      // Add some distance-based variation
+      const distance = Math.sqrt(x * x + y * y + z * z);
+      const intensity = Math.sin(distance * 3) * 0.2 + 0.8;
+
+      colors[i * 3] = r * intensity;
+      colors[i * 3 + 1] = g * intensity;
+      colors[i * 3 + 2] = b * intensity;
     } else {
       const color = new THREE.Color(config.color);
       colors[i * 3] = color.r;
@@ -123,17 +142,17 @@ function Points({ config }) {
 
 const BadRng = () => {
   const [config, setConfig] = useState({
-    pointCount: 15000,
+    pointCount: 100000,
     pointSize: 0.02,
     color: "#00ff00",
     backgroundColor: "#000000",
     autoRotate: true,
-    rotationSpeedX: 1,
-    rotationSpeedY: 1,
-    rotationSpeedZ: 1,
-    opacity: 1,
+    rotationSpeedX: 0.5,
+    rotationSpeedY: 0.5,
+    rotationSpeedZ: 0.5,
+    opacity: 0.9,
     generator: "Bad LCG",
-    colorMode: "rgb",
+    colorMode: "plasma",
   });
 
   useEffect(() => {
@@ -167,7 +186,7 @@ const BadRng = () => {
       });
 
     appearanceFolder
-      .add(config, "colorMode", ["single", "rgb"])
+      .add(config, "colorMode", ["single", "rgb", "electric", "plasma"])
       .name("Color Mode")
       .onChange((value) => {
         setConfig((prev) => ({ ...prev, colorMode: value }));
@@ -232,8 +251,8 @@ const BadRng = () => {
   return (
     <div className="w-screen h-screen">
       <Canvas style={{ background: config.backgroundColor }}>
-        <PerspectiveCamera makeDefault position={[0, 0, 4]} />
-        <OrbitControls enableDamping dampingFactor={0.05} />
+        <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+        <OrbitControls enableDamping dampingFactor={0.05} zoomSpeed={0.5} />
         <Points config={config} />
       </Canvas>
     </div>
