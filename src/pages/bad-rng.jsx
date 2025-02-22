@@ -9,20 +9,22 @@ export const meta = {
   created: "2025-02-20",
 };
 
+function lcg(seed, a, c, m) {
+  let z = seed;
+  return () => {
+    z = (a * z + c) % m;
+    return z / m;
+  };
+}
+
 const generators = {
   "Bad LCG": (count) => {
     const points = [];
-    let x = 1;
-    const a = 1597;
-    const c = 51749;
-    const m = 244944;
+    let rng = lcg(1, 1597, 51749, 244944);
     for (let i = 0; i < count; i++) {
-      x = (a * x + c) % m;
-      const x1 = x / m;
-      x = (a * x + c) % m;
-      const y1 = x / m;
-      x = (a * x + c) % m;
-      const z1 = x / m;
+      const x1 = rng();
+      const y1 = rng();
+      const z1 = rng();
       points.push([x1, y1, z1]);
     }
     return points;
@@ -30,17 +32,11 @@ const generators = {
 
   RANDU: (count) => {
     const points = [];
-    let x = 1;
-    const a = 65539;
-    const c = 0;
-    const m = 2147483648;
+    let rng = lcg(1, 65539, 0, 2147483648);
     for (let i = 0; i < count; i++) {
-      x = (a * x + c) % m;
-      const x1 = x / m;
-      x = (a * x + c) % m;
-      const y1 = x / m;
-      x = (a * x + c) % m;
-      const z1 = x / m;
+      const x1 = rng();
+      const y1 = rng();
+      const z1 = rng();
       points.push([x1, y1, z1]);
     }
     return points;
