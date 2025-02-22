@@ -18,26 +18,46 @@ function lcg(seed, a, c, m) {
 }
 
 const generators = {
-  "Bad LCG": (count) => {
+  "Bad LCG Cube": (count) => {
     const points = [];
     let rng = lcg(1, 1597, 51749, 244944);
     for (let i = 0; i < count; i++) {
-      const x1 = rng();
-      const y1 = rng();
-      const z1 = rng();
-      points.push([x1, y1, z1]);
+      const v1 = rng();
+      const v2 = rng();
+      const v3 = rng();
+      points.push([v1, v2, v3]);
     }
     return points;
   },
 
-  RANDU: (count) => {
+  "RANDU Cube": (count) => {
     const points = [];
     let rng = lcg(1, 65539, 0, 2147483648);
     for (let i = 0; i < count; i++) {
-      const x1 = rng();
-      const y1 = rng();
-      const z1 = rng();
-      points.push([x1, y1, z1]);
+      const v1 = rng();
+      const v2 = rng();
+      const v3 = rng();
+      points.push([v1, v2, v3]);
+    }
+    return points;
+  },
+
+  "RANDU Sphere": (count) => {
+    const points = [];
+    let rng = lcg(1, 65539, 0, 2147483648);
+    for (let i = 0; i < count; i++) {
+      const v1 = rng();
+      const v2 = rng();
+      const v3 = rng();
+
+      const phi = v1 * 2 * Math.PI;
+      const theta = Math.acos(2 * v2 - 1);
+      const r = Math.cbrt(v3) * Math.sqrt(2);
+
+      const x = (r * Math.sin(theta) * Math.cos(phi) + 1) / 2;
+      const y = (r * Math.sin(theta) * Math.sin(phi) + 1) / 2;
+      const z = (r * Math.cos(theta) + 1) / 2;
+      points.push([x, y, z]);
     }
     return points;
   },
@@ -147,7 +167,7 @@ const BadRng = () => {
     rotationSpeedY: 0.5,
     rotationSpeedZ: 0.5,
     opacity: 0.9,
-    generator: "Bad LCG",
+    generator: "Bad LCG Cube",
     colorMode: "plasma",
   });
 
@@ -182,7 +202,7 @@ const BadRng = () => {
       });
 
     appearanceFolder
-      .add(config, "colorMode", ["single", "rgb", "electric", "plasma"])
+      .add(config, "colorMode", ["single", "rgb", "plasma"])
       .name("Color Mode")
       .onChange((value) => {
         setConfig((prev) => ({ ...prev, colorMode: value }));
