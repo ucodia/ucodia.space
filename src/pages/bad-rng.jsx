@@ -17,54 +17,43 @@ function lcg(seed, a, c, m) {
   };
 }
 
-const generators = {
-  "Bad LCG Cube": (count) => {
-    const points = [];
-    let rng = lcg(1, 1597, 51749, 244944);
-    for (let i = 0; i < count; i++) {
-      const v1 = rng();
-      const v2 = rng();
-      const v3 = rng();
-      points.push([v1, v2, v3]);
-    }
-    return points;
+const lcgParams = {
+  ZX81: [75, 74, 65537],
+  JavaRandom: [25214903917, 11, 281474976710656],
+  RANDU: [65539, 0, 2147483648],
+  Ucodia: [1597, 51749, 244944],
+};
+
+const projectionModes = {
+  Cube: (v1, v2, v3) => {
+    return [v1, v2, v3];
   },
+  Sphere: (v1, v2, v3) => {
+    const phi = v1 * 2 * Math.PI;
+    const theta = Math.acos(2 * v2 - 1);
+    const r = Math.cbrt(v3) * Math.sqrt(2);
 
-  "RANDU Cube": (count) => {
-    const points = [];
-    let rng = lcg(1, 65539, 0, 2147483648);
-    for (let i = 0; i < count; i++) {
-      const v1 = rng();
-      const v2 = rng();
-      const v3 = rng();
-      points.push([v1, v2, v3]);
-    }
-    return points;
-  },
-
-  "RANDU Sphere": (count) => {
-    const points = [];
-    let rng = lcg(1, 65539, 0, 2147483648);
-    for (let i = 0; i < count; i++) {
-      const v1 = rng();
-      const v2 = rng();
-      const v3 = rng();
-
-      const phi = v1 * 2 * Math.PI;
-      const theta = Math.acos(2 * v2 - 1);
-      const r = Math.cbrt(v3) * Math.sqrt(2);
-
-      const x = (r * Math.sin(theta) * Math.cos(phi) + 1) / 2;
-      const y = (r * Math.sin(theta) * Math.sin(phi) + 1) / 2;
-      const z = (r * Math.cos(theta) + 1) / 2;
-      points.push([x, y, z]);
-    }
-    return points;
+    const x = (r * Math.sin(theta) * Math.cos(phi) + 1) / 2;
+    const y = (r * Math.sin(theta) * Math.sin(phi) + 1) / 2;
+    const z = (r * Math.cos(theta) + 1) / 2;
+    return [x, y, z];
   },
 };
 
+const generatePoints = (count, config) => {
+  const points = [];
+  let rng = lcg(1, ...lcgParams[config.rngType]);
+  for (let i = 0; i < count; i++) {
+    const v1 = rng();
+    const v2 = rng();
+    const v3 = rng();
+    points.push(projectionModes[config.projectionMode](v1, v2, v3));
+  }
+  return points;
+};
+
 function Points({ config }) {
-  const points = generators[config.generator](config.pointCount);
+  const points = generatePoints(config.pointCount, config);
   const pointsRef = useRef(null);
 
   const roundShape = useMemo(() => {
@@ -104,11 +93,11 @@ function Points({ config }) {
     positions[i * 3 + 1] = y;
     positions[i * 3 + 2] = z;
 
-    if (config.colorMode === "rgb") {
+    if (config.colorMode === "RGB") {
       colors[i * 3] = (x + 1) / 2;
       colors[i * 3 + 1] = (y + 1) / 2;
       colors[i * 3 + 2] = (z + 1) / 2;
-    } else if (config.colorMode === "plasma") {
+    } else if (config.colorMode === "Plasma") {
       // Create a plasma-like effect using sine waves
       const frequency = 5;
       const phase =
@@ -167,8 +156,9 @@ const BadRng = () => {
     rotationSpeedY: 0.5,
     rotationSpeedZ: 0.5,
     opacity: 0.9,
-    generator: "Bad LCG Cube",
-    colorMode: "plasma",
+    rngType: "Ucodia",
+    projectionMode: "Cube",
+    colorMode: "Plasma",
   });
 
   useEffect(() => {
@@ -180,10 +170,17 @@ const BadRng = () => {
 
     const generatorFolder = gui.addFolder("Generator");
     generatorFolder
-      .add(config, "generator", Object.keys(generators))
-      .name("Algorithm")
+      .add(config, "rngType", Object.keys(lcgParams))
+      .name("RNG")
       .onChange((value) => {
-        setConfig((prev) => ({ ...prev, generator: value }));
+        setConfig((prev) => ({ ...prev, rngType: value }));
+      });
+
+    generatorFolder
+      .add(config, "projectionMode", Object.keys(projectionModes))
+      .name("Projection")
+      .onChange((value) => {
+        setConfig((prev) => ({ ...prev, projectionMode: value }));
       });
 
     generatorFolder
@@ -202,7 +199,7 @@ const BadRng = () => {
       });
 
     appearanceFolder
-      .add(config, "colorMode", ["single", "rgb", "plasma"])
+      .add(config, "colorMode", ["Single", "RGB", "Plasma"])
       .name("Color Mode")
       .onChange((value) => {
         setConfig((prev) => ({ ...prev, colorMode: value }));
