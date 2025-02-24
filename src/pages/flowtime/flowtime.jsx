@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { fromDate } from "flowtime";
+import flowtime from "flowtime";
 import useInterval from "@/hooks/use-interval";
 import styles from "./flowtime.module.css";
 
@@ -14,10 +14,10 @@ const timeFormatter = new Intl.DateTimeFormat(
 );
 
 const Flowtime = () => {
-  const [time, setTime] = useState(fromDate(new Date()).toDate());
+  const [time, setTime] = useState(flowtime.fromDate(new Date()).date);
   const [realityCheck, setRealityCheck] = useState(false);
   useInterval(() => {
-    setTime(realityCheck ? new Date() : fromDate(new Date()).toDate());
+    setTime(realityCheck ? new Date() : flowtime.fromDate(new Date()).date);
   }, 1000);
 
   const showReality = () => {
@@ -26,7 +26,7 @@ const Flowtime = () => {
   };
   const showFlowtime = () => {
     setRealityCheck(false);
-    setTime(fromDate(new Date()).toDate());
+    setTime(flowtime.fromDate(new Date()).date);
   };
 
   return (
