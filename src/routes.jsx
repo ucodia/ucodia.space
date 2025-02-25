@@ -1,7 +1,8 @@
+import { Suspense, lazy } from "react";
 import ExternalRedirect from "@/components/external-redirect";
+import LoadingSpinner from "@/components/loading-spinner";
 import SketchWrapper from "@/components/sketch-wrapper";
 import MDXLayout from "@/components/mdx-layout";
-import BadRng from "@/pages/bad-rng";
 import GiphyVox from "@/pages/giphy-vox";
 import Kinetic from "@/pages/kinetic";
 import Zukunft from "@/pages/zukunft";
@@ -29,6 +30,8 @@ import * as spinnySquares from "@/pages/sketches/spinny-squares";
 import ComputerObservingItselfMdx from "@/mdx-pages/computer-observing-itself.mdx";
 import EventsMdx from "@/mdx-pages/events.mdx";
 import Flowtime from "@/mdx-pages/flowtime.mdx";
+
+const BadRng = lazy(() => import("@/pages/bad-rng"));
 
 const FullscreenSketch = ({ sketch }) => {
   return (
@@ -95,7 +98,15 @@ const routes = [
     path: "mycologue",
     element: <ExternalRedirect to="https://mycologue.org" />,
   },
-  { name: "bad rng", path: "bad-rng", element: <BadRng /> },
+  {
+    name: "bad rng",
+    path: "bad-rng",
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <BadRng />
+      </Suspense>
+    ),
+  },
   { name: "giphy vox", path: "giphy-vox", element: <GiphyVox /> },
   { name: "kinetic", path: "kinetic", element: <Kinetic /> },
   {
