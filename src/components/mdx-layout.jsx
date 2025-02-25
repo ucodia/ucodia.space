@@ -52,7 +52,7 @@ export default function MDXLayout({ children }) {
         </div>
       </header>
 
-      <main className="p-4 px-8 md:p-8 max-w-2xl mx-auto">
+      <main className="p-4 px-8 md:p-8 max-w-4xl mx-auto">
         <article className="prose dark:prose-invert md:prose-lg lg:prose-xl">
           {children}
         </article>
@@ -61,7 +61,7 @@ export default function MDXLayout({ children }) {
       <footer className="bg-background border-t py-4">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center">
-            <span>Built by Ucodia - 2024</span>
+            <span>Built by Ucodia - 2025</span>
             <img
               src="/diamond.svg"
               alt="Diamond"
