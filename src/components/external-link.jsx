@@ -1,6 +1,6 @@
 const ExternalLink = (props) => {
   return (
-    <a href={props.to} target="_blank" rel="noopener noreferrer" {...props}>
+    <a {...props} target="_blank" rel="noopener noreferrer">
       {props.children}
     </a>
   );

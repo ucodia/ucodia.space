@@ -6,6 +6,11 @@ import Alert from "@/components/alert";
 import Home from "@/pages/home";
 import routes from "@/routes";
 import { MDXProvider } from "@mdx-js/react";
+import ExternalLink from "./components/external-link";
+
+const components = {
+  a: ExternalLink,
+};
 
 const router = createBrowserRouter([
   {
@@ -34,7 +39,7 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <ThemeProvider>
-      <MDXProvider>
+      <MDXProvider components={components}>
         <RouterProvider router={router} />
       </MDXProvider>
     </ThemeProvider>

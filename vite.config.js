@@ -6,7 +6,14 @@ import { qrcode } from "vite-plugin-qrcode";
 import mdx from "@mdx-js/rollup";
 
 export default defineConfig({
-  plugins: [mdx(), react(), svgr(), qrcode()],
+  plugins: [
+    mdx({
+      providerImportSource: "@mdx-js/react",
+    }),
+    react(),
+    svgr(),
+    qrcode(),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
