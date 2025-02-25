@@ -5,7 +5,6 @@ import BadRng from "@/pages/bad-rng";
 import GiphyVox from "@/pages/giphy-vox";
 import Kinetic from "@/pages/kinetic";
 import Zukunft from "@/pages/zukunft";
-import Flowtime from "@/pages/flowtime";
 import Conundrum from "@/pages/conundrum";
 import LorenzSvg from "@/pages/lorenz-svg";
 import Seine from "@/pages/seine";
@@ -29,6 +28,7 @@ import * as infiniteChaos from "@/pages/sketches/infinite-chaos";
 import * as spinnySquares from "@/pages/sketches/spinny-squares";
 import ComputerObservingItselfMdx from "@/mdx-pages/computer-observing-itself.mdx";
 import EventsMdx from "@/mdx-pages/events.mdx";
+import Flowtime from "@/mdx-pages/flowtime.mdx";
 
 const FullscreenSketch = ({ sketch }) => {
   return (
@@ -54,6 +54,15 @@ const routes = [
     element: (
       <MDXLayout>
         <EventsMdx />
+      </MDXLayout>
+    ),
+  },
+  {
+    name: "flowtime",
+    path: "flowtime",
+    element: (
+      <MDXLayout>
+        <Flowtime />
       </MDXLayout>
     ),
   },
@@ -94,7 +103,6 @@ const routes = [
     path: "zukunft",
     element: <Zukunft />,
   },
-  { name: "flowtime", path: "flowtime", element: <Flowtime /> },
   { name: "conundrum", path: "conundrum", element: <Conundrum /> },
   { name: "lorenz (for plotters)", path: "lorenz-svg", element: <LorenzSvg /> },
   { name: "seine", path: "seine", element: <Seine /> },

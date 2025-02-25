@@ -1,0 +1,53 @@
+import Flowtime from "@/components/flowtime"
+import YouTube from "@/components/youtube"
+
+# flowtime (2017 - 2025)
+
+flowtime is an art project and thought experiment that challenges and reimagines our traditional understanding of time. It explores the relationship between our perception of time and our ability to enter [flow states][1], periods of deep focus and engagement with the present moment. In essence, flowtime is a manifestation of timelessness.
+
+<Flowtime />
+
+The concept emerged from a simple observation: whenever I became aware of time, whether by mechanically looking at my watch or involuntarily catching a glimpse of a screen, I momentarily and unconsciously time travel and lose touch with the present. This sparked a question: what if there were a way to decide consciously whether to know the time or remain immersed in the flow? This was the birth of flowtime.
+
+Although it preserves the familiar structure of 24 hours per day 60 minutes per hour, the order of its hours and minutes is unpredictable and unique each day. Yet it remains universal, meaning the flowtime is the same for everyone, just like conventional time. This uncertainty encourages us to loosen our attachment to time, creating an opportunity to return into the flow of the present moment.
+
+What started as a conceptual exploration has since materialized into a tangible, interactive technology that melds philosophical inquiry with practical application. It is now available in the form of a [JavaScript library][6], a command line tool, a classic Casio watch, and on this page.
+
+Concept and development by Lionel Ringenbach (a.k.a. Ucodia), started in September 2017.
+
+<YouTube id="MrFj9_5885s" title="flowtime watch" />
+
+## How does it work?
+
+To compute the flowtime, the current date and time is used as input. The day and hour periods are derived by concatenating their numerical values. For example, `July 21 2018 09:28:42` has identifiers `20180721` for the day period and `2018072109` for the hour period. These identifiers then seed a [pseudorandom number generator (PRNG)](2) to produce a deterministic sequence of hours and minutes. This method ensures universality while remaining unpredictable to human beings.
+
+The [xorshift32 algorithm][3] generates the random numbers, and the [Fisher-Yates algorithm][4] shuffles them, resulting in deterministically random sequences.
+
+### First version
+
+The original version of flowtime used different algorithms. Random numbers were generated using two separarate linear congruential generators and a horribly inefficient algorithm to shuffle sequences. This and flawed integration in the watch firmware resulted in draining the watch battery in less than 6 months and prompted for a redesign.
+
+## History
+
+- September 2017: Conceptualization of flowtime
+- July 2018: Release of version 1.0 as a JavaScript library
+- September 2024: Integration into a Casio F-91W watch using a [Sensor Watch](5) firmware
+- February 2025: Release of version 2.0
+
+## References
+
+- [Flow state][1] on Wikipedia
+- [Pseudorandom number generator][2] on Wikipedia
+- [Xorshift][3] on Wikipedia
+- [Fisher-Yates shuffle][4] on Wikipedia
+- [Sensor Watch][5] official website
+- [Source code][6] on GitHub
+- [JavaScript library][7] on NPM
+
+[1]: https://en.wikipedia.org/wiki/Flow_(psychology)
+[2]: https://en.wikipedia.org/wiki/Pseudorandom_number_generator
+[3]: https://en.wikipedia.org/wiki/Xorshift
+[4]: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+[5]: https://www.sensorwatch.net/
+[6]: https://github.com/Ucodia/flowtime
+[7]: https://www.npmjs.com/package/flowtime

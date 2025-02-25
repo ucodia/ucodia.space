@@ -1,0 +1,12 @@
+@keyframes color-cycle {
+  from {
+    color: #00c3ff;
+  }
+  to {
+    color: #ffff1c;
+  }
+}
+
+.colorCycle {
+  animation: color-cycle 10s infinite alternate;
+}
