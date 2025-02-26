@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react-swc";
 import svgr from "vite-plugin-svgr";
 import { qrcode } from "vite-plugin-qrcode";
 import mdx from "@mdx-js/rollup";
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
   plugins: [
@@ -13,6 +14,7 @@ export default defineConfig({
     react(),
     svgr(),
     qrcode(),
+    visualizer(),
   ],
   resolve: {
     alias: {
