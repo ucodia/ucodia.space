@@ -1,6 +1,6 @@
 import { GUI } from "lil-gui";
 import autoStretchP5 from "@/utils/auto-stretch-p5";
-import { hsv } from "chroma-js";
+import hsvToHex from "@/utils/hsv-to-hex";
 
 export const meta = {
   name: "Squircle",
@@ -240,15 +240,15 @@ const squircle = (sketch) => {
   }
 
   function complementary(offset) {
-    return hueDivisions(offset, 2).map((h) => hsv(h, 1, 1).hex());
+    return hueDivisions(offset, 2).map((h) => hsvToHex(h, 1, 1));
   }
 
   function triadic(offset) {
-    return hueDivisions(offset, 3).map((h) => hsv(h, 1, 1).hex());
+    return hueDivisions(offset, 3).map((h) => hsvToHex(h, 1, 1));
   }
 
   function analogous(offset) {
-    return hueDivisions(offset, 12).map((h) => hsv(h, 1, 1).hex());
+    return hueDivisions(offset, 12).map((h) => hsvToHex(h, 1, 1));
   }
 
   // feature generation
