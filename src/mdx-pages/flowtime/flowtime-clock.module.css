@@ -1,9 +1,11 @@
 @keyframes color-cycle {
   from {
     color: #00c3ff;
+    border-color: #00c3ff;
   }
   to {
     color: #ffff1c;
+    border-color: #ffff1c;
   }
 }
 

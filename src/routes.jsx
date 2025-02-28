@@ -29,7 +29,7 @@ import * as infiniteChaos from "@/pages/sketches/infinite-chaos";
 import * as spinnySquares from "@/pages/sketches/spinny-squares";
 import ComputerObservingItselfMdx from "@/mdx-pages/computer-observing-itself.mdx";
 import EventsMdx from "@/mdx-pages/events.mdx";
-import Flowtime from "@/mdx-pages/flowtime.mdx";
+import Flowtime from "@/mdx-pages/flowtime/flowtime.mdx";
 
 const BadRng = lazy(() => import("@/pages/bad-rng"));
 
