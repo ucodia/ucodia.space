@@ -3,6 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import * as THREE from "three";
 import GUI from "lil-gui";
+import useCanvasRecorder from "@/hooks/use-canvas-recorder";
 
 export const meta = {
   name: "Bad RNG",
@@ -160,13 +161,27 @@ const BadRng = () => {
     projectionMode: "Cube",
     colorMode: "Plasma",
   });
+  const canvasRef = useRef(null);
+  const { isRecording, startRecording, stopRecording } = useCanvasRecorder();
 
   useEffect(() => {
     const gui = new GUI({ title: "Controls" });
     gui.close();
-    gui.domElement.style.position = "absolute";
-    gui.domElement.style.top = "1rem";
-    gui.domElement.style.right = "1rem";
+
+    let startRecordingController = null;
+    let stopRecordingController = null;
+    const recordingActions = {
+      startRecording: () => {
+        startRecordingController.disable();
+        stopRecordingController.enable();
+        startRecording(canvasRef.current);
+      },
+      stopRecording: () => {
+        stopRecording();
+        startRecordingController.enable();
+        stopRecordingController.disable();
+      },
+    };
 
     const generatorFolder = gui.addFolder("Generator");
     generatorFolder
@@ -191,6 +206,7 @@ const BadRng = () => {
       });
 
     const appearanceFolder = gui.addFolder("Appearance");
+    appearanceFolder.close();
     appearanceFolder
       .add(config, "pointSize", 0.001, 0.05, 0.005)
       .name("Point Size")
@@ -227,7 +243,7 @@ const BadRng = () => {
       });
 
     const rotationFolder = gui.addFolder("Rotation");
-
+    rotationFolder.close();
     rotationFolder
       .add(config, "autoRotate")
       .name("Auto Rotate")
@@ -256,6 +272,16 @@ const BadRng = () => {
         setConfig((prev) => ({ ...prev, rotationSpeedZ: value }));
       });
 
+    const recordFolder = gui.addFolder("Recording");
+    recordFolder.close();
+    startRecordingController = recordFolder
+      .add(recordingActions, "startRecording")
+      .name("Start Recording");
+    stopRecordingController = recordFolder
+      .add(recordingActions, "stopRecording")
+      .name("Stop Recording")
+      .disable();
+
     return () => {
       gui.destroy();
     };
@@ -263,7 +289,7 @@ const BadRng = () => {
 
   return (
     <div className="w-screen h-screen">
-      <Canvas style={{ background: config.backgroundColor }}>
+      <Canvas ref={canvasRef} style={{ background: config.backgroundColor }}>
         <PerspectiveCamera makeDefault position={[0, 0, 5]} />
         <OrbitControls enableDamping dampingFactor={0.05} zoomSpeed={0.5} />
         <Points config={config} />
