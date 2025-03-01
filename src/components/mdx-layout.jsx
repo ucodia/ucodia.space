@@ -20,7 +20,7 @@ const UcodiaHeaderImg = () => {
 export default function MDXLayout({ children }) {
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="bg-background border-b">
+      <header className="bg-background border-b sticky top-0 z-10">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             {/* Mobile Layout */}
