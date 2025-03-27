@@ -7,7 +7,7 @@ export const meta = {
 
 const circuits = (sketch) => {
   // display parameters
-  const gridSize = 30;
+  let cellSize = 30;
   const padSizeRatio = 0.45;
   const traceWidthRatio = 0.15 * padSizeRatio;
   let isDarkTheme = true;
@@ -60,8 +60,8 @@ const circuits = (sketch) => {
     sketch.background(isDarkTheme ? "#000" : "#fff");
     sketch.push();
 
-    const tX = (sketch.width - currentModel.circuit.cols * gridSize) / 2;
-    const tY = (sketch.height - currentModel.circuit.rows * gridSize) / 2;
+    const tX = (sketch.width - currentModel.circuit.cols * cellSize) / 2;
+    const tY = (sketch.height - currentModel.circuit.rows * cellSize) / 2;
     sketch.translate(tX, tY);
 
     for (var i = 0; i < currentModel.circuit.paths.length; i++) {
@@ -89,8 +89,9 @@ const circuits = (sketch) => {
       },
     ];
 
-    var cols = sketch.floor(sketch.width / gridSize);
-    var rows = sketch.floor(sketch.height / gridSize);
+    cellSize = randomInt(2, 8) * 10;
+    var cols = sketch.floor(sketch.width / cellSize);
+    var rows = sketch.floor(sketch.height / cellSize);
     var circuit = createCircuit(cols, rows, palette.length, padStyles.length);
 
     return {
@@ -101,7 +102,7 @@ const circuits = (sketch) => {
   }
 
   function drawPath(path, color, padStyle) {
-    sketch.strokeWeight(gridSize * traceWidthRatio);
+    sketch.strokeWeight(cellSize * traceWidthRatio);
 
     drawTrace(path.nodes, color);
 
@@ -117,8 +118,8 @@ const circuits = (sketch) => {
     for (let i = 0; i < nodes.length - 1; i++) {
       sketch.stroke(color);
 
-      let origin = getPosition(nodes[i], gridSize);
-      let target = getPosition(nodes[i + 1], gridSize);
+      let origin = getPosition(nodes[i], cellSize);
+      let target = getPosition(nodes[i + 1], cellSize);
 
       // if first node in path
       if (i === 0) {
@@ -127,7 +128,7 @@ const circuits = (sketch) => {
           origin.x,
           origin.y,
           angle,
-          (gridSize * padSizeRatio) / 2
+          (cellSize * padSizeRatio) / 2
         );
         origin.set(newOrigin);
       }
@@ -138,7 +139,7 @@ const circuits = (sketch) => {
           target.x,
           target.y,
           angle,
-          (gridSize * padSizeRatio) / 2
+          (cellSize * padSizeRatio) / 2
         );
         target.set(newTarget);
       }
@@ -150,15 +151,15 @@ const circuits = (sketch) => {
   }
 
   function drawPad(node, color, padStyle) {
-    const pos = getPosition(node, gridSize);
+    const pos = getPosition(node, cellSize);
 
     sketch.stroke(color);
     padStyle(color);
     sketch.ellipse(
       pos.x,
       pos.y,
-      gridSize * padSizeRatio,
-      gridSize * padSizeRatio
+      cellSize * padSizeRatio,
+      cellSize * padSizeRatio
     );
   }
 
