@@ -201,21 +201,27 @@ const circuits = (sketch) => {
         // update reference gridnn
         grid[i][j] = current;
 
+        let prevDir = randomInt(0, 1);
+
         // generate path
         while (path.nodes.length < pathLength) {
           const last = path.nodes[path.nodes.length - 1];
           const next = { x: last.x, y: last.y };
           const dir = randomInt(0, 1);
 
-          // dir = 0 -> navigate to right
-          if (dir === 0) {
+          if (prevDir === 0 && dir === 0) {
             next.x++;
-          }
-          // dir = 1 -> navigate to bottom right
-          else if (dir === 1) {
+          } else if (prevDir === 0 && dir === 1) {
+            next.x++;
+            next.y++;
+          } else if (prevDir === 1 && dir === 1) {
+            next.y++;
+          } else if (prevDir === 1 && dir === 0) {
             next.x++;
             next.y++;
           }
+
+          prevDir = dir;
 
           // exit prematurely in case
           // next position is outside boundaries
