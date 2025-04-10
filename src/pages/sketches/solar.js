@@ -24,12 +24,14 @@ function f(xms, yms, t) {
 }
 
 const solar = (sketch) => {
+  let t = 0;
   let defaultSx = {
     n: 200,
     steps: [0.5, 0.5],
     minStep: 0.01,
     maxStep: 2,
-    speed: 0.01,
+    speed: 0.001,
+    offset: 0,
     smoothness: 0.5,
     movePattern: [[[1, 100]], [[2, 50]]],
     sunX: 0,
@@ -49,24 +51,31 @@ const solar = (sketch) => {
 
   sketch.draw = function () {
     // animate
-    const t = sketch.frameCount * sx.speed;
     const [offsetX, offsetY] = f([[1, 100]], [[2, 50]], t);
     sx.sunX = sketch.width / 2 + offsetX;
     sx.sunY = sketch.height / 2 + offsetY;
     sx.steps[0] = sketch.map(
-      sketch.noise(t * sx.smoothness, 2),
+      sketch.noise(t * sx.smoothness, 0),
       0,
       1,
       sx.minStep,
       sx.maxStep
     );
     sx.steps[1] = sketch.map(
-      sketch.noise(t * sx.smoothness, 3),
+      sketch.noise(t * sx.smoothness, 1),
       0,
       1,
       sx.minStep,
       sx.maxStep
     );
+    sx.speed = sketch.map(
+      sketch.noise(sketch.frameCount * 0.01, 2),
+      0,
+      1,
+      0.0005,
+      0.005
+    );
+    t += sx.speed;
 
     // draw
     sketch.background(255);
@@ -115,6 +124,8 @@ const solar = (sketch) => {
     sx.seed = sketch.round(sketch.random(0, 10000));
     sketch.randomSeed(sx.seed);
     sketch.noiseSeed(sx.seed);
+    sx.offset = sketch.random(0, 1000);
+    t = sx.offset;
 
     let moveType = randomInt(0, 1);
     if (moveType === 0) {
