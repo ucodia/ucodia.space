@@ -27,6 +27,7 @@ import * as cmyDance from "@/pages/sketches/cmy-dance";
 import * as squircle from "@/pages/sketches/squircle";
 import * as infiniteChaos from "@/pages/sketches/infinite-chaos";
 import * as spinnySquares from "@/pages/sketches/spinny-squares";
+import * as solar from "@/pages/sketches/solar";
 import ComputerObservingItselfMdx from "@/mdx-pages/computer-observing-itself.mdx";
 import EventsMdx from "@/mdx-pages/events.mdx";
 import Flowtime from "@/mdx-pages/flowtime/flowtime.mdx";
@@ -207,6 +208,11 @@ const routes = [
     name: "spinny squares",
     path: "spinny-squares",
     element: <FullscreenSketch sketch={spinnySquares} />,
+  },
+  {
+    name: "solar",
+    path: "solar",
+    element: <FullscreenSketch sketch={solar} />,
   },
 ];
 
