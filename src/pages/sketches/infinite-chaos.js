@@ -47,18 +47,19 @@ const colors = {
 };
 
 const defaultSx = {
-  pointCount: 100000,
+  pointCount: 250000,
   background: colors.darkgrey,
   color: colors.emerald,
   particleSize: 1,
   opacity: 0.3,
   marginRatio: 0.1,
-  xModifier: "asinh",
-  yModifier: "asinh",
-  seed: "km1rw8720",
+  xModifier: "noop",
+  yModifier: "noop",
+  seed: "",
   presetSeed: "",
-  highRes: true,
+  highRes: false,
   swapColors: false,
+  minSpread: 0.25,
 };
 
 const seedsOfInterest = [
@@ -103,6 +104,7 @@ const infiniteChaos = (sketch) => {
   const xModifierController = gui.add(sx, "xModifier", Object.keys(modifiers));
   const yModifierController = gui.add(sx, "yModifier", Object.keys(modifiers));
   const presetSeedController = gui.add(sx, "presetSeed", seedsOfInterest);
+  gui.add(sx, "minSpread", 0, 0.5, 0.05);
 
   pointCountController.onFinishChange(() => {
     updateAttractorData();
@@ -153,6 +155,7 @@ const infiniteChaos = (sketch) => {
     randomize: () => {
       const startTime = performance.now();
       const modNames = Object.keys(modifiers);
+      let spread = 0;
 
       do {
         sx.seed = randomString(8);
@@ -160,12 +163,27 @@ const infiniteChaos = (sketch) => {
         params = createAttractorParams(rand);
         sx.xModifier = modNames[(rand() * modNames.length) | 0];
         sx.yModifier = modNames[(rand() * modNames.length) | 0];
-      } while (
-        !isChaotic(params, modifiers[sx.xModifier], modifiers[sx.yModifier])
-      );
+
+        if (
+          isChaotic(params, modifiers[sx.xModifier], modifiers[sx.yModifier])
+        ) {
+          // new spread filter
+          const { x, y, xMin, xMax, yMin, yMax } = generateAttractor(
+            params,
+            10000,
+            modifiers[sx.xModifier],
+            modifiers[sx.yModifier]
+          );
+          spread = computeSpread(x, y, xMin, xMax, yMin, yMax);
+        }
+      } while (isNaN(spread) || spread < sx.minSpread);
 
       const elapsedTime = performance.now() - startTime;
-      console.log(`Found chaotic seed ${sx.seed} in ${elapsedTime}ms`);
+      console.log(
+        `Found chaotic seed ${sx.seed} with spread ${spread.toFixed(
+          2
+        )} in ${elapsedTime.toFixed(2)}ms`
+      );
 
       sx.presetSeed = "";
       gui.controllersRecursive().forEach((c) => c.updateDisplay());
@@ -186,7 +204,11 @@ const infiniteChaos = (sketch) => {
         (v) => !filteredParams.includes(filteredParams)
       );
 
-      const urlParams = { seed: sx.seed };
+      const urlParams = {
+        seed: sx.seed,
+        xModifier: sx.xModifier,
+        yModifier: sx.yModifier,
+      };
       allowedParams.forEach((key) => {
         const value = sx[key];
         if (value !== defaultSx[key]) {
@@ -201,11 +223,13 @@ const infiniteChaos = (sketch) => {
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
-    autoStretchP5(sketch, layout);
+    autoStretchP5(sketch);
     sketch.noLoop();
-  };
 
-  function layout() {}
+    if (!sx.seed) {
+      actions.randomize();
+    }
+  };
 
   sketch.draw = (ctx) => {
     if (!ctx) ctx = sketch;
@@ -249,17 +273,12 @@ const infiniteChaos = (sketch) => {
     const rand = namedLcg(sx.seed);
     params = createAttractorParams(rand);
 
-    const startTime = performance.now();
-
     attractorData = generateAttractor(
       params,
       sx.pointCount,
       modifiers[sx.xModifier],
       modifiers[sx.yModifier]
     );
-
-    const elapsedTime = performance.now() - startTime;
-    console.log(`Generated attractors in ${elapsedTime}ms`);
   }
 };
 
@@ -362,6 +381,58 @@ function isChaotic(params, xFn, yFn) {
   }
 
   return true;
+}
+
+function computeSpread(x, y, xMin, xMax, yMin, yMax) {
+  const cells = {};
+
+  // divide the smallest side in at least 100 cells
+  const minSubdivision = 100;
+  const minLength = Math.min(Math.abs(xMax - xMin), Math.abs(yMax - yMin));
+  const cellSize = floorToFirstDecimal(minLength / minSubdivision);
+
+  // find the number of columns/rows
+  const startX = floorToMultiple(xMin, cellSize);
+  const endX = floorToMultiple(xMax, cellSize);
+  const startY = floorToMultiple(yMin, cellSize);
+  const endY = floorToMultiple(yMax, cellSize);
+  const gridWidth = Math.abs(endX - startX);
+  const gridHeight = Math.abs(endY - startY);
+  const cols = Math.round(gridWidth / cellSize);
+  const rows = Math.round(gridHeight / cellSize);
+
+  // analyze maximum 1M first points
+  // spread does not increase much beyond that
+  const n = Math.min(x.length, 1000000);
+  let uniqueCellCount = 0;
+  for (let i = 0; i < n; i++) {
+    const cellX = floorToMultiple(x[i], cellSize);
+    const cellY = floorToMultiple(y[i], cellSize);
+    const cellKey = `${cellX}_${cellY}`;
+    if (!cells[cellKey]) {
+      cells[cellKey] = 1;
+      uniqueCellCount++;
+    }
+  }
+
+  const spread = uniqueCellCount / (cols * rows);
+  return spread;
+}
+
+function floorToFirstDecimal(number) {
+  if (number >= 1) {
+    return Math.floor(number);
+  } else {
+    const precision = Math.ceil(-Math.log10(number));
+    return Number(number.toString().substr(0, precision + 2));
+  }
+}
+
+function floorToMultiple(number, increment) {
+  const roundedValue = increment * Math.floor(number / increment);
+  const precision = Math.ceil(-Math.log10(increment));
+  const factor = Math.pow(10, precision);
+  return Math.round(roundedValue * factor) / factor;
 }
 
 function opacityToHex(opacity) {
