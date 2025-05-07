@@ -57,7 +57,7 @@ const defaultSx = {
   yModifier: "noop",
   seed: "",
   presetSeed: "",
-  highRes: false,
+  highRes: true,
   swapColors: false,
   minSpread: 0.25,
 };
