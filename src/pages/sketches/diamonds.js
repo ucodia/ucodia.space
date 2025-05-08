@@ -64,7 +64,7 @@ const diamonds = (sketch, n = 3, transparent = false) => {
     if (!sides) sides = 8;
     if (!offset) offset = 0;
 
-    const inc = 1 / 1000;
+    const inc = 1 / 3000;
     let position = sketch.constrain(offset, 0, 1);
 
     return {
