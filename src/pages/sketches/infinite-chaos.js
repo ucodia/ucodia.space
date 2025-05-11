@@ -47,30 +47,22 @@ const colors = {
 };
 
 const defaultSx = {
-  pointCount: 250000,
-  background: colors.darkgrey,
-  color: colors.emerald,
-  particleSize: 1,
-  opacity: 0.3,
-  marginRatio: 0.1,
+  pointCount: 500000,
   xModifier: "noop",
   yModifier: "noop",
   seed: "",
-  presetSeed: "",
-  highRes: true,
-  swapColors: false,
   minSpread: 0.25,
+  background: colors.black,
+  color: colors.emerald,
+  swapColors: false,
+  opacity: 0.3,
+  particleSize: 1,
+  marginRatio: 0.1,
+  highRes: true,
+  animate: true,
+  batchSize: 500,
+  continuousMode: true,
 };
-
-const seedsOfInterest = [
-  "3vg11h8l6",
-  "1mr99uuz9",
-  "3r3anjk2v",
-  "miiigngbt",
-  "sp57s52kv",
-  "unnxuw7ol",
-  "t6yerjusf",
-];
 
 const modifiers = {
   noop: (v) => v,
@@ -88,23 +80,132 @@ const infiniteChaos = (sketch) => {
   const sx = { ...defaultSx, ...urlSx };
   let params = {};
   let attractorData = {};
+  let batchCurrent = 0;
   updateAttractorData();
 
   const gui = new GUI();
   gui.close();
-  const pointCountController = gui.add(sx, "pointCount", 10000, 1000000, 10000);
-  const bgController = gui.addColor(sx, "background");
-  const colorController = gui.addColor(sx, "color");
-  const swapColorsController = gui.add(sx, "swapColors");
-  const particleSizeController = gui.add(sx, "particleSize", 0, 2, 0.1);
-  const opacityController = gui.add(sx, "opacity", 0, 1, 0.05);
-  const marginRatioController = gui.add(sx, "marginRatio", 0, 0.5, 0.05);
-  const highResController = gui.add(sx, "highRes");
-  const seedController = gui.add(sx, "seed");
-  const xModifierController = gui.add(sx, "xModifier", Object.keys(modifiers));
-  const yModifierController = gui.add(sx, "yModifier", Object.keys(modifiers));
-  const presetSeedController = gui.add(sx, "presetSeed", seedsOfInterest);
-  gui.add(sx, "minSpread", 0, 0.5, 0.05);
+
+  // Attractor folder
+  const attractorFolder = gui.addFolder("attractor");
+  const pointCountController = attractorFolder.add(
+    sx,
+    "pointCount",
+    10000,
+    1000000,
+    10000
+  );
+  const xModifierController = attractorFolder.add(
+    sx,
+    "xModifier",
+    Object.keys(modifiers)
+  );
+  const yModifierController = attractorFolder.add(
+    sx,
+    "yModifier",
+    Object.keys(modifiers)
+  );
+  const seedController = attractorFolder.add(sx, "seed");
+  attractorFolder.add(sx, "minSpread", 0, 0.5, 0.05);
+
+  // Style folder
+  const styleFolder = gui.addFolder("style");
+  const bgController = styleFolder.addColor(sx, "background");
+  const colorController = styleFolder.addColor(sx, "color");
+  const swapColorsController = styleFolder.add(sx, "swapColors");
+  const opacityController = styleFolder.add(sx, "opacity", 0, 1, 0.05);
+  const particleSizeController = styleFolder.add(sx, "particleSize", 0, 2, 0.1);
+  const marginRatioController = styleFolder.add(
+    sx,
+    "marginRatio",
+    0,
+    0.5,
+    0.05
+  );
+  const highResController = styleFolder.add(sx, "highRes");
+
+  // Animation folder
+  const animationFolder = gui.addFolder("animation");
+  const animateController = animationFolder.add(sx, "animate");
+  const batchSizeController = animationFolder.add(
+    sx,
+    "batchSize",
+    100,
+    10000,
+    100
+  );
+  const continuousModeController = animationFolder.add(sx, "continuousMode");
+
+  // Actions folder
+  const actionsFolder = gui.addFolder("actions");
+  const actions = {
+    randomize: () => {
+      const startTime = performance.now();
+      const modNames = Object.keys(modifiers);
+      let spread = 0;
+
+      do {
+        sx.seed = randomString(8);
+        const rand = namedLcg(sx.seed);
+        params = createAttractorParams(rand);
+        sx.xModifier = modNames[(rand() * modNames.length) | 0];
+        sx.yModifier = modNames[(rand() * modNames.length) | 0];
+
+        if (
+          isChaotic(params, modifiers[sx.xModifier], modifiers[sx.yModifier])
+        ) {
+          // new spread filter
+          const { x, y, xMin, xMax, yMin, yMax } = generateAttractor(
+            params,
+            10000,
+            modifiers[sx.xModifier],
+            modifiers[sx.yModifier]
+          );
+          spread = computeSpread(x, y, xMin, xMax, yMin, yMax);
+        }
+      } while (isNaN(spread) || spread < sx.minSpread);
+
+      const elapsedTime = performance.now() - startTime;
+      console.log(
+        `Found chaotic seed ${sx.seed} with spread ${spread.toFixed(
+          2
+        )} in ${elapsedTime.toFixed(2)}ms`
+      );
+
+      gui.controllersRecursive().forEach((c) => c.updateDisplay());
+      batchCurrent = 0;
+      updateAttractorData();
+      if (sx.animate) {
+        sketch.loop();
+      } else {
+        sketch.draw();
+      }
+    },
+    save: () => {
+      const mod =
+        sx.xModifier !== defaultSx.xModifier ||
+        sx.yModifier !== defaultSx.yModifier
+          ? `-${sx.xModifier}-${sx.yModifier}`
+          : "";
+      sketch.save(`infinite-chaos-${sx.seed}${mod}.png`);
+    },
+    shareUrl: () => {
+      const urlParams = {
+        seed: sx.seed,
+        xModifier: sx.xModifier,
+        yModifier: sx.yModifier,
+      };
+      Object.keys(defaultSx).forEach((key) => {
+        const value = sx[key];
+        if (value !== defaultSx[key]) {
+          urlParams[key] =
+            typeof value === "number" ? truncateFloat(value) : value;
+        }
+      });
+      setURLParams(urlParams);
+    },
+  };
+  Object.keys(actions).forEach((name) => actionsFolder.add(actions, name));
 
   pointCountController.onFinishChange(() => {
     updateAttractorData();
@@ -140,91 +241,36 @@ const infiniteChaos = (sketch) => {
     sketch.draw();
   });
   seedController.onFinishChange(() => {
-    sx.presetSeed = "";
     gui.controllersRecursive().forEach((c) => c.updateDisplay());
     updateAttractorData();
     sketch.draw();
   });
-  presetSeedController.onFinishChange(() => {
-    sx.seed = sx.presetSeed;
-    updateAttractorData();
-    sketch.draw();
-  });
-
-  const actions = {
-    randomize: () => {
-      const startTime = performance.now();
-      const modNames = Object.keys(modifiers);
-      let spread = 0;
-
-      do {
-        sx.seed = randomString(8);
-        const rand = namedLcg(sx.seed);
-        params = createAttractorParams(rand);
-        sx.xModifier = modNames[(rand() * modNames.length) | 0];
-        sx.yModifier = modNames[(rand() * modNames.length) | 0];
-
-        if (
-          isChaotic(params, modifiers[sx.xModifier], modifiers[sx.yModifier])
-        ) {
-          // new spread filter
-          const { x, y, xMin, xMax, yMin, yMax } = generateAttractor(
-            params,
-            10000,
-            modifiers[sx.xModifier],
-            modifiers[sx.yModifier]
-          );
-          spread = computeSpread(x, y, xMin, xMax, yMin, yMax);
-        }
-      } while (isNaN(spread) || spread < sx.minSpread);
-
-      const elapsedTime = performance.now() - startTime;
-      console.log(
-        `Found chaotic seed ${sx.seed} with spread ${spread.toFixed(
-          2
-        )} in ${elapsedTime.toFixed(2)}ms`
-      );
-
-      sx.presetSeed = "";
-      gui.controllersRecursive().forEach((c) => c.updateDisplay());
-      updateAttractorData();
+  animateController.onFinishChange(() => {
+    if (sx.animate) {
+      batchCurrent = 0;
+      sketch.loop();
+    } else {
+      sketch.noLoop();
       sketch.draw();
-    },
-    save: () => {
-      const mod =
-        sx.xModifier !== defaultSx.xModifier ||
-        sx.yModifier !== defaultSx.yModifier
-          ? `-${sx.xModifier}-${sx.yModifier}`
-          : "";
-      sketch.save(`infinite-chaos-${sx.seed}${mod}.png`);
-    },
-    shareUrl: () => {
-      const filteredParams = ["presetSeed"];
-      const allowedParams = Object.keys(defaultSx).filter(
-        (v) => !filteredParams.includes(filteredParams)
-      );
-
-      const urlParams = {
-        seed: sx.seed,
-        xModifier: sx.xModifier,
-        yModifier: sx.yModifier,
-      };
-      allowedParams.forEach((key) => {
-        const value = sx[key];
-        if (value !== defaultSx[key]) {
-          urlParams[key] =
-            typeof value === "number" ? truncateFloat(value) : value;
-        }
-      });
-      setURLParams(urlParams);
-    },
-  };
-  Object.keys(actions).forEach((name) => gui.add(actions, name));
+    }
+  });
+  batchSizeController.onFinishChange(() => {
+    if (sx.animate) {
+      sketch.draw();
+    }
+  });
+  continuousModeController.onFinishChange(() => {
+    if (sx.continuousMode && sx.animate) {
+      sketch.loop();
+    }
+  });
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
     autoStretchP5(sketch);
-    sketch.noLoop();
+    if (!sx.animate) {
+      sketch.noLoop();
+    }
 
     if (!sx.seed) {
       actions.randomize();
@@ -237,12 +283,20 @@ const infiniteChaos = (sketch) => {
     const fg = sx.swapColors ? sx.background : sx.color;
     const bg = sx.swapColors ? sx.color : sx.background;
 
-    ctx.clear();
-    ctx.background(bg);
-    ctx.noStroke();
-    ctx.fill(`${fg}${opacityToHex(sx.opacity)}`);
+    if (batchCurrent === 0) {
+      ctx.clear();
+      ctx.background(bg);
+    }
 
     const { x, y, xMin, xMax, yMin, yMax } = attractorData;
+    const batchEnd = sx.animate
+      ? Math.min(batchCurrent + sx.batchSize, x.length)
+      : x.length;
+
+    console.log(`draw batch from ${batchCurrent} to ${batchEnd}`);
+
+    ctx.noStroke();
+    ctx.fill(`${fg}${opacityToHex(sx.opacity)}`);
 
     const margin = ctx.width * sx.marginRatio;
     const attractorWidth = xMax - xMin;
@@ -253,7 +307,8 @@ const infiniteChaos = (sketch) => {
     );
     const centerX = (ctx.width - attractorWidth * scale) / 2;
     const centerY = (ctx.height - attractorHeight * scale) / 2;
-    for (let i = 0; i < x.length; i++) {
+
+    for (let i = batchCurrent; i < batchEnd; i++) {
       let ix = centerX + (x[i] - xMin) * scale;
       let iy = centerY + (y[i] - yMin) * scale;
 
@@ -261,6 +316,16 @@ const infiniteChaos = (sketch) => {
         ctx.ellipse(ix, iy, sx.particleSize, sx.particleSize);
       } else {
         ctx.rect(ix, iy, sx.particleSize, sx.particleSize);
+      }
+    }
+
+    batchCurrent += sx.batchSize;
+    if (batchCurrent >= x.length) {
+      batchCurrent = 0;
+      if (sx.continuousMode && sx.animate) {
+        actions.randomize();
+      } else {
+        sketch.noLoop();
       }
     }
   };
