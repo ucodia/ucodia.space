@@ -1,4 +1,5 @@
 import { GUI } from "lil-gui";
+import p5plotSvg from "p5.plotsvg";
 import autoStretchP5 from "@/utils/auto-stretch-p5";
 import hsvToHex from "@/utils/hsv-to-hex";
 
@@ -69,14 +70,9 @@ const squircle = (sketch) => {
       sketch.draw();
     },
     save: () => {
-      const svg = sketch.createGraphics(
-        sketch.windowWidth,
-        sketch.windowHeight,
-        sketch.SVG
-      );
-      svg.rectMode(sketch.CENTER);
-      sketch.draw(svg);
-      svg.save(`squircle-${sx.noise.seed}.svg`);
+      p5plotSvg.beginRecordSVG(sketch, `squircle.svg`);
+      sketch.draw();
+      p5plotSvg.endRecordSVG();
     },
   };
   Object.keys(actions).forEach((name) => gui.add(actions, name));
@@ -116,21 +112,19 @@ const squircle = (sketch) => {
     }
   };
 
-  sketch.draw = (ctx) => {
-    if (!ctx) ctx = sketch;
-
-    ctx.clear();
-    ctx.background(sx.background);
-    ctx.stroke(sx.stroke);
-    ctx.strokeWeight(sx.thickness);
+  sketch.draw = () => {
+    sketch.clear();
+    sketch.background(sx.background);
+    sketch.stroke(sx.stroke);
+    sketch.strokeWeight(sx.thickness);
     if (sx.transparent) {
-      ctx.noFill();
+      sketch.noFill();
     } else {
-      ctx.fill(sx.background);
+      sketch.fill(sx.background);
     }
 
     const minSide = getMinSide();
-    const portrait = minSide === ctx.width;
+    const portrait = minSide === sketch.width;
     const maxWidth = minSide * (1 - sx.marginRatio);
     const minWidth = minSide * 0.01;
     const inc = (maxWidth - minWidth) / (sx.lineCount - 1);
@@ -141,21 +135,21 @@ const squircle = (sketch) => {
       const rads = getRadiuses(sx, i);
       const w = maxWidth - i * inc;
 
-      ctx.push();
-      ctx.translate(ctx.width / 2, ctx.height / 2);
-      ctx.rotate(rot);
-      ctx.translate(-ctx.width / 2 + trans, -ctx.height / 2 + trans);
-      ctx.rect(
-        ctx.width / 2,
-        ctx.height / 2,
+      sketch.push();
+      sketch.translate(sketch.width / 2, sketch.height / 2);
+      sketch.rotate(rot);
+      sketch.translate(-sketch.width / 2 + trans, -sketch.height / 2 + trans);
+      sketch.rect(
+        sketch.width / 2,
+        sketch.height / 2,
         portrait ? w * sx.squareness : w,
         portrait ? w : w * sx.squareness,
         ...rads
       );
-      ctx.pop();
+      sketch.pop();
     }
 
-    // ctx.noLoop();
+    // sketch.noLoop();
   };
 
   sketch.cleanup = () => {

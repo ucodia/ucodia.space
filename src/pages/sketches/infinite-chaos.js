@@ -305,8 +305,6 @@ const infiniteChaos = (sketch) => {
       ? Math.min(batchCurrent + sx.batchSize, x.length)
       : x.length;
 
-    console.log(`draw batch from ${batchCurrent} to ${batchEnd}`);
-
     ctx.noStroke();
     ctx.fill(`${fg}${opacityToHex(sx.opacity)}`);
 

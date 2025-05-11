@@ -1,9 +1,5 @@
 import React, { useRef, useEffect } from "react";
 import p5 from "p5";
-import p5Svg from "p5.js-svg";
-
-// add SVG renderer to p5;
-p5Svg(p5);
 
 const P5Wrapper = ({ sketch }) => {
   const containerRef = useRef(null);

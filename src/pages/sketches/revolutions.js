@@ -1,3 +1,4 @@
+import p5plotSvg from "p5.plotsvg";
 import autoStretchP5 from "@/utils/auto-stretch-p5";
 
 export const meta = {
@@ -73,11 +74,13 @@ const revolutions = (sketch) => {
 
   sketch.keyPressed = () => {
     switch (sketch.key) {
-      case "r": {
-        sketch.save(`frame-${mode}-${n}-${iterations}.svg`);
+      case "s": {
+        p5plotSvg.beginRecordSVG(sketch, `revolutions.svg`);
+        sketch.draw();
+        p5plotSvg.endRecordSVG();
         break;
       }
-      case "g": {
+      case "n": {
         iterations = randomInt(0, 1080);
         n = randomInt(0, 1080);
         mode = randomInt(0, 1);
@@ -121,7 +124,7 @@ const revolutions = (sketch) => {
     }
   };
 
-  sketch.mousePressed = () => {
+  sketch.doubleClicked = () => {
     mode = (mode + 1) % 2;
     regen();
     return false;

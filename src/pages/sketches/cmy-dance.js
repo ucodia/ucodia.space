@@ -1,4 +1,5 @@
 import { GUI } from "lil-gui";
+import p5plotSvg from "p5.plotsvg";
 import autoStretchP5 from "@/utils/auto-stretch-p5";
 import { numericalRecipesLcg } from "@/utils/random";
 import presets from "./cmy-dance-presets.json";
@@ -65,15 +66,11 @@ const cmyDance = (sketch) => {
   const presetControl = gui.add(sx, "preset", [0, 1, 2]);
 
   const actions = {
-    newSeed: () => seedControl.setValue(getRandomString()),
+    randomize: () => seedControl.setValue(getRandomString()),
     save: () => {
-      const svg = sketch.createGraphics(
-        sketch.windowWidth,
-        sketch.windowHeight,
-        sketch.SVG
-      );
-      sketch.draw(svg);
-      svg.save(`cmy-dance-${sx.seed}.svg`);
+      p5plotSvg.beginRecordSVG(sketch, `cmy-dance.svg`);
+      sketch.draw();
+      p5plotSvg.endRecordSVG();
     },
     shareUrl: () => {
       const params = { ...sx };
@@ -146,22 +143,20 @@ const cmyDance = (sketch) => {
     }
   }
 
-  sketch.draw = (ctx) => {
-    if (!ctx) ctx = sketch;
-
-    ctx.clear();
-    ctx.background("black");
-    ctx.translate(ctx.width / 2, ctx.height / 2);
-    ctx.scale(realScale - scaleOffset);
-    ctx.strokeWeight(sx.thickness);
+  sketch.draw = () => {
+    sketch.clear();
+    sketch.background("black");
+    sketch.translate(sketch.width / 2, sketch.height / 2);
+    sketch.scale(realScale - scaleOffset);
+    sketch.strokeWeight(sx.thickness);
     t += sx.speed;
 
     for (let i = 0; i < sx.length; i++) {
       const tInc = i * sx.spacing + sx.offset;
       for (let j = 0; j < paramSet.length; j++) {
         const [r, g, b] = palette[j % palette.length];
-        ctx.stroke(`rgba(${r},${g},${b},${sx.opacity})`);
-        ctx.line(
+        sketch.stroke(`rgba(${r},${g},${b},${sx.opacity})`);
+        sketch.line(
           ...f(...paramSet[j][0], t + tInc),
           ...f(...paramSet[j][1], t + tInc)
         );
@@ -180,7 +175,7 @@ const cmyDance = (sketch) => {
         break;
       }
       case "n": {
-        actions.newSeed();
+        actions.randomize();
       }
       case " ": {
         toggleLooping();
