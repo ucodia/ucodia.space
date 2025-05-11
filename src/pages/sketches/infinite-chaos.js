@@ -267,13 +267,25 @@ const infiniteChaos = (sketch) => {
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
-    autoStretchP5(sketch);
+    autoStretchP5(sketch, layout);
     if (!sx.animate) {
       sketch.noLoop();
     }
 
     if (!sx.seed) {
       actions.randomize();
+    }
+  };
+
+  function layout() {
+    batchCurrent = 0;
+  }
+
+  sketch.doubleClicked = () => {
+    if (sketch.fullscreen()) {
+      sketch.fullscreen(false);
+    } else {
+      sketch.fullscreen(true);
     }
   };
 
