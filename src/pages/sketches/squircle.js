@@ -69,10 +69,13 @@ const squircle = (sketch) => {
       randomizeFeatures();
       sketch.draw();
     },
-    save: () => {
+    savePlotter: () => {
       p5plotSvg.beginRecordSVG(sketch, `squircle.svg`);
       sketch.draw();
       p5plotSvg.endRecordSVG();
+    },
+    saveImage: () => {
+      sketch.save(`squircle.png`);
     },
   };
   Object.keys(actions).forEach((name) => gui.add(actions, name));
@@ -96,14 +99,14 @@ const squircle = (sketch) => {
     autoStretchP5(sketch);
   };
 
-  sketch.windowResized = () => {
-    sketch.resizeCanvas(sketch.windowWidth, sketch.windowHeight);
-  };
-
   sketch.keyPressed = () => {
     switch (sketch.key) {
       case "s": {
-        actions.save();
+        actions.saveImage();
+        break;
+      }
+      case "p": {
+        actions.savePlotter();
         break;
       }
       case "n": {

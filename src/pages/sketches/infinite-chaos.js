@@ -181,7 +181,7 @@ const infiniteChaos = (sketch) => {
         sketch.draw();
       }
     },
-    save: () => {
+    saveImage: () => {
       const mod =
         sx.xModifier !== defaultSx.xModifier ||
         sx.yModifier !== defaultSx.yModifier
@@ -286,6 +286,20 @@ const infiniteChaos = (sketch) => {
       sketch.fullscreen(false);
     } else {
       sketch.fullscreen(true);
+    }
+  };
+
+  sketch.keyPressed = () => {
+    switch (sketch.key) {
+      case "s": {
+        actions.saveImage();
+        break;
+      }
+      case "n": {
+        actions.randomize();
+      }
+      default: {
+      }
     }
   };
 

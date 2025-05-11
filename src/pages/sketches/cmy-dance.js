@@ -67,10 +67,13 @@ const cmyDance = (sketch) => {
 
   const actions = {
     randomize: () => seedControl.setValue(getRandomString()),
-    save: () => {
+    savePlotter: () => {
       p5plotSvg.beginRecordSVG(sketch, `cmy-dance.svg`);
       sketch.draw();
       p5plotSvg.endRecordSVG();
+    },
+    saveImage: () => {
+      sketch.save(`cmy-dance.png`);
     },
     shareUrl: () => {
       const params = { ...sx };
@@ -171,7 +174,11 @@ const cmyDance = (sketch) => {
   sketch.keyPressed = () => {
     switch (sketch.key) {
       case "s": {
-        actions.save();
+        actions.saveImage();
+        break;
+      }
+      case "p": {
+        actions.savePlotter();
         break;
       }
       case "n": {
