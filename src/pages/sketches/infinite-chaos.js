@@ -52,7 +52,7 @@ const defaultSx = {
   yModifier: "noop",
   seed: "",
   minSpread: 0.25,
-  background: colors.black,
+  background: "#000000",
   color: colors.emerald,
   swapColors: false,
   opacity: 0.3,
@@ -60,6 +60,7 @@ const defaultSx = {
   marginRatio: 0.1,
   highRes: true,
   animate: true,
+  animateHue: false,
   batchSize: 500,
   continuousMode: true,
 };
@@ -81,9 +82,10 @@ const infiniteChaos = (sketch) => {
   let params = {};
   let attractorData = {};
   let batchCurrent = 0;
+  let hueCurrent = 159;
   updateAttractorData();
 
-  const gui = new GUI();
+  const gui = new GUI({ title: "Infinite Chaos" });
   gui.close();
 
   // Attractor folder
@@ -127,6 +129,7 @@ const infiniteChaos = (sketch) => {
   // Animation folder
   const animationFolder = gui.addFolder("animation");
   const animateController = animationFolder.add(sx, "animate");
+  animationFolder.add(sx, "animateHue");
   const batchSizeController = animationFolder.add(
     sx,
     "batchSize",
@@ -298,6 +301,14 @@ const infiniteChaos = (sketch) => {
       case "n": {
         actions.randomize();
       }
+      case "e": {
+        if (gui._hidden) {
+          gui.show();
+        } else {
+          gui.hide();
+        }
+        break;
+      }
       default: {
       }
     }
@@ -306,8 +317,17 @@ const infiniteChaos = (sketch) => {
   sketch.draw = (ctx) => {
     if (!ctx) ctx = sketch;
 
-    const fg = sx.swapColors ? sx.background : sx.color;
-    const bg = sx.swapColors ? sx.color : sx.background;
+    const baseBg = sx.background;
+    let baseColor = sx.color;
+
+    if (sx.animate && sx.animateHue) {
+      let inc = 0.1;
+      hueCurrent = (hueCurrent + inc) % 360;
+      baseColor = hslToHex(Math.round(hueCurrent), 100, 50);
+    }
+
+    const fg = sx.swapColors ? baseBg : baseColor;
+    const bg = sx.swapColors ? baseColor : baseBg;
 
     if (batchCurrent === 0) {
       ctx.clear();
@@ -529,6 +549,40 @@ function opacityToHex(opacity) {
     .toString(16)
     .toUpperCase()
     .padStart(2, "0");
+}
+
+function hslToHex(h, s, l) {
+  // Convert s and l from percentage to decimal
+  s = s / 100;
+  l = l / 100;
+
+  // Convert h to RGB
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+
+  let r, g, b;
+  if (h >= 0 && h < 60) {
+    [r, g, b] = [c, x, 0];
+  } else if (h >= 60 && h < 120) {
+    [r, g, b] = [x, c, 0];
+  } else if (h >= 120 && h < 180) {
+    [r, g, b] = [0, c, x];
+  } else if (h >= 180 && h < 240) {
+    [r, g, b] = [0, x, c];
+  } else if (h >= 240 && h < 300) {
+    [r, g, b] = [x, 0, c];
+  } else {
+    [r, g, b] = [c, 0, x];
+  }
+
+  // Convert RGB to hex
+  const toHex = (n) => {
+    const hex = Math.round((n + m) * 255).toString(16);
+    return hex.length === 1 ? "0" + hex : hex;
+  };
+
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
 function truncateFloat(num, decimalPlaces = 4) {
