@@ -83,6 +83,7 @@ const infiniteChaos = (sketch) => {
   let attractorData = {};
   let batchCurrent = 0;
   let hueCurrent = 159;
+  let midiInput = null;
   updateAttractorData();
 
   const gui = new GUI({ title: "Infinite Chaos" });
@@ -184,6 +185,93 @@ const infiniteChaos = (sketch) => {
         sketch.draw();
       }
     },
+    enableMidi: () => {
+      if (!navigator.requestMIDIAccess) {
+        console.error("MIDI is not supported on this browser");
+        return;
+      }
+
+      navigator
+        .requestMIDIAccess()
+        .then((midiAccess) => {
+          const inputs = Array.from(midiAccess.inputs.values());
+          if (inputs.length === 0) {
+            console.error("No MIDI inputs available");
+            return;
+          }
+
+          midiInput = inputs[0];
+          console.log(
+            `Connected to MIDI input: ${midiInput.manufacturer} ${midiInput.name}`
+          );
+          midiInput.onmidimessage = function handleMIDIMessage(event) {
+            const [channel, note, value] = event.data;
+            const type =
+              channel === 0x90
+                ? "noteOn"
+                : channel === 0x80
+                ? "noteOff"
+                : channel === 0xb0
+                ? "controlChange"
+                : "unknown";
+
+            console.log(`[${midiInput.name}] ${type} ${note} ${value}`);
+
+            if (type === "noteOn" && value === 127) {
+              switch (note) {
+                case 40: {
+                  actions.randomize();
+                  break;
+                }
+                case 41: {
+                  sx.animateHue = !sx.animateHue;
+                  gui.controllersRecursive().forEach((c) => c.updateDisplay());
+                  break;
+                }
+                case 42: {
+                  batchCurrent = 0;
+                  break;
+                }
+              }
+            } else if (type === "controlChange") {
+              switch (note) {
+                case 32: {
+                  sx.color = hslToHex(Math.round((value / 127) * 360), 100, 50);
+                  colorController.updateDisplay();
+                  break;
+                }
+                case 33: {
+                  sx.marginRatio = value / 127;
+                  marginRatioController.updateDisplay();
+                  break;
+                }
+                case 34: {
+                  sx.opacity = value / 127;
+                  opacityController.updateDisplay();
+                  break;
+                }
+                case 35: {
+                  sx.particleSize = (value / 127) * 2;
+                  particleSizeController.updateDisplay();
+                  break;
+                }
+              }
+            }
+          };
+        })
+        .catch((error) => {
+          console.error("Failed to get MIDI access:", error);
+        });
+    },
+    disableMidi: () => {
+      if (midiInput) {
+        console.log(
+          `Disconnecting from MIDI input: ${midiInput.manufacturer} ${midiInput.name}`
+        );
+        midiInput.onmidimessage = null;
+        midiInput = null;
+      }
+    },
     saveImage: () => {
       const mod =
         sx.xModifier !== defaultSx.xModifier ||
@@ -208,7 +296,12 @@ const infiniteChaos = (sketch) => {
       setURLParams(urlParams);
     },
   };
-  Object.keys(actions).forEach((name) => actionsFolder.add(actions, name));
+  Object.keys(actions).forEach((name) => {
+    const controller = actionsFolder.add(actions, name);
+    if (name.includes("Midi")) {
+      controller.hide();
+    }
+  });
 
   pointCountController.onFinishChange(() => {
     updateAttractorData();
@@ -300,6 +393,15 @@ const infiniteChaos = (sketch) => {
       }
       case "n": {
         actions.randomize();
+        break;
+      }
+      case "m": {
+        if (midiInput) {
+          actions.disableMidi();
+        } else {
+          actions.enableMidi();
+        }
+        break;
       }
       case "e": {
         if (gui._hidden) {
@@ -376,6 +478,7 @@ const infiniteChaos = (sketch) => {
 
   sketch.cleanup = () => {
     gui.destroy();
+    actions.disableMidi();
   };
 
   function updateAttractorData() {
