@@ -19,20 +19,23 @@ const breakpoints = [
 ];
 // add counter breakpoints
 breakpoints.push(
-  ...breakpoints.map(([position, n]) => [0.5 + (0.5 - position), n])
+  ...breakpoints
+    .slice()
+    .reverse()
+    .map(([position, n]) => [0.5 + (0.5 - position), n])
 );
 
 const manifest = (sketch) => {
   let position = 0;
   let n = 33 * 3; // should be a multiple of 3
-  let stepFactor = 1;
   let speedInc = 1 / 36000;
   let speed = 0;
   let showCrosshair = false;
+  let marginRatio = 0.2;
 
   // preset animation variables
   let isAnimating = false;
-  let animationDuration = 5 * 1000;
+  let animationDuration = 5000; // default duration for first two animations
   let animationStartTime = 0;
   let animationStartPos = 0;
   let animationTargetPos = 0;
@@ -46,7 +49,7 @@ const manifest = (sketch) => {
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
     autoStretchP5(sketch);
-    startAnimation(...breakpoints[randomInt(0, breakpoints.length)]);
+    newAnimation();
   };
 
   sketch.draw = () => {
@@ -56,7 +59,8 @@ const manifest = (sketch) => {
 
     const centerX = sketch.width / 2;
     const centerY = sketch.height / 2;
-    const circleWidth = Math.min(sketch.width, sketch.height) * 0.8;
+    const circleWidth =
+      Math.min(sketch.width, sketch.height) * (1 - marginRatio);
 
     const dots = getDots(position, n);
     for (let i = 0; i < n - 1; i++) {
@@ -76,7 +80,7 @@ const manifest = (sketch) => {
     if (isAnimating) {
       const elapsed = sketch.millis() - animationStartTime;
       const progress = Math.min(elapsed / animationDuration, 1);
-      const easedProgress = easeInOutQuad(progress);
+      const easedProgress = easeInOutCubic(progress);
       position = sketch.lerp(
         animationStartPos,
         animationTargetPos,
@@ -112,8 +116,11 @@ const manifest = (sketch) => {
 
     switch (sketch.keyCode) {
       case sketch.ENTER: {
-        speed = 0;
-        startAnimation(...breakpoints[randomInt(0, breakpoints.length)]);
+        if (sketch.fullscreen()) {
+          sketch.fullscreen(false);
+        } else {
+          sketch.fullscreen(true);
+        }
         break;
       }
       case sketch.LEFT_ARROW: {
@@ -136,17 +143,16 @@ const manifest = (sketch) => {
     }
   };
 
-  sketch.doubleClicked = () => {
-    if (sketch.fullscreen()) {
-      sketch.fullscreen(false);
-    } else {
-      sketch.fullscreen(true);
+  sketch.mousePressed = () => {
+    if (isAnimating) {
+      return;
     }
+    newAnimation();
   };
 
   function getDots(position, n) {
-    const inc = sketch.TWO_PI / (360 * stepFactor);
-    const iterations = sketch.map(position, 0, 1, 0, 360 * stepFactor);
+    const inc = sketch.TWO_PI / 360;
+    const iterations = sketch.map(position, 0, 1, 0, 360);
     const dots = [];
     for (let i = 0; i < n; ++i) {
       dots[i] = inc * (i + 1) * iterations;
@@ -164,15 +170,16 @@ const manifest = (sketch) => {
     );
   }
 
-  function easeInOutQuad(t) {
-    return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 
-  function startRandomAnimation() {
-    startAnimation(...breakpoints[randomInt(0, breakpoints.length)]);
+  function newAnimation() {
+    startAnimation(...breakpoints[randomInt(0, breakpoints.length - 1)]);
   }
 
   function startAnimation(targetPosition, targetN) {
+    speed = 0;
     animationStartPos = position;
     animationTargetPos = targetPosition;
     animationStartTime = sketch.millis();

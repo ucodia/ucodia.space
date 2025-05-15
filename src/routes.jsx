@@ -5,6 +5,7 @@ import SketchWrapper from "@/components/sketch-wrapper";
 import MDXLayout from "@/components/mdx-layout";
 import GiphyVox from "@/pages/giphy-vox";
 import Kinetic from "@/pages/kinetic";
+import Manifest from "@/pages/manifest";
 import Zukunft from "@/pages/zukunft";
 import Conundrum from "@/pages/conundrum";
 import LorenzSvg from "@/pages/lorenz-svg";
@@ -20,7 +21,6 @@ import * as vintage from "@/pages/sketches/vintage";
 import * as scales from "@/pages/sketches/scales";
 import * as drawbot from "@/pages/sketches/drawbot";
 import * as revolutions from "@/pages/sketches/revolutions";
-import * as manifest from "@/pages/sketches/manifest";
 import * as fittestBubleBath from "@/pages/sketches/fittest-bubble-bath";
 import * as circleClock from "@/pages/sketches/circle-clock";
 import * as lorenz from "@/pages/sketches/lorenz";
@@ -111,6 +111,7 @@ const routes = [
   },
   { name: "giphy vox", path: "giphy-vox", element: <GiphyVox /> },
   { name: "kinetic", path: "kinetic", element: <Kinetic /> },
+  { name: "manifest", path: "manifest", element: <Manifest /> },
   {
     name: "zukunft",
     path: "zukunft",
@@ -179,11 +180,6 @@ const routes = [
     name: "revolutions",
     path: "revolutions",
     element: <FullscreenSketch sketch={revolutions} />,
-  },
-  {
-    name: "manifest",
-    path: "manifest",
-    element: <FullscreenSketch sketch={manifest} />,
   },
   {
     name: "fittest bubble bath",
