@@ -17,6 +17,10 @@ const breakpoints = [
   [0.41712963, 99], // passion
   [0.44329815, 99], // creativity
 ];
+// add counter breakpoints
+breakpoints.push(
+  ...breakpoints.map(([position, n]) => [0.5 + (0.5 - position), n])
+);
 
 const manifest = (sketch) => {
   let position = 0;
@@ -24,16 +28,14 @@ const manifest = (sketch) => {
   let stepFactor = 1;
   let speedInc = 1 / 36000;
   let speed = 0;
-  let breakpointRecording = false;
   let showCrosshair = false;
 
   // preset animation variables
-  let isPresetAnimating = false;
-  let presetAnimationStart = 0;
-  let presetAnimationDuration = 2000;
-  let presetStart = 0;
-  let presetTarget = 0;
-  let presetSpeed = 1;
+  let isAnimating = false;
+  let animationDuration = 5 * 1000;
+  let animationStartTime = 0;
+  let animationStartPos = 0;
+  let animationTargetPos = 0;
 
   const palette = [
     "#00aeef", // cyan
@@ -43,8 +45,8 @@ const manifest = (sketch) => {
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
-    setRandomBreakpoint();
     autoStretchP5(sketch);
+    startAnimation(...breakpoints[randomInt(0, breakpoints.length)]);
   };
 
   sketch.draw = () => {
@@ -71,17 +73,18 @@ const manifest = (sketch) => {
       sketch.line(0, centerY, sketch.width, centerY);
     }
 
-    if (isPresetAnimating) {
-      const elapsed = sketch.millis() - presetAnimationStart;
-      const progress = Math.min(
-        elapsed / (presetAnimationDuration / presetSpeed),
-        1
-      );
+    if (isAnimating) {
+      const elapsed = sketch.millis() - animationStartTime;
+      const progress = Math.min(elapsed / animationDuration, 1);
       const easedProgress = easeInOutQuad(progress);
-      position = sketch.lerp(presetStart, presetTarget, easedProgress);
+      position = sketch.lerp(
+        animationStartPos,
+        animationTargetPos,
+        easedProgress
+      );
       if (progress >= 1) {
-        isPresetAnimating = false;
-        position = presetTarget;
+        isAnimating = false;
+        position = animationTargetPos;
       }
     }
 
@@ -100,38 +103,9 @@ const manifest = (sketch) => {
         console.log(`n: ${n}, position: ${position}, speed: ${speed}`);
         break;
       }
-      case "b": {
-        breakpointRecording = !breakpointRecording;
-        console.log(`breakpoints: ${JSON.stringify(getBreakpoints())}`);
-        console.log(
-          `breakpoint recording ${breakpointRecording ? "enabled" : "disabled"}`
-        );
-        break;
-      }
       case "c": {
         showCrosshair = !showCrosshair;
         break;
-      }
-      case "0":
-      case "1":
-      case "2":
-      case "3":
-      case "4":
-      case "5":
-      case "6":
-      case "7":
-      case "8":
-      case "9": {
-        if (breakpointRecording) {
-          setBreakpoint(sketch.key, position, n);
-          breakpointRecording = false;
-        } else {
-          const presets = getBreakpoints();
-          if (presets[sketch.key]) {
-            startPresetAnimation(presets[sketch.key]);
-          }
-          break;
-        }
       }
       default:
     }
@@ -139,7 +113,7 @@ const manifest = (sketch) => {
     switch (sketch.keyCode) {
       case sketch.ENTER: {
         speed = 0;
-        setRandomBreakpoint();
+        startAnimation(...breakpoints[randomInt(0, breakpoints.length)]);
         break;
       }
       case sketch.LEFT_ARROW: {
@@ -194,27 +168,16 @@ const manifest = (sketch) => {
     return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
   }
 
-  function setRandomBreakpoint() {
-    startPresetAnimation(breakpoints[randomInt(0, breakpoints.length)]);
+  function startRandomAnimation() {
+    startAnimation(...breakpoints[randomInt(0, breakpoints.length)]);
   }
 
-  function setBreakpoint(key, position, n) {
-    const presets = getBreakpoints();
-    presets[key] = [Number(position.toFixed(8)), n];
-    localStorage.setItem("breakpoints", JSON.stringify(presets));
-  }
-
-  function getBreakpoints() {
-    const localBreakpoints = localStorage.getItem("breakpoints");
-    return localBreakpoints ? JSON.parse(localBreakpoints) : breakpoints;
-  }
-
-  function startPresetAnimation([targetPosition, targetN]) {
-    presetStart = position;
-    presetTarget = targetPosition;
-    presetAnimationStart = sketch.millis();
-    isPresetAnimating = true;
+  function startAnimation(targetPosition, targetN) {
+    animationStartPos = position;
+    animationTargetPos = targetPosition;
+    animationStartTime = sketch.millis();
     n = targetN;
+    isAnimating = true;
   }
 };
 
