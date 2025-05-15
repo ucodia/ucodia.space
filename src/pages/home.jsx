@@ -4,7 +4,12 @@ import { singleDiamond } from "./sketches/diamonds";
 import U5Wrapper from "@/components/u5-wrapper";
 import routes from "@/routes";
 
+const DEV_ONLY_ROUTES = ["manifest"];
+
 const links = routes
+  .filter(
+    (route) => import.meta.env.DEV || !DEV_ONLY_ROUTES.includes(route.name)
+  )
   .map(({ name, path, override }) => ({
     name,
     to: override ? override : path,
