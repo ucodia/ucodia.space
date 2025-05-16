@@ -31,7 +31,7 @@ const manifest = (sketch) => {
   let speedInc = 1 / 36000;
   let speed = 0;
   let showCrosshair = false;
-  let marginRatio = 0.2;
+  let marginRatio = 0;
 
   // preset animation variables
   let isAnimating = false;
