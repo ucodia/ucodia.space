@@ -12,6 +12,7 @@ const seedGallery = [
   ["91wni2fcy", "asinh", "cbrt"],
   ["km1rw8720", "asinh", "asinh"],
   ["qwufpc8pu", "log", "cos"],
+  ["yv82mrz2l", "atan", "cbrt"],
 ];
 
 /**
