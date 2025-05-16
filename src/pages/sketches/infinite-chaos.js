@@ -8,6 +8,7 @@ export const meta = {
 };
 
 const seedGallery = [
+  ["00ci6pw9", "cbrt", "atan"],
   ["2e8mn21l2", "asinh", "cbrt"],
   ["91wni2fcy", "asinh", "cbrt"],
   ["km1rw8720", "asinh", "asinh"],
@@ -159,32 +160,25 @@ const infiniteChaos = (sketch) => {
       const modNames = Object.keys(modifiers);
       let spread = 0;
 
-      if (sx.galleryMode) {
-        sx.seed = seedGallery[galleryIndex][0];
-        sx.xModifier = seedGallery[galleryIndex][1];
-        sx.yModifier = seedGallery[galleryIndex][2];
-        galleryIndex = (galleryIndex + 1) % seedGallery.length;
-      } else {
-        do {
-          sx.seed = randomString(8);
-          const rand = namedLcg(sx.seed);
-          params = createAttractorParams(rand);
-          sx.xModifier = modNames[(rand() * modNames.length) | 0];
-          sx.yModifier = modNames[(rand() * modNames.length) | 0];
+      do {
+        sx.seed = randomString(8);
+        const rand = namedLcg(sx.seed);
+        params = createAttractorParams(rand);
+        sx.xModifier = modNames[(rand() * modNames.length) | 0];
+        sx.yModifier = modNames[(rand() * modNames.length) | 0];
 
-          if (
-            isChaotic(params, modifiers[sx.xModifier], modifiers[sx.yModifier])
-          ) {
-            const { x, y, xMin, xMax, yMin, yMax } = generateAttractor(
-              params,
-              10000,
-              modifiers[sx.xModifier],
-              modifiers[sx.yModifier]
-            );
-            spread = computeSpread(x, y, xMin, xMax, yMin, yMax);
-          }
-        } while (isNaN(spread) || spread < sx.minSpread);
-      }
+        if (
+          isChaotic(params, modifiers[sx.xModifier], modifiers[sx.yModifier])
+        ) {
+          const { x, y, xMin, xMax, yMin, yMax } = generateAttractor(
+            params,
+            10000,
+            modifiers[sx.xModifier],
+            modifiers[sx.yModifier]
+          );
+          spread = computeSpread(x, y, xMin, xMax, yMin, yMax);
+        }
+      } while (isNaN(spread) || spread < sx.minSpread);
 
       const elapsedTime = performance.now() - startTime;
       console.log(
@@ -379,7 +373,7 @@ const infiniteChaos = (sketch) => {
   });
   galleryModeController.onFinishChange(() => {
     if (sx.galleryMode) {
-      actions.randomize();
+      setSeedFromGallery(galleryIndex);
     }
   });
 
@@ -390,6 +384,10 @@ const infiniteChaos = (sketch) => {
       sketch.noLoop();
     }
 
+    if (sx.galleryMode) {
+      setSeedFromGallery(galleryIndex);
+    }
+
     if (!sx.seed) {
       actions.randomize();
     }
@@ -398,14 +396,6 @@ const infiniteChaos = (sketch) => {
   function layout() {
     batchCurrent = 0;
   }
-
-  sketch.doubleClicked = () => {
-    if (sketch.fullscreen()) {
-      sketch.fullscreen(false);
-    } else {
-      sketch.fullscreen(true);
-    }
-  };
 
   sketch.keyPressed = () => {
     switch (sketch.key) {
@@ -430,6 +420,34 @@ const infiniteChaos = (sketch) => {
           gui.show();
         } else {
           gui.hide();
+        }
+        break;
+      }
+      default: {
+      }
+    }
+
+    switch (sketch.keyCode) {
+      case sketch.ENTER: {
+        if (sketch.fullscreen()) {
+          sketch.fullscreen(false);
+        } else {
+          sketch.fullscreen(true);
+        }
+        break;
+      }
+      case sketch.LEFT_ARROW: {
+        if (sx.galleryMode) {
+          galleryIndex =
+            (galleryIndex - 1 + seedGallery.length) % seedGallery.length;
+          setSeedFromGallery(galleryIndex);
+        }
+        break;
+      }
+      case sketch.RIGHT_ARROW: {
+        if (sx.galleryMode) {
+          galleryIndex = (galleryIndex + 1) % seedGallery.length;
+          setSeedFromGallery(galleryIndex);
         }
         break;
       }
@@ -490,8 +508,11 @@ const infiniteChaos = (sketch) => {
     batchCurrent += sx.batchSize;
     if (batchCurrent >= x.length) {
       batchCurrent = 0;
-      if ((sx.continuousMode || sx.galleryMode) && sx.animate) {
+      if (sx.continuousMode && sx.animate) {
         actions.randomize();
+      } else if (sx.galleryMode) {
+        galleryIndex = (galleryIndex + 1) % seedGallery.length;
+        setSeedFromGallery(galleryIndex);
       } else {
         sketch.noLoop();
       }
@@ -513,6 +534,20 @@ const infiniteChaos = (sketch) => {
       modifiers[sx.xModifier],
       modifiers[sx.yModifier]
     );
+  }
+
+  function setSeedFromGallery(index) {
+    console.log("setting seed from gallery", index);
+    sx.seed = seedGallery[index][0];
+    sx.xModifier = seedGallery[index][1];
+    sx.yModifier = seedGallery[index][2];
+    batchCurrent = 0;
+    updateAttractorData();
+    if (sx.animate) {
+      sketch.loop();
+    } else {
+      sketch.draw();
+    }
   }
 };
 
