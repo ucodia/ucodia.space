@@ -1,20 +1,31 @@
 import { GUI } from "lil-gui";
 import autoStretchP5 from "@/utils/auto-stretch-p5";
 import { numericalRecipesLcg, randomString } from "@/utils/random";
-
+import shuffle from "@/utils/shuffle";
 export const meta = {
   name: "Infinite Chaos",
   created: "2024-01-10",
 };
 
 const seedGallery = [
-  ["00ci6pw9", "cbrt", "atan"],
-  ["2e8mn21l2", "asinh", "cbrt"],
-  ["91wni2fcy", "asinh", "cbrt"],
-  ["km1rw8720", "asinh", "asinh"],
-  ["qwufpc8pu", "log", "cos"],
-  ["yv82mrz2l", "atan", "cbrt"],
+  ["1c3w7mwe_sin_asinh"],
+  ["0n7sm132_cbrt_atan"],
+  ["00e8js0s_sin_atan"],
+  ["00e8js0s_atan_sin"],
+  ["0mrp94fs_asinh_asinh"],
+  ["0ki5p1x1_cos_sin"],
+  ["0kgbzuuj_cbrt_cos"],
+  ["0h5qs8xq_asinh_atan"],
+  ["00ci6pw9_cbrt_atan"],
+  ["0b19pu0h_cbrt_sin"],
+  ["2e8mn21l2_asinh_cbrt"],
+  ["91wni2fcy_asinh_cbrt"],
+  ["km1rw8720_asinh_asinh"],
+  ["qwufpc8pu_log_cos"],
+  ["yv82mrz2l_atan_cbrt"],
 ];
+
+shuffle(seedGallery);
 
 /**
  * Computes the next coordinate in a system
@@ -538,9 +549,16 @@ const infiniteChaos = (sketch) => {
 
   function setSeedFromGallery(index) {
     console.log("setting seed from gallery", index);
-    sx.seed = seedGallery[index][0];
-    sx.xModifier = seedGallery[index][1];
-    sx.yModifier = seedGallery[index][2];
+    if (seedGallery[index].length === 1) {
+      const [nextSeed, xModifier, yModifier] = seedGallery[index][0].split("_");
+      sx.seed = nextSeed;
+      sx.xModifier = xModifier;
+      sx.yModifier = yModifier;
+    } else {
+      sx.seed = seedGallery[index][0];
+      sx.xModifier = seedGallery[index][1];
+      sx.yModifier = seedGallery[index][2];
+    }
     batchCurrent = 0;
     updateAttractorData();
     if (sx.animate) {
