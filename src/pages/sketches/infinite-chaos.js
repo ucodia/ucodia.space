@@ -7,6 +7,13 @@ export const meta = {
   created: "2024-01-10",
 };
 
+const seedGallery = [
+  ["2e8mn21l2", "asinh", "cbrt"],
+  ["91wni2fcy", "asinh", "cbrt"],
+  ["km1rw8720", "asinh", "asinh"],
+  ["qwufpc8pu", "log", "cos"],
+];
+
 /**
  * Computes the next coordinate in a system
  * as defined by a 2D quadratic function
@@ -63,6 +70,7 @@ const defaultSx = {
   animateHue: false,
   batchSize: 500,
   continuousMode: true,
+  galleryMode: false,
 };
 
 const modifiers = {
@@ -84,6 +92,7 @@ const infiniteChaos = (sketch) => {
   let batchCurrent = 0;
   let hueCurrent = 159;
   let midiInput = null;
+  let galleryIndex = 0;
   updateAttractorData();
 
   const gui = new GUI({ title: "Infinite Chaos" });
@@ -139,6 +148,7 @@ const infiniteChaos = (sketch) => {
     100
   );
   const continuousModeController = animationFolder.add(sx, "continuousMode");
+  const galleryModeController = animationFolder.add(sx, "galleryMode");
 
   // Actions folder
   const actionsFolder = gui.addFolder("actions");
@@ -148,26 +158,32 @@ const infiniteChaos = (sketch) => {
       const modNames = Object.keys(modifiers);
       let spread = 0;
 
-      do {
-        sx.seed = randomString(8);
-        const rand = namedLcg(sx.seed);
-        params = createAttractorParams(rand);
-        sx.xModifier = modNames[(rand() * modNames.length) | 0];
-        sx.yModifier = modNames[(rand() * modNames.length) | 0];
+      if (sx.galleryMode) {
+        sx.seed = seedGallery[galleryIndex][0];
+        sx.xModifier = seedGallery[galleryIndex][1];
+        sx.yModifier = seedGallery[galleryIndex][2];
+        galleryIndex = (galleryIndex + 1) % seedGallery.length;
+      } else {
+        do {
+          sx.seed = randomString(8);
+          const rand = namedLcg(sx.seed);
+          params = createAttractorParams(rand);
+          sx.xModifier = modNames[(rand() * modNames.length) | 0];
+          sx.yModifier = modNames[(rand() * modNames.length) | 0];
 
-        if (
-          isChaotic(params, modifiers[sx.xModifier], modifiers[sx.yModifier])
-        ) {
-          // new spread filter
-          const { x, y, xMin, xMax, yMin, yMax } = generateAttractor(
-            params,
-            10000,
-            modifiers[sx.xModifier],
-            modifiers[sx.yModifier]
-          );
-          spread = computeSpread(x, y, xMin, xMax, yMin, yMax);
-        }
-      } while (isNaN(spread) || spread < sx.minSpread);
+          if (
+            isChaotic(params, modifiers[sx.xModifier], modifiers[sx.yModifier])
+          ) {
+            const { x, y, xMin, xMax, yMin, yMax } = generateAttractor(
+              params,
+              10000,
+              modifiers[sx.xModifier],
+              modifiers[sx.yModifier]
+            );
+            spread = computeSpread(x, y, xMin, xMax, yMin, yMax);
+          }
+        } while (isNaN(spread) || spread < sx.minSpread);
+      }
 
       const elapsedTime = performance.now() - startTime;
       console.log(
@@ -360,6 +376,11 @@ const infiniteChaos = (sketch) => {
       sketch.loop();
     }
   });
+  galleryModeController.onFinishChange(() => {
+    if (sx.galleryMode) {
+      actions.randomize();
+    }
+  });
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
@@ -468,7 +489,7 @@ const infiniteChaos = (sketch) => {
     batchCurrent += sx.batchSize;
     if (batchCurrent >= x.length) {
       batchCurrent = 0;
-      if (sx.continuousMode && sx.animate) {
+      if ((sx.continuousMode || sx.galleryMode) && sx.animate) {
         actions.randomize();
       } else {
         sketch.noLoop();
