@@ -10,6 +10,7 @@ const links = routes
   .filter(
     (route) => import.meta.env.DEV || !DEV_ONLY_ROUTES.includes(route.name)
   )
+  .filter(({ path }) => !path.includes("fullscreen"))
   .map(({ name, path, override }) => ({
     name,
     to: override ? override : path,

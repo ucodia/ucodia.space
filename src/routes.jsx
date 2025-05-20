@@ -32,6 +32,7 @@ import * as solar from "@/pages/sketches/solar";
 import ComputerObservingItselfMdx from "@/mdx-pages/computer-observing-itself.mdx";
 import EventsMdx from "@/mdx-pages/events.mdx";
 import Flowtime from "@/mdx-pages/flowtime/flowtime.mdx";
+import InfiniteChaos from "@/mdx-pages/infinite-chaos.mdx";
 
 const BadRng = lazy(() => import("@/pages/bad-rng"));
 
@@ -68,6 +69,15 @@ const routes = [
     element: (
       <MDXLayout>
         <Flowtime />
+      </MDXLayout>
+    ),
+  },
+  {
+    name: "infinite chaos",
+    path: "infinite-chaos",
+    element: (
+      <MDXLayout>
+        <InfiniteChaos />
       </MDXLayout>
     ),
   },
@@ -202,8 +212,8 @@ const routes = [
     element: <FullscreenSketch sketch={squircle} />,
   },
   {
-    name: "infinite chaos",
-    path: "infinite-chaos",
+    name: "infinite chaos (fullscreen)",
+    path: "infinite-chaos/fullscreen",
     element: <FullscreenSketch sketch={infiniteChaos} />,
   },
   {

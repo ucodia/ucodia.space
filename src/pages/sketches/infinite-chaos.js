@@ -389,7 +389,10 @@ const infiniteChaos = (sketch) => {
   });
 
   sketch.setup = () => {
-    sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
+    sketch.createCanvas(
+      sketch.canvas.parentElement,
+      sketch.canvas.parentElement
+    );
     autoStretchP5(sketch, layout);
     if (!sx.animate) {
       sketch.noLoop();

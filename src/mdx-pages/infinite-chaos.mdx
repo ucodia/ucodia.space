@@ -1,0 +1,59 @@
+import MdxSketch from "@/components/mdx-sketch";
+import * as sketch from "../pages/sketches/infinite-chaos";
+
+# Infinite Chaos (2024-)
+
+In 1961, Edward Lorenz pioneered weather forecasting systems by discovering a system of equations where small differences in initial conditions could lead to unpredictable behavior, despite the system being deterministic. With the discovery of the [Lorenz attractor][1], the *chaos theory* and the *butterfly effect* were established.
+
+*Infinite Chaos* explores beyond the Lorenz attractor and other chaotic systems. By using a [Lyapunov exponent][2] computation and a custom point cloud density filter, new chaotic attractors parameters are mined and curated to explore an infinity of never seen before chaotic systems.
+
+<MdxSketch sketch={sketch} />
+
+## The inner workings
+
+The development of *Infinite Chaos* began after watching a [video on random attractors][4] by @verymuchtom on YouTube, which led me to read an [article on random attractors using lyapunov exponents][3] by Paul Bourke.
+
+I had prior experience with strange attractors but these systems did not exhibit extensive generative properties. The discovery of a method to find random attractors opened the door to a whole new range of chaos exploration.
+
+### The system
+
+The system is based on a set of 6th order polynomial equations, which are defined in JavaScript as follows:
+
+```
+function attractor(x, y, ax, ay) {
+  return [
+    ax[0] +
+      ax[1] * x +
+      ax[2] * x * x +
+      ax[3] * x * y +
+      ax[4] * y +
+      ax[5] * y * y,
+    ay[0] +
+      ay[1] * x +
+      ay[2] * x * x +
+      ay[3] * x * y +
+      ay[4] * y +
+      ay[5] * y * y,
+  ];
+}
+```
+
+### Parameter mining
+
+For each new attractor, 6 values of `ax` and `ay` are generated using random numbers. Though this may not yield chaotic behavior and as such a process to "mine" chaotic parameters is defined:
+1. Compute the [Lyapunov exponent][2] for the generated parameters which will allow us to filter out non-chaotic systems.
+2. Compute a spread ratio which determines the point cloud density of the attractors. This is a purely curatorial parameter which allows to filter out systems which do not cover much of the visual canvas.
+
+Once a set of parameters is deemed chaotic and has a sufficient spread ratio, the entire point cloud is generated and displayed. If parameters do not meet these conditions, an entirely new set of parameters are generated and the mining process is repeated.
+
+## References
+
+- [Lorenz attractor][1] on Wikipedia
+- [Lyapunov exponent][2] on Wikipedia
+- [Random Attractors Found using Lyapunov Exponents][3] article by Paul Bourke
+- [Finding Strange Attractors][4] video by @verymuchtom
+
+[1]: https://en.wikipedia.org/wiki/Lorenz_attractor
+[2]: https://en.wikipedia.org/wiki/Lyapunov_exponent
+[3]: https://paulbourke.net/fractals/lyapunov/
+[4]: https://www.youtube.com/watch?v=Lw_SqFxHtH0
