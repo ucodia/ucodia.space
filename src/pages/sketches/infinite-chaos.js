@@ -563,6 +563,9 @@ const infiniteChaos = (sketch) => {
       sx.yModifier = seedGallery[index][2];
     }
     batchCurrent = 0;
+    seedController.updateDisplay();
+    xModifierController.updateDisplay();
+    yModifierController.updateDisplay();
     updateAttractorData();
     if (sx.animate) {
       sketch.loop();
