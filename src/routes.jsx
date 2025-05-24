@@ -33,6 +33,7 @@ import ComputerObservingItselfMdx from "@/mdx-pages/computer-observing-itself.md
 import EventsMdx from "@/mdx-pages/events.mdx";
 import Flowtime from "@/mdx-pages/flowtime/flowtime.mdx";
 import InfiniteChaos from "@/mdx-pages/infinite-chaos.mdx";
+import CodeIsAPaintbrush from "@/mdx-pages/code-is-a-paintbrush.mdx";
 
 const BadRng = lazy(() => import("@/pages/bad-rng"));
 
@@ -78,6 +79,15 @@ const routes = [
     element: (
       <MDXLayout>
         <InfiniteChaos />
+      </MDXLayout>
+    ),
+  },
+  {
+    name: "code is a paintbrush",
+    path: "code-is-a-paintbrush",
+    element: (
+      <MDXLayout>
+        <CodeIsAPaintbrush />
       </MDXLayout>
     ),
   },
