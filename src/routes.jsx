@@ -35,6 +35,7 @@ import Flowtime from "@/mdx-pages/flowtime/flowtime.mdx";
 import InfiniteChaos from "@/mdx-pages/infinite-chaos.mdx";
 
 const BadRng = lazy(() => import("@/pages/bad-rng"));
+const Lunar = lazy(() => import("@/pages/lunar"));
 
 const FullscreenSketch = ({ sketch }) => {
   return (
@@ -119,6 +120,7 @@ const routes = [
       </Suspense>
     ),
   },
+  { name: "lunar", path: "lunar", element: <Lunar /> },
   { name: "giphy vox", path: "giphy-vox", element: <GiphyVox /> },
   { name: "kinetic", path: "kinetic", element: <Kinetic /> },
   { name: "manifest", path: "manifest", element: <Manifest /> },
