@@ -11,29 +11,8 @@ import Conundrum from "@/pages/conundrum";
 import LorenzSvg from "@/pages/lorenz-svg";
 import Seine from "@/pages/seine";
 import ThirtySixDaysOfType from "@/pages/36-days-of-type";
-import * as diamonds from "@/pages/sketches/diamonds";
-import * as circuit from "@/pages/sketches/circuit";
-import * as dizzyWaves from "@/pages/sketches/dizzy-waves";
-import * as area715 from "@/pages/sketches/area715";
-import * as illusions from "@/pages/sketches/illusions";
-import * as lookAbove from "@/pages/sketches/look-above";
-import * as vintage from "@/pages/sketches/vintage";
-import * as scales from "@/pages/sketches/scales";
-import * as drawbot from "@/pages/sketches/drawbot";
-import * as revolutions from "@/pages/sketches/revolutions";
-import * as fittestBubleBath from "@/pages/sketches/fittest-bubble-bath";
-import * as circleClock from "@/pages/sketches/circle-clock";
-import * as lorenz from "@/pages/sketches/lorenz";
-import * as cmyDance from "@/pages/sketches/cmy-dance";
-import * as squircle from "@/pages/sketches/squircle";
-import * as infiniteChaos from "@/pages/sketches/infinite-chaos";
-import * as spinnySquares from "@/pages/sketches/spinny-squares";
-import * as solar from "@/pages/sketches/solar";
-import ComputerObservingItselfMdx from "@/mdx-pages/computer-observing-itself.mdx";
-import EventsMdx from "@/mdx-pages/events.mdx";
-import Flowtime from "@/mdx-pages/flowtime/flowtime.mdx";
-import InfiniteChaos from "@/mdx-pages/infinite-chaos.mdx";
-import CodeIsAPaintbrush from "@/mdx-pages/code-is-a-paintbrush.mdx";
+import mdxPages from "@/mdx-pages";
+import sketches from "@/pages/sketches";
 
 const BadRng = lazy(() => import("@/pages/bad-rng"));
 
@@ -45,52 +24,75 @@ const FullscreenSketch = ({ sketch }) => {
   );
 };
 
+const mdxRoutes = Object.entries(mdxPages).map(([name, MdxComponent]) => ({
+  name: name.replace(/-/g, " "),
+  path: name,
+  element: (
+    <MDXLayout>
+      <MdxComponent />
+    </MDXLayout>
+  ),
+}));
+
+const sketchesRoutes = Object.entries(sketches)
+  .filter(([name]) => name)
+  .map(([name, sketch]) => {
+    const mdxPath = mdxRoutes.find((route) => route.path === name);
+    return {
+      name: `${name.replace(/-/g, " ")}${mdxPath ? " (fullscreen)" : ""}`,
+      path: mdxPath ? `${name}/fullscreen` : name,
+      element: <FullscreenSketch sketch={sketch} />,
+    };
+  });
+
 const routes = [
-  {
-    name: "computer observing itself",
-    path: "computer-observing-itself",
-    element: (
-      <MDXLayout>
-        <ComputerObservingItselfMdx />
-      </MDXLayout>
-    ),
-  },
-  {
-    name: "events 📅",
-    path: "events",
-    element: (
-      <MDXLayout>
-        <EventsMdx />
-      </MDXLayout>
-    ),
-  },
-  {
-    name: "flowtime",
-    path: "flowtime",
-    element: (
-      <MDXLayout>
-        <Flowtime />
-      </MDXLayout>
-    ),
-  },
-  {
-    name: "infinite chaos",
-    path: "infinite-chaos",
-    element: (
-      <MDXLayout>
-        <InfiniteChaos />
-      </MDXLayout>
-    ),
-  },
-  {
-    name: "code is a paintbrush",
-    path: "code-is-a-paintbrush",
-    element: (
-      <MDXLayout>
-        <CodeIsAPaintbrush />
-      </MDXLayout>
-    ),
-  },
+  ...mdxRoutes,
+  ...sketchesRoutes,
+  // {
+  //   name: "computer observing itself",
+  //   path: "computer-observing-itself",
+  //   element: (
+  //     <MDXLayout>
+  //       <ComputerObservingItselfMdx />
+  //     </MDXLayout>
+  //   ),
+  // },
+  // {
+  //   name: "events 📅",
+  //   path: "events",
+  //   element: (
+  //     <MDXLayout>
+  //       <EventsMdx />
+  //     </MDXLayout>
+  //   ),
+  // },
+  // {
+  //   name: "flowtime",
+  //   path: "flowtime",
+  //   element: (
+  //     <MDXLayout>
+  //       <Flowtime />
+  //     </MDXLayout>
+  //   ),
+  // },
+  // {
+  //   name: "infinite chaos",
+  //   path: "infinite-chaos",
+  //   element: (
+  //     <MDXLayout>
+  //       <InfiniteChaos />
+  //     </MDXLayout>
+  //   ),
+  // },
+  // {
+  //   name: "code is a paintbrush",
+  //   path: "code-is-a-paintbrush",
+  //   element: (
+  //     <MDXLayout>
+  //       <CodeIsAPaintbrush />
+  //     </MDXLayout>
+  //   ),
+  // },
   {
     name: "cv",
     path: "cv",
@@ -146,96 +148,96 @@ const routes = [
     element: <ThirtySixDaysOfType />,
     disabled: true,
   },
-  {
-    name: "diamonds",
-    path: "diamonds",
-    element: <FullscreenSketch sketch={diamonds} />,
-  },
-  {
-    name: "circle clock",
-    path: "circle-clock",
-    element: <FullscreenSketch sketch={circleClock} />,
-  },
-  {
-    name: "circuit",
-    path: "circuit",
-    element: <FullscreenSketch sketch={circuit} />,
-  },
-  {
-    name: "dizzy waves",
-    path: "dizzy-waves",
-    element: <FullscreenSketch sketch={dizzyWaves} />,
-  },
-  {
-    name: "area715",
-    path: "area715",
-    element: <FullscreenSketch sketch={area715} />,
-  },
-  {
-    name: "illusions",
-    path: "illusions",
-    element: <FullscreenSketch sketch={illusions} />,
-  },
-  {
-    name: "look above",
-    path: "look-above",
-    element: <FullscreenSketch sketch={lookAbove} />,
-  },
-  {
-    name: "vintage",
-    path: "vintage",
-    element: <FullscreenSketch sketch={vintage} />,
-  },
-  {
-    name: "scales",
-    path: "scales",
-    element: <FullscreenSketch sketch={scales} />,
-  },
-  {
-    name: "drawbot",
-    path: "drawbot",
-    element: <FullscreenSketch sketch={drawbot} />,
-  },
-  {
-    name: "revolutions",
-    path: "revolutions",
-    element: <FullscreenSketch sketch={revolutions} />,
-  },
-  {
-    name: "fittest bubble bath",
-    path: "fittest-bubble-bath",
-    element: <FullscreenSketch sketch={fittestBubleBath} />,
-  },
-  {
-    name: "lorenz",
-    path: "lorenz",
-    element: <FullscreenSketch sketch={lorenz} />,
-  },
-  {
-    name: "cmy dance",
-    path: "cmy-dance",
-    element: <FullscreenSketch sketch={cmyDance} />,
-  },
-  {
-    name: "squircle",
-    path: "squircle",
-    element: <FullscreenSketch sketch={squircle} />,
-  },
-  {
-    name: "infinite chaos (fullscreen)",
-    path: "infinite-chaos/fullscreen",
-    element: <FullscreenSketch sketch={infiniteChaos} />,
-  },
-  {
-    name: "spinny squares",
-    path: "spinny-squares",
-    element: <FullscreenSketch sketch={spinnySquares} />,
-  },
-  {
-    name: "solar",
-    path: "solar",
-    element: <FullscreenSketch sketch={solar} />,
-  },
+  // {
+  //   name: "diamonds",
+  //   path: "diamonds",
+  //   element: <FullscreenSketch sketch={diamonds} />,
+  // },
+  // {
+  //   name: "circle clock",
+  //   path: "circle-clock",
+  //   element: <FullscreenSketch sketch={circleClock} />,
+  // },
+  // {
+  //   name: "circuit",
+  //   path: "circuit",
+  //   element: <FullscreenSketch sketch={circuit} />,
+  // },
+  // {
+  //   name: "dizzy waves",
+  //   path: "dizzy-waves",
+  //   element: <FullscreenSketch sketch={dizzyWaves} />,
+  // },
+  // {
+  //   name: "area715",
+  //   path: "area715",
+  //   element: <FullscreenSketch sketch={area715} />,
+  // },
+  // {
+  //   name: "illusions",
+  //   path: "illusions",
+  //   element: <FullscreenSketch sketch={illusions} />,
+  // },
+  // {
+  //   name: "look above",
+  //   path: "look-above",
+  //   element: <FullscreenSketch sketch={lookAbove} />,
+  // },
+  // {
+  //   name: "vintage",
+  //   path: "vintage",
+  //   element: <FullscreenSketch sketch={vintage} />,
+  // },
+  // {
+  //   name: "scales",
+  //   path: "scales",
+  //   element: <FullscreenSketch sketch={scales} />,
+  // },
+  // {
+  //   name: "drawbot",
+  //   path: "drawbot",
+  //   element: <FullscreenSketch sketch={drawbot} />,
+  // },
+  // {
+  //   name: "revolutions",
+  //   path: "revolutions",
+  //   element: <FullscreenSketch sketch={revolutions} />,
+  // },
+  // {
+  //   name: "fittest bubble bath",
+  //   path: "fittest-bubble-bath",
+  //   element: <FullscreenSketch sketch={fittestBubleBath} />,
+  // },
+  // {
+  //   name: "lorenz",
+  //   path: "lorenz",
+  //   element: <FullscreenSketch sketch={lorenz} />,
+  // },
+  // {
+  //   name: "cmy dance",
+  //   path: "cmy-dance",
+  //   element: <FullscreenSketch sketch={cmyDance} />,
+  // },
+  // {
+  //   name: "squircle",
+  //   path: "squircle",
+  //   element: <FullscreenSketch sketch={squircle} />,
+  // },
+  // {
+  //   name: "infinite chaos (fullscreen)",
+  //   path: "infinite-chaos/fullscreen",
+  //   element: <FullscreenSketch sketch={infiniteChaos} />,
+  // },
+  // {
+  //   name: "spinny squares",
+  //   path: "spinny-squares",
+  //   element: <FullscreenSketch sketch={spinnySquares} />,
+  // },
+  // {
+  //   name: "solar",
+  //   path: "solar",
+  //   element: <FullscreenSketch sketch={solar} />,
+  // },
 ];
 
 export default routes.filter(({ disabled }) => !disabled);
