@@ -45,25 +45,10 @@ const getMoonData = (selectedDate) => {
     phaseName = "Waning Crescent";
   }
 
-  let daysToNextNewMoon = 0;
-  let nextNewMoonFound = false;
-  while (!nextNewMoonFound && daysToNextNewMoon <= 30) {
-    const futureDate = new Date(
-      selectedDate.getTime() + daysToNextNewMoon * 24 * 60 * 60 * 1000
-    );
-    const futurePhase = SunCalc.getMoonIllumination(futureDate).phase;
-    if (futurePhase < 0.025 || futurePhase >= 0.975) {
-      nextNewMoonFound = true;
-    } else {
-      daysToNextNewMoon++;
-    }
-  }
-
   return {
+    fraction,
     phase,
     phaseName,
-    illumination: fraction,
-    nextNewMoonDays: daysToNextNewMoon,
     moonTimes,
     moonPosition,
   };
@@ -91,7 +76,7 @@ function Moon({ moonPhase }) {
 
   return (
     <>
-      <ambientLight intensity={0.1} />
+      <ambientLight intensity={0.3} />
       <directionalLight
         position={lightPosition}
         intensity={2}
@@ -109,10 +94,65 @@ const Lunar = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const moonData = useMemo(() => getMoonData(selectedDate), [selectedDate]);
   const showUI = useInteraction(3000);
-  console.log(moonData);
+
+  const handleDateChange = (value) => {
+    const newDate = new Date(selectedDate.getFullYear(), 0, value[0]);
+    setSelectedDate(newDate);
+  };
+
+  const getDayOfYear = (date) => {
+    const start = new Date(date.getFullYear(), 0, 0);
+    const diff = date - start;
+    const oneDay = 1000 * 60 * 60 * 24;
+    return Math.floor(diff / oneDay);
+  };
+
+  const currentDayOfYear = getDayOfYear(selectedDate);
+
+  const formatDateDisplay = (date) => {
+    const today = new Date();
+    if (date.toDateString() === today.toDateString()) {
+      return "Today";
+    }
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <div className={`w-screen h-screen ${!showUI ? "cursor-none" : ""}`}>
+      <div
+        className={`
+          absolute inset-0 z-10
+          transition-opacity duration-700 ease-in-out
+          ${showUI ? "opacity-100" : "opacity-0"}
+        `}
+      >
+        <div className="p-8 mx-auto h-full flex flex-col justify-between">
+          <div>
+            <Slider
+              value={[currentDayOfYear]}
+              min={1}
+              max={365}
+              step={1}
+              onValueChange={(value) => handleDateChange(value)}
+              className="w-full"
+            />
+            <div className="text-center mt-2 text-slate-300 text-sm">
+              {formatDateDisplay(selectedDate)}
+            </div>
+          </div>
+          <div className="inline-flex flex-col items-start gap-1 px-4 py-3">
+            <h2 className="text-xl font-medium phase-name text-slate-300">
+              {moonData.phaseName}
+            </h2>
+            <p className="text-sm text-slate-400">
+              {Math.round(moonData.fraction * 100)}% illuminated
+            </p>
+          </div>
+        </div>
+      </div>
       <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
         <color attach="background" args={["#01040f"]} />
         <Stars
@@ -130,42 +170,9 @@ const Lunar = () => {
           enablePan={false}
           minDistance={5}
           maxDistance={20}
-          rotateSpeed={0.5}
           autoRotate={false}
-          autoRotateSpeed={0.5}
         />
       </Canvas>
-      <div
-        className={`
-          absolute inset-0 pointer-events-none
-          transition-opacity duration-700 ease-in-out
-          ${showUI ? "opacity-50" : "opacity-0"}
-        `}
-      >
-        <div
-          className={`
-            container mx-auto px-4 h-full flex flex-col justify-end pb-12
-            ${showUI ? "pointer-events-auto" : "pointer-events-none"}
-          `}
-        >
-          <div className="pl-12">
-            <div className="moon-info-card inline-flex flex-col items-start gap-1 px-4 py-3">
-              <h2 className="text-xl font-medium phase-name">
-                {moonData.phaseName}
-              </h2>
-              <p className="text-sm text-slate-300">
-                {Math.round(moonData.illumination * 100)}% illuminated
-              </p>
-              <p className="text-sm text-slate-400">
-                Next moon:{" "}
-                {moonData.nextNewMoonDays === 1
-                  ? "Tomorrow"
-                  : `${moonData.nextNewMoonDays} days`}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
