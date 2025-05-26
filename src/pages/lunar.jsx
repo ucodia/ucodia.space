@@ -96,18 +96,19 @@ const Lunar = () => {
   const showUI = useInteraction(3000);
 
   const handleDateChange = (value) => {
-    const newDate = new Date(selectedDate.getFullYear(), 0, value[0]);
+    const newDate = new Date(selectedDate.getFullYear(), 0, 0);
+    newDate.setHours(value[0]);
     setSelectedDate(newDate);
   };
 
-  const getDayOfYear = (date) => {
+  const getHourOfYear = (date) => {
     const start = new Date(date.getFullYear(), 0, 0);
     const diff = date - start;
-    const oneDay = 1000 * 60 * 60 * 24;
-    return Math.floor(diff / oneDay);
+    const oneHour = 1000 * 60 * 60;
+    return Math.floor(diff / oneHour);
   };
 
-  const currentDayOfYear = getDayOfYear(selectedDate);
+  const currentHourOfYear = getHourOfYear(selectedDate);
 
   const formatDateDisplay = (date) => {
     const today = new Date();
@@ -117,6 +118,8 @@ const Lunar = () => {
     return date.toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
+      hour: "numeric",
+      hour12: true,
     });
   };
 
@@ -132,9 +135,9 @@ const Lunar = () => {
         <div className="p-8 mx-auto h-full flex flex-col justify-between">
           <div>
             <Slider
-              value={[currentDayOfYear]}
-              min={1}
-              max={365}
+              value={[currentHourOfYear]}
+              min={0}
+              max={8759}
               step={1}
               onValueChange={(value) => handleDateChange(value)}
               className="w-full"
