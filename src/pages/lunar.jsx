@@ -1,4 +1,5 @@
 import { Slider } from "@/components/ui/slider";
+import { useFullscreen } from "@/hooks/use-fullscreen";
 import { useInteraction } from "@/hooks/use-interaction";
 import { CDN_URL } from "@/utils/cdn";
 import { OrbitControls, Stars } from "@react-three/drei";
@@ -57,6 +58,7 @@ const getMoonData = (selectedDate) => {
 
 function Moon({ moonPhase }) {
   const moonRef = useRef();
+  useFullscreen();
 
   const colorMap = useLoader(TextureLoader, MOON_TEXTURE_URL);
   const normalMap = useLoader(TextureLoader, MOON_NORMAL_URL);
@@ -106,10 +108,6 @@ const getHourOfYear = (date) => {
 };
 
 const formatDateDisplay = (date) => {
-  const today = new Date();
-  if (date.toDateString() === today.toDateString()) {
-    return "Today";
-  }
   return date.toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",

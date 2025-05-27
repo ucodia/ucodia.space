@@ -1,8 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 
-export const useInteraction = (delay = 3000) => {
+const defaultEvents = [
+  ["mousemove"],
+  ["pointerdown", "pointerup"],
+  ["mousedown", "mouseup"],
+  ["keydown", "keyup"],
+  ["touchstart", "touchend"],
+];
+
+export const useInteraction = (delay = 3000, events = defaultEvents) => {
   const [isActive, setIsActive] = useState(true);
   const timeoutRef = useRef(null);
+  const eventStatesRef = useRef(new Array(events.length).fill(false));
 
   const resetTimeout = () => {
     setIsActive(true);
@@ -10,65 +19,43 @@ export const useInteraction = (delay = 3000) => {
       clearTimeout(timeoutRef.current);
     }
     timeoutRef.current = setTimeout(() => {
-      setIsActive(false);
+      if (!eventStatesRef.current.some((state) => state)) {
+        setIsActive(false);
+      }
     }, delay);
   };
 
   useEffect(() => {
-    resetTimeout(); // Initial setup
+    resetTimeout();
 
-    const handleUserInteraction = () => {
-      resetTimeout();
-    };
+    const handlers = events
+      .map((eventGroup, groupIndex) =>
+        eventGroup.map((event, index) => ({
+          event,
+          handler: () => {
+            // keep track of begin/end events state
+            if (eventGroup.length > 1) {
+              eventStatesRef.current[groupIndex] = index === 0;
+            }
+            resetTimeout();
+          },
+        }))
+      )
+      .flat();
 
-    const handleKeyDown = (event) => {
-      if (event.key === "Enter") {
-        // Request fullscreen
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen?.() ||
-            document.documentElement.webkitRequestFullscreen?.() ||
-            document.documentElement.mozRequestFullScreen?.() ||
-            document.documentElement.msRequestFullscreen?.();
-        } else {
-          // Exit fullscreen
-          document.exitFullscreen?.() ||
-            document.webkitExitFullscreen?.() ||
-            document.mozCancelFullScreen?.() ||
-            document.msExitFullscreen?.();
-        }
-      }
-      resetTimeout();
-    };
-
-    // Add event listeners
-    window.addEventListener("mousemove", handleUserInteraction);
-    window.addEventListener("mousedown", handleUserInteraction);
-    window.addEventListener("touchstart", handleUserInteraction);
-    window.addEventListener("keydown", handleKeyDown);
-
-    // Canvas-specific interactions
-    const canvasElement = document.querySelector(".canvas-container canvas");
-    if (canvasElement) {
-      canvasElement.addEventListener("mousedown", handleUserInteraction);
-      canvasElement.addEventListener("wheel", handleUserInteraction);
-      canvasElement.addEventListener("touchstart", handleUserInteraction);
-    }
+    handlers.forEach(({ event, handler }) => {
+      window.addEventListener(event, handler);
+    });
 
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-      window.removeEventListener("mousemove", handleUserInteraction);
-      window.removeEventListener("mousedown", handleUserInteraction);
-      window.removeEventListener("touchstart", handleUserInteraction);
-      window.removeEventListener("keydown", handleKeyDown);
-      if (canvasElement) {
-        canvasElement.removeEventListener("mousedown", handleUserInteraction);
-        canvasElement.removeEventListener("wheel", handleUserInteraction);
-        canvasElement.removeEventListener("touchstart", handleUserInteraction);
-      }
+      handlers.forEach(({ event, handler }) => {
+        window.removeEventListener(event, handler);
+      });
     };
-  }, [delay]);
+  }, [delay, events]);
 
   return isActive;
 };
