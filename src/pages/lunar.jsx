@@ -70,7 +70,7 @@ function Moon({ moonPhase }) {
 
   useFrame(() => {
     if (moonRef.current) {
-      moonRef.current.rotation.y += 0.00001;
+      moonRef.current.rotation.y += 0.0001;
     }
   });
 
@@ -98,10 +98,32 @@ function Moon({ moonPhase }) {
   );
 }
 
+const getHourOfYear = (date) => {
+  const start = new Date(date.getFullYear(), 0, 0);
+  const diff = date - start;
+  const oneHour = 1000 * 60 * 60;
+  return Math.floor(diff / oneHour);
+};
+
+const formatDateDisplay = (date) => {
+  const today = new Date();
+  if (date.toDateString() === today.toDateString()) {
+    return "Today";
+  }
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+  });
+};
+
 const Lunar = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const moonData = useMemo(() => getMoonData(selectedDate), [selectedDate]);
   const showUI = useInteraction(3000);
+  const currentHourOfYear = getHourOfYear(selectedDate);
+  // TODO: this is inelegant hack so that moon fully visible on mobile
+  const defaultCameraZ = window.innerWidth < 640 ? 15 : 10;
 
   const handleDateChange = (value) => {
     const newDate = new Date(selectedDate.getFullYear(), 0, 0);
@@ -109,31 +131,15 @@ const Lunar = () => {
     setSelectedDate(newDate);
   };
 
-  const getHourOfYear = (date) => {
-    const start = new Date(date.getFullYear(), 0, 0);
-    const diff = date - start;
-    const oneHour = 1000 * 60 * 60;
-    return Math.floor(diff / oneHour);
-  };
-
-  const currentHourOfYear = getHourOfYear(selectedDate);
-
-  const formatDateDisplay = (date) => {
-    const today = new Date();
-    if (date.toDateString() === today.toDateString()) {
-      return "Today";
-    }
-    return date.toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      hour12: true,
-    });
-  };
-
   return (
     <div className={`w-screen h-screen ${!showUI ? "cursor-none" : ""}`}>
-      <Canvas camera={{ position: [0, 0, 10], fov: 45 }} shadows>
+      <Canvas
+        camera={{
+          position: [0, 0, defaultCameraZ],
+          fov: 45,
+        }}
+        shadows
+      >
         <color attach="background" args={["#01040f"]} />
         <Stars
           radius={100}
