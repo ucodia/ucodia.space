@@ -7,8 +7,8 @@ import { useMemo, useRef, useState } from "react";
 import SunCalc from "suncalc";
 import { TextureLoader, Vector3 } from "three";
 
-const MOON_TEXTURE_URL = `${CDN_URL}/img/lunar/lroc_color_poles_1k.jpg`;
-const MOON_DISPLACEMENT_URL = `${CDN_URL}/img/lunar/ldem_3_8bit.jpg`;
+const MOON_TEXTURE_URL = `${CDN_URL}/img/lunar/moon_4k.png`;
+const MOON_NORMAL_URL = `${CDN_URL}/img/lunar/moon_4k_normals.png`;
 
 // default to vancouver, bc :)
 const DEFAULT_LATITUDE = 49.2827;
@@ -59,7 +59,7 @@ function Moon({ moonPhase }) {
   const moonRef = useRef();
 
   const colorMap = useLoader(TextureLoader, MOON_TEXTURE_URL);
-  const displacementMap = useLoader(TextureLoader, MOON_DISPLACEMENT_URL);
+  const normalMap = useLoader(TextureLoader, MOON_NORMAL_URL);
 
   const getLightPosition = () => {
     const angle = moonPhase * 2 * Math.PI - Math.PI / 2;
@@ -70,7 +70,7 @@ function Moon({ moonPhase }) {
 
   useFrame(() => {
     if (moonRef.current) {
-      moonRef.current.rotation.y += 0.0001;
+      moonRef.current.rotation.y += 0.00001;
     }
   });
 
@@ -84,14 +84,12 @@ function Moon({ moonPhase }) {
         intensity={2}
         color="#f8f9fa"
         castShadow
-        shadow-mapSize={[1024, 512]}
       />
       <mesh ref={moonRef} position={[0, 0, 0]} castShadow receiveShadow>
-        <sphereGeometry args={[2.5, 1024, 512]} />
+        <sphereGeometry args={[2.5, 64, 64]} />
         <meshStandardMaterial
           map={colorMap}
-          displacementMap={displacementMap}
-          displacementScale={0.15}
+          normalMap={normalMap}
           metalness={0.1}
           roughness={0.9}
         />
