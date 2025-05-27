@@ -8,6 +8,7 @@ import SunCalc from "suncalc";
 import { TextureLoader, Vector3 } from "three";
 
 const MOON_TEXTURE_URL = `${CDN_URL}/img/lunar/lroc_color_poles_1k.jpg`;
+const MOON_DISPLACEMENT_URL = `${CDN_URL}/img/lunar/ldem_3_8bit.jpg`;
 
 // default to vancouver, bc :)
 const DEFAULT_LATITUDE = 49.2827;
@@ -58,6 +59,7 @@ function Moon({ moonPhase }) {
   const moonRef = useRef();
 
   const colorMap = useLoader(TextureLoader, MOON_TEXTURE_URL);
+  const displacementMap = useLoader(TextureLoader, MOON_DISPLACEMENT_URL);
 
   const getLightPosition = () => {
     const angle = moonPhase * 2 * Math.PI - Math.PI / 2;
@@ -68,7 +70,7 @@ function Moon({ moonPhase }) {
 
   useFrame(() => {
     if (moonRef.current) {
-      moonRef.current.rotation.y += 0.00001;
+      moonRef.current.rotation.y += 0.0001;
     }
   });
 
@@ -76,15 +78,23 @@ function Moon({ moonPhase }) {
 
   return (
     <>
-      <ambientLight intensity={0.3} />
+      <ambientLight intensity={0.1} />
       <directionalLight
         position={lightPosition}
         intensity={2}
         color="#f8f9fa"
+        castShadow
+        shadow-mapSize={[1024, 512]}
       />
-      <mesh ref={moonRef} position={[0, 0, 0]}>
-        <sphereGeometry args={[2.5, 64, 64]} />
-        <meshStandardMaterial map={colorMap} metalness={0.2} roughness={0.8} />
+      <mesh ref={moonRef} position={[0, 0, 0]} castShadow receiveShadow>
+        <sphereGeometry args={[2.5, 1024, 512]} />
+        <meshStandardMaterial
+          map={colorMap}
+          displacementMap={displacementMap}
+          displacementScale={0.15}
+          metalness={0.1}
+          roughness={0.9}
+        />
       </mesh>
     </>
   );
@@ -125,15 +135,35 @@ const Lunar = () => {
 
   return (
     <div className={`w-screen h-screen ${!showUI ? "cursor-none" : ""}`}>
+      <Canvas camera={{ position: [0, 0, 10], fov: 45 }} shadows>
+        <color attach="background" args={["#01040f"]} />
+        <Stars
+          radius={100}
+          depth={50}
+          count={5000}
+          factor={4}
+          saturation={0}
+          fade
+          speed={1}
+        />
+        <Moon moonPhase={moonData.phase} />
+        <OrbitControls
+          enableRotate={false}
+          enablePan={false}
+          minDistance={5}
+          maxDistance={20}
+        />
+      </Canvas>
       <div
         className={`
           absolute inset-0 z-10
           transition-opacity duration-700 ease-in-out
+          pointer-events-none
           ${showUI ? "opacity-100" : "opacity-0"}
         `}
       >
         <div className="p-8 mx-auto h-full flex flex-col justify-between">
-          <div>
+          <div className="pointer-events-auto">
             <Slider
               value={[currentHourOfYear]}
               min={0}
@@ -156,26 +186,6 @@ const Lunar = () => {
           </div>
         </div>
       </div>
-      <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
-        <color attach="background" args={["#01040f"]} />
-        <Stars
-          radius={100}
-          depth={50}
-          count={5000}
-          factor={4}
-          saturation={0}
-          fade
-          speed={1}
-        />
-        <Moon moonPhase={moonData.phase} />
-        <OrbitControls
-          enableZoom={true}
-          enablePan={false}
-          minDistance={5}
-          maxDistance={20}
-          autoRotate={false}
-        />
-      </Canvas>
     </div>
   );
 };
