@@ -66,7 +66,7 @@ const cmyDance = (sketch) => {
   gui.add(sx, "length", 3, 300, 1);
   gui.add(sx, "offset", -300, 300, 1);
   gui.add(sx, "spacing", 0.01, 10, 0.1);
-  gui.add(sx, "animate");
+  const animateControl = gui.add(sx, "animate");
   gui.add(sx, "speed", -5, 5, 0.1);
   gui.add(sx, "thickness", 0.5, 20, 0.1);
   gui.add(sx, "opacity", 0, 1, 0.1);
@@ -142,7 +142,7 @@ const cmyDance = (sketch) => {
   }
 
   function toggleAnimation() {
-    sx.animate = !sx.animate;
+    animateControl.setValue(!sx.animate);
   }
 
   function updateFromSeed() {
