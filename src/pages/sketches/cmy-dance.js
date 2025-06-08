@@ -2,7 +2,6 @@ import { GUI } from "lil-gui";
 import p5plotSvg from "p5.plotsvg";
 import autoStretchP5 from "@/utils/auto-stretch-p5";
 import { numericalRecipesLcg } from "@/utils/random";
-import presets from "./cmy-dance-presets.json";
 
 export const meta = {
   name: "CMY Dance",
@@ -36,7 +35,6 @@ const defaultSx = {
   thickness: 5,
   opacity: 0.5,
   animate: true,
-  preset: 0,
   fracMin: 5,
   fracMax: 50,
   ampMin: -300,
@@ -62,7 +60,7 @@ const cmyDance = (sketch) => {
 
   let paramSet = [];
 
-  var gui = new GUI();
+  var gui = new GUI({ title: "CMY Dance" });
   gui.close();
   gui.add(sx, "length", 3, 300, 1);
   gui.add(sx, "offset", -300, 300, 1);
@@ -71,14 +69,13 @@ const cmyDance = (sketch) => {
   gui.add(sx, "speed", -5, 5, 0.1);
   gui.add(sx, "thickness", 0.5, 20, 0.1);
   gui.add(sx, "opacity", 0, 1, 0.1);
+  const linkSegmentControl = gui.add(sx, "linkSegments");
   const seedControl = gui.add(sx, "seed");
-  const presetControl = gui.add(sx, "preset", [0, 1, 2]);
   const randomizerFolder = gui.addFolder("randomizer");
   randomizerFolder.add(sx, "xmsMax", 1, 10, 1);
   randomizerFolder.add(sx, "ymsMax", 1, 10, 1);
   randomizerFolder.add(sx, "fracMax", 5, 100, 1);
   randomizerFolder.add(sx, "ampMax", 1, 500, 1);
-  randomizerFolder.add(sx, "linkSegments");
   randomizerFolder.close();
 
   const actions = {
@@ -101,27 +98,25 @@ const cmyDance = (sketch) => {
           urlParams[key] = value;
         }
       });
-      setURLParams(urlParams);
+      const url = setURLParams(urlParams);
+      copyToClipboard(url);
     },
   };
   Object.keys(actions).forEach((name) => gui.add(actions, name));
 
-  presetControl.onChange(() => {
-    seedControl.setValue("");
-    updateFromPreset();
-    updateUrl();
+  linkSegmentControl.onChange((val) => {
+    updateFromSeed();
   });
   seedControl.onChange((val) => {
     if (!val) return;
     updateFromSeed();
-    updateUrl();
+    setURLParams({ seed: sx.seed });
   });
 
-  if (sx.seed) {
-    updateFromSeed();
-  } else {
-    updateFromPreset();
+  if (!sx.seed) {
+    seedControl.setValue(getRandomString());
   }
+  updateFromSeed();
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
@@ -149,22 +144,9 @@ const cmyDance = (sketch) => {
     sx.animate = !sx.animate;
   }
 
-  function updateFromPreset() {
-    paramSet = presets[sx.preset];
-    layout();
-  }
-
   function updateFromSeed() {
     paramSet = getRandomSet(sx);
     layout();
-  }
-
-  function updateUrl() {
-    if (sx.seed) {
-      setURLParams({ seed: sx.seed });
-    } else {
-      setURLParams({ preset: sx.preset });
-    }
   }
 
   sketch.draw = () => {
@@ -311,7 +293,15 @@ function setURLParams(obj) {
     url.searchParams.set(key, value);
   }
   window.history.replaceState(null, "", url);
-  copyToClipboard(url.toString());
+  return url.toString();
+}
+
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    console.error("Unable to copy text to clipboard", err);
+  }
 }
 
 function getTimestamp() {
