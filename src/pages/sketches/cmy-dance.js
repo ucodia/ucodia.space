@@ -63,9 +63,9 @@ const cmyDance = (sketch) => {
   var gui = new GUI({ title: "CMY Dance" });
   gui.close();
   // gui.addColor(sx, "background");
-  gui.add(sx, "length", 3, 300, 1);
+  gui.add(sx, "length", 3, 1000, 1);
   gui.add(sx, "offset", -300, 300, 1);
-  gui.add(sx, "spacing", 0.01, 10, 0.1);
+  gui.add(sx, "spacing", 0.01, 2, 0.01);
   const animateControl = gui.add(sx, "animate");
   gui.add(sx, "speed", -5, 5, 0.1);
   gui.add(sx, "thickness", 0.5, 20, 0.1);
@@ -303,6 +303,9 @@ function setURLParams(obj) {
     }
   });
   for (const [key, value] of Object.entries(obj)) {
+    if (key === "offset") {
+      continue;
+    }
     url.searchParams.set(key, value);
   }
   window.history.replaceState(null, "", url);
