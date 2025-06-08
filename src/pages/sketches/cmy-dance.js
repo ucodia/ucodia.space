@@ -63,7 +63,7 @@ const cmyDance = (sketch) => {
   var gui = new GUI({ title: "CMY Dance" });
   gui.close();
   // gui.addColor(sx, "background");
-  gui.add(sx, "length", 3, 1000, 1);
+  const lengthControl = gui.add(sx, "length", 3, 1000, 1);
   gui.add(sx, "offset", -300, 300, 1);
   gui.add(sx, "spacing", 0.01, 2, 0.01);
   const animateControl = gui.add(sx, "animate");
@@ -151,6 +151,8 @@ const cmyDance = (sketch) => {
   }
 
   sketch.draw = () => {
+    keyPressedFrame();
+
     sketch.clear();
     sketch.background(sx.background);
     sketch.translate(sketch.width / 2, sketch.height / 2);
@@ -209,6 +211,30 @@ const cmyDance = (sketch) => {
       }
     }
   };
+
+  function keyPressedFrame() {
+    if (!sketch.keyIsPressed) return;
+
+    switch (sketch.keyCode) {
+      case sketch.LEFT_ARROW: {
+        t -= sx.speed;
+        break;
+      }
+      case sketch.RIGHT_ARROW: {
+        t += sx.speed;
+        break;
+      }
+      case sketch.UP_ARROW: {
+        lengthControl.setValue(sx.length + 1);
+        break;
+      }
+      case sketch.DOWN_ARROW: {
+        lengthControl.setValue(sx.length - 1);
+        break;
+      }
+      default:
+    }
+  }
 
   sketch.cleanup = () => {
     gui.destroy();
