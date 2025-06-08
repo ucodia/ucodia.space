@@ -28,9 +28,9 @@ function f(xms, yms, t) {
 
 const defaultSx = {
   background: "#ffffff",
-  length: 32,
+  length: 66,
   offset: 0,
-  spacing: 1,
+  spacing: 0.6,
   speed: 0.1,
   thickness: 5,
   opacity: 0.5,
@@ -110,7 +110,6 @@ const cmyDance = (sketch) => {
   seedControl.onChange((val) => {
     if (!val) return;
     updateFromSeed();
-    setURLParams({ seed: sx.seed });
   });
 
   if (!sx.seed) {
@@ -120,6 +119,7 @@ const cmyDance = (sketch) => {
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
+    sketch.blendMode(sketch.MULTIPLY);
     autoStretchP5(sketch, layout);
   };
 
@@ -151,9 +151,7 @@ const cmyDance = (sketch) => {
 
   sketch.draw = () => {
     sketch.clear();
-    sketch.blendMode(sketch.ADD);
     sketch.background(sx.background);
-    sketch.blendMode(sketch.MULTIPLY);
     sketch.translate(sketch.width / 2, sketch.height / 2);
     sketch.scale(realScale - scaleOffset);
     sketch.strokeWeight(sx.thickness);
@@ -187,9 +185,23 @@ const cmyDance = (sketch) => {
       }
       case "n": {
         actions.randomize();
+        break;
       }
       case " ": {
         toggleAnimation();
+        break;
+      }
+      default: {
+      }
+    }
+
+    switch (sketch.keyCode) {
+      case sketch.ENTER: {
+        if (sketch.fullscreen()) {
+          sketch.fullscreen(false);
+        } else {
+          sketch.fullscreen(true);
+        }
         break;
       }
       default: {
