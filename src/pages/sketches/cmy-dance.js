@@ -41,7 +41,7 @@ const defaultSx = {
   ampMax: 300,
   xmsMax: 6,
   ymsMax: 6,
-  linkSegments: true,
+  unlink: false,
   seed: "",
 };
 
@@ -62,6 +62,7 @@ const cmyDance = (sketch) => {
 
   var gui = new GUI({ title: "CMY Dance" });
   gui.close();
+  // gui.addColor(sx, "background");
   gui.add(sx, "length", 3, 300, 1);
   gui.add(sx, "offset", -300, 300, 1);
   gui.add(sx, "spacing", 0.01, 10, 0.1);
@@ -69,7 +70,7 @@ const cmyDance = (sketch) => {
   gui.add(sx, "speed", -5, 5, 0.1);
   gui.add(sx, "thickness", 0.5, 20, 0.1);
   gui.add(sx, "opacity", 0, 1, 0.1);
-  const linkSegmentControl = gui.add(sx, "linkSegments");
+  const unlinkControl = gui.add(sx, "unlink");
   const seedControl = gui.add(sx, "seed");
   const randomizerFolder = gui.addFolder("randomizer");
   randomizerFolder.add(sx, "xmsMax", 1, 10, 1);
@@ -104,7 +105,7 @@ const cmyDance = (sketch) => {
   };
   Object.keys(actions).forEach((name) => gui.add(actions, name));
 
-  linkSegmentControl.onChange((val) => {
+  unlinkControl.onChange((val) => {
     updateFromSeed();
   });
   seedControl.onChange((val) => {
@@ -241,16 +242,16 @@ function getRandomSet(sx) {
   const e = getRandomParams();
   const f = getRandomParams();
 
-  return sx.linkSegments
+  return sx.unlink
     ? [
-        [a, b],
-        [b, c],
-        [c, a],
-      ]
-    : [
         [a, b],
         [c, d],
         [e, f],
+      ]
+    : [
+        [a, b],
+        [b, c],
+        [c, a],
       ];
 }
 
