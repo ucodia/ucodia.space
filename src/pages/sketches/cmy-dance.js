@@ -16,8 +16,8 @@ export const meta = {
  *   f(x) = sum(sin(t * (1 / fx)) * ax))
  *   f(y) = sum(cos(t * (1 / fy)) * ay))
  *
- * fx controls the wave period fraction (frequency)
- * ax controls the wave height multiplier (amplitude)
+ * fx and fy controls the wave period fraction (frequency)
+ * ax and ay controls the wave height multiplier (amplitude)
  * t represents the time
  */
 function f(xms, yms, t) {
@@ -28,14 +28,22 @@ function f(xms, yms, t) {
 }
 
 const defaultSx = {
-  length: 16,
+  background: "#ffffff",
+  length: 32,
   offset: 0,
   spacing: 1,
-  speed: 0.25,
+  speed: 0.1,
   thickness: 5,
-  opacity: 0.6,
-  looping: true,
+  opacity: 0.5,
+  animate: true,
   preset: 0,
+  fracMin: 5,
+  fracMax: 50,
+  ampMin: -300,
+  ampMax: 300,
+  xmsMax: 6,
+  ymsMax: 6,
+  linkSegments: true,
   seed: "",
 };
 
@@ -57,27 +65,43 @@ const cmyDance = (sketch) => {
   var gui = new GUI();
   gui.close();
   gui.add(sx, "length", 3, 300, 1);
-  gui.add(sx, "offset", -10000, 10000, 1);
+  gui.add(sx, "offset", -300, 300, 1);
   gui.add(sx, "spacing", 0.01, 10, 0.1);
+  gui.add(sx, "animate");
   gui.add(sx, "speed", -5, 5, 0.1);
   gui.add(sx, "thickness", 0.5, 20, 0.1);
   gui.add(sx, "opacity", 0, 1, 0.1);
   const seedControl = gui.add(sx, "seed");
   const presetControl = gui.add(sx, "preset", [0, 1, 2]);
+  const randomizerFolder = gui.addFolder("randomizer");
+  randomizerFolder.add(sx, "xmsMax", 1, 10, 1);
+  randomizerFolder.add(sx, "ymsMax", 1, 10, 1);
+  randomizerFolder.add(sx, "fracMax", 5, 100, 1);
+  randomizerFolder.add(sx, "ampMax", 1, 500, 1);
+  randomizerFolder.add(sx, "linkSegments");
+  randomizerFolder.close();
 
   const actions = {
     randomize: () => seedControl.setValue(getRandomString()),
     savePlotter: () => {
-      p5plotSvg.beginRecordSVG(sketch, `cmy-dance.svg`);
+      p5plotSvg.beginRecordSVG(sketch, `cmy-dance-${getTimestamp()}.svg`);
       sketch.draw();
       p5plotSvg.endRecordSVG();
     },
     saveImage: () => {
-      sketch.save(`cmy-dance.png`);
+      sketch.save(`cmy-dance-${getTimestamp()}.png`);
     },
     shareUrl: () => {
-      const params = { ...sx };
-      setURLParams(params);
+      const urlParams = {
+        seed: sx.seed,
+      };
+      Object.keys(defaultSx).forEach((key) => {
+        const value = sx[key];
+        if (value !== defaultSx[key]) {
+          urlParams[key] = value;
+        }
+      });
+      setURLParams(urlParams);
     },
   };
   Object.keys(actions).forEach((name) => gui.add(actions, name));
@@ -121,11 +145,8 @@ const cmyDance = (sketch) => {
       1 / Math.max((maxX * 2) / sketch.width, (maxY * 2) / sketch.height);
   }
 
-  function toggleLooping() {
-    sx.looping = !sx.looping;
-    if (sx.looping) {
-      sketch.loop();
-    }
+  function toggleAnimation() {
+    sx.animate = !sx.animate;
   }
 
   function updateFromPreset() {
@@ -134,7 +155,7 @@ const cmyDance = (sketch) => {
   }
 
   function updateFromSeed() {
-    paramSet = getRandomSet(sx.seed);
+    paramSet = getRandomSet(sx);
     layout();
   }
 
@@ -148,11 +169,16 @@ const cmyDance = (sketch) => {
 
   sketch.draw = () => {
     sketch.clear();
-    sketch.background("black");
+    sketch.blendMode(sketch.ADD);
+    sketch.background(sx.background);
+    sketch.blendMode(sketch.MULTIPLY);
     sketch.translate(sketch.width / 2, sketch.height / 2);
     sketch.scale(realScale - scaleOffset);
     sketch.strokeWeight(sx.thickness);
-    t += sx.speed;
+
+    if (sx.animate) {
+      t += sx.speed;
+    }
 
     for (let i = 0; i < sx.length; i++) {
       const tInc = i * sx.spacing + sx.offset;
@@ -164,10 +190,6 @@ const cmyDance = (sketch) => {
           ...f(...paramSet[j][1], t + tInc)
         );
       }
-    }
-
-    if (!sx.looping) {
-      sketch.noLoop();
     }
   };
 
@@ -185,7 +207,7 @@ const cmyDance = (sketch) => {
         actions.randomize();
       }
       case " ": {
-        toggleLooping();
+        toggleAnimation();
         break;
       }
       default: {
@@ -198,20 +220,24 @@ const cmyDance = (sketch) => {
   };
 };
 
-function getRandomSet(seed) {
-  const lcg = numericalRecipesLcg(hashCode(seed));
-  const fnIndex = getRandomInt(0, 2, lcg);
-  return [rand1, rand2, rand3][fnIndex](lcg);
-}
+function getRandomSet(sx) {
+  const lcg = numericalRecipesLcg(hashCode(sx.seed));
 
-function rand1(lcg) {
   const getRandomTF = () => [
-    getRandomInt(5, 50, lcg),
+    getRandomInt(5, sx.fracMax, lcg),
     getRandomInt(-300, 300, lcg),
   ];
   const getRandomParams = () => [
-    [...Array.from(Array(getRandomInt(1, 6, lcg)).keys()).map(getRandomTF)],
-    [...Array.from(Array(getRandomInt(1, 6, lcg)).keys()).map(getRandomTF)],
+    [
+      ...Array.from(Array(getRandomInt(1, sx.xmsMax, lcg)).keys()).map(
+        getRandomTF
+      ),
+    ],
+    [
+      ...Array.from(Array(getRandomInt(1, sx.ymsMax, lcg)).keys()).map(
+        getRandomTF
+      ),
+    ],
   ];
 
   const a = getRandomParams();
@@ -221,50 +247,17 @@ function rand1(lcg) {
   const e = getRandomParams();
   const f = getRandomParams();
 
-  return [
-    [a, b],
-    [c, d],
-    [e, f],
-  ];
-}
-
-function rand2(lcg) {
-  const getRandomTF = () => [
-    getRandomInt(5, 50, lcg),
-    getRandomInt(-300, 300, lcg),
-  ];
-  const getRandomParams = () => [
-    [...Array.from(Array(getRandomInt(1, 6, lcg)).keys()).map(getRandomTF)],
-    [...Array.from(Array(getRandomInt(1, 6, lcg)).keys()).map(getRandomTF)],
-  ];
-  const a = getRandomParams();
-  const b = getRandomParams();
-  const c = getRandomParams();
-  return [
-    [a, b],
-    [b, c],
-    [c, a],
-  ];
-}
-
-function rand3(lcg) {
-  const getRandomTF = () => [
-    getRandomInt(10, 50, lcg),
-    getRandomInt(-300, 300, lcg),
-  ];
-
-  const getRandomParams = () => [
-    [...Array.from(Array(getRandomInt(1, 6, lcg)).keys()).map(getRandomTF)],
-    [...Array.from(Array(getRandomInt(1, 6, lcg)).keys()).map(getRandomTF)],
-  ];
-  const a = getRandomParams();
-  const b = getRandomParams();
-  const c = getRandomParams();
-  const d = getRandomParams();
-  return [
-    [a, b],
-    [c, d],
-  ];
+  return sx.linkSegments
+    ? [
+        [a, b],
+        [b, c],
+        [c, a],
+      ]
+    : [
+        [a, b],
+        [c, d],
+        [e, f],
+      ];
 }
 
 function hashCode(str) {
@@ -294,6 +287,11 @@ function getURLParams() {
   for (const [key, value] of params) {
     if (/^-?\d+(\.\d+)?$/.test(value)) {
       parsedParams[key] = parseFloat(value);
+    } else if (
+      value.toLowerCase() === "true" ||
+      value.toLowerCase() === "false"
+    ) {
+      parsedParams[key] = value.toLowerCase() === "true";
     } else {
       parsedParams[key] = value;
     }
@@ -313,6 +311,20 @@ function setURLParams(obj) {
     url.searchParams.set(key, value);
   }
   window.history.replaceState(null, "", url);
+  copyToClipboard(url.toString());
+}
+
+function getTimestamp() {
+  const now = new Date();
+  return new Date()
+    .toISOString()
+    .split("-")
+    .join("")
+    .split("T")
+    .join("-")
+    .split(":")
+    .join("")
+    .split(".")[0];
 }
 
 export default cmyDance;
