@@ -34,14 +34,16 @@ const defaultSx = {
   speed: 0.1,
   thickness: 5,
   opacity: 0.5,
+  unlink: false,
   animate: true,
+  autoRand: true,
+  autoRandInterval: 60,
   fracMin: 5,
   fracMax: 50,
   ampMin: -300,
   ampMax: 300,
   xmsMax: 6,
   ymsMax: 6,
-  unlink: false,
   seed: "",
 };
 
@@ -59,6 +61,7 @@ const cmyDance = (sketch) => {
   const sx = { ...defaultSx, ...urlSx };
 
   let paramSet = [];
+  let lastGen = null;
 
   var gui = new GUI({ title: "CMY Dance" });
   gui.close();
@@ -66,18 +69,20 @@ const cmyDance = (sketch) => {
   const lengthControl = gui.add(sx, "length", 3, 1000, 1);
   gui.add(sx, "offset", -300, 300, 1);
   gui.add(sx, "spacing", 0.01, 2, 0.01);
-  const animateControl = gui.add(sx, "animate");
   gui.add(sx, "speed", -5, 5, 0.1);
   gui.add(sx, "thickness", 0.5, 20, 0.1);
   gui.add(sx, "opacity", 0, 1, 0.1);
   const unlinkControl = gui.add(sx, "unlink");
+  const animateControl = gui.add(sx, "animate");
+  gui.add(sx, "autoRand");
+  gui.add(sx, "autoRandInterval", 1, 120, 1);
   const seedControl = gui.add(sx, "seed");
-  const randomizerFolder = gui.addFolder("randomizer");
-  randomizerFolder.add(sx, "xmsMax", 1, 10, 1);
-  randomizerFolder.add(sx, "ymsMax", 1, 10, 1);
-  randomizerFolder.add(sx, "fracMax", 5, 100, 1);
-  randomizerFolder.add(sx, "ampMax", 1, 500, 1);
-  randomizerFolder.close();
+  const generatorFolder = gui.addFolder("generator");
+  generatorFolder.add(sx, "xmsMax", 1, 10, 1);
+  generatorFolder.add(sx, "ymsMax", 1, 10, 1);
+  generatorFolder.add(sx, "fracMax", 5, 100, 1);
+  generatorFolder.add(sx, "ampMax", 1, 500, 1);
+  generatorFolder.close();
 
   const actions = {
     randomize: () => seedControl.setValue(getRandomString()),
@@ -105,11 +110,11 @@ const cmyDance = (sketch) => {
   };
   Object.keys(actions).forEach((name) => gui.add(actions, name));
 
-  unlinkControl.onChange((val) => {
-    updateFromSeed();
-  });
   seedControl.onChange((val) => {
     if (!val) return;
+    updateFromSeed();
+  });
+  unlinkControl.onChange((val) => {
     updateFromSeed();
   });
 
@@ -147,6 +152,7 @@ const cmyDance = (sketch) => {
 
   function updateFromSeed() {
     paramSet = getRandomSet(sx);
+    lastGen = new Date();
     layout();
   }
 
@@ -172,6 +178,13 @@ const cmyDance = (sketch) => {
           ...f(...paramSet[j][0], t + tInc),
           ...f(...paramSet[j][1], t + tInc)
         );
+      }
+    }
+
+    if (sx.autoRand && lastGen) {
+      const elapsed = new Date() - lastGen;
+      if (elapsed > sx.autoRandInterval * 1000) {
+        actions.randomize();
       }
     }
   };
