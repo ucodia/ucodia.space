@@ -190,6 +190,14 @@ const cmyDance = (sketch) => {
         actions.randomize();
         break;
       }
+      case "h": {
+        if (gui._hidden) {
+          gui.show();
+        } else {
+          gui.hide();
+        }
+        break;
+      }
       case " ": {
         toggleAnimation();
         break;
