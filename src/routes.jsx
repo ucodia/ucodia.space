@@ -83,13 +83,6 @@ const routes = [
     ),
   },
   {
-    name: "cv",
-    path: "cv",
-    element: (
-      <ExternalRedirect to="https://ucodia.notion.site/Ucodia-CV-ca7805ca1c404dc58112ab885fe3f55e" />
-    ),
-  },
-  {
     name: "contact",
     path: "contact",
     element: <ExternalRedirect to="https://linktr.ee/ucodia" />,
@@ -110,6 +103,11 @@ const routes = [
     name: "mycologue 🍄",
     path: "mycologue",
     element: <ExternalRedirect to="https://mycologue.org" />,
+  },
+  {
+    name: "source code",
+    path: "source-code",
+    element: <ExternalRedirect to="https://github.com/Ucodia/ucodia.space" />,
   },
   {
     name: "bad rng",

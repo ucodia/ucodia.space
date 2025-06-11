@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { singleDiamond } from "./sketches/diamonds";
+import ExternalLink from "@/components/external-link";
 import U5Wrapper from "@/components/u5-wrapper";
 import routes from "@/routes";
 
@@ -11,9 +12,9 @@ const links = routes
     (route) => import.meta.env.DEV || !DEV_ONLY_ROUTES.includes(route.name)
   )
   .filter(({ path }) => !path.includes("fullscreen"))
-  .map(({ name, path, override }) => ({
-    name,
-    to: override ? override : path,
+  .map(({ ...args }) => ({
+    ...args,
+    to: args.override ? args.override : args.path,
   }))
   .sort((a, b) => a.name.localeCompare(b.name));
 
@@ -31,9 +32,21 @@ const Home = () => {
         />
       </div>
       <div className="my-12 sm:my-[50px] flex flex-col items-center justify-center">
-        {links.map(({ name, to }, index, items) => {
+        {links.map(({ name, to, element }, index, items) => {
           const inc = Math.round(360 / items.length);
           const color = `hsl(${index * inc},80%,60%)`;
+            if (element?.type?.name === "ExternalRedirect") {
+            return (
+              <ExternalLink
+                key={name}
+                className="text-center text-4xl sm:text-6xl p-2 sm:p-4 no-underline"
+                style={{ color: color }}
+                href={to}
+              >
+                {name}
+              </ExternalLink>
+            );
+          }
           return (
             <Link
               key={name}
