@@ -330,7 +330,7 @@ const infiniteChaos = (sketch) => {
         actions.randomize();
         break;
       }
-      case "e": {
+      case "h": {
         if (gui._hidden) {
           gui.show();
         } else {
