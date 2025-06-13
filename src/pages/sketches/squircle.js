@@ -16,29 +16,22 @@ const defaultSx = {
   background: "#fff",
   stroke: "#000",
   transparent: true,
-  noise: {
-    seed: 2,
-    res: 1 / 20,
-  },
-  radius: {
-    fn: "linear",
-    inc: 30,
-    reverse: false,
-  },
-  rotate: {
-    fn: "linear",
-    inc: (Math.PI * 2) / 120,
-    reverse: false,
-  },
-  translate: {
-    fn: "none",
-    inc: 3,
-    reverse: false,
-  },
+  noiseSeed: 2,
+  noiseRes: 1 / 20,
+  radiusFn: "linear",
+  radiusInc: 30,
+  radiusReverse: false,
+  rotateFn: "linear",
+  rotateInc: (Math.PI * 2) / 120,
+  rotateReverse: false,
+  translateFn: "none",
+  translateInc: 3,
+  translateReverse: false,
 };
 
 const squircle = (sketch) => {
-  const sx = { ...defaultSx };
+  const urlSx = getURLParams();
+  const sx = { ...defaultSx, ...urlSx };
 
   const gui = new GUI();
   gui.close();
@@ -49,21 +42,29 @@ const squircle = (sketch) => {
   gui.addColor(sx, "background");
   gui.addColor(sx, "stroke");
   gui.add(sx, "transparent");
+
+  const noiseFolder = gui.addFolder("noise");
+  noiseFolder.open();
+  noiseFolder.add(sx, "noiseSeed", 0, 10000, 1);
+  noiseFolder.add(sx, "noiseRes", 0.001, 1, 0.001);
+
   const radiusFolder = gui.addFolder("radius");
   radiusFolder.open();
-  radiusFolder.add(sx.radius, "fn", ["none", "fixed", "linear"]);
-  radiusFolder.add(sx.radius, "inc", 1, 100);
-  radiusFolder.add(sx.radius, "reverse");
+  radiusFolder.add(sx, "radiusFn", ["none", "fixed", "linear"]);
+  radiusFolder.add(sx, "radiusInc", 1, 100);
+  radiusFolder.add(sx, "radiusReverse");
+
   const rotateFolder = gui.addFolder("rotate");
   rotateFolder.open();
-  rotateFolder.add(sx.rotate, "fn", ["none", "linear", "sin", "noise"]);
-  rotateFolder.add(sx.rotate, "inc", 0, Math.PI / 4);
-  rotateFolder.add(sx.rotate, "reverse");
+  rotateFolder.add(sx, "rotateFn", ["none", "linear", "sin", "noise"]);
+  rotateFolder.add(sx, "rotateInc", 0, Math.PI / 4);
+  rotateFolder.add(sx, "rotateReverse");
+
   const translateFolder = gui.addFolder("translate");
   translateFolder.open();
-  translateFolder.add(sx.translate, "fn", ["none", "fixed", "linear"]);
-  translateFolder.add(sx.translate, "inc", -500, 500, 0.01);
-  translateFolder.add(sx.translate, "reverse");
+  translateFolder.add(sx, "translateFn", ["none", "fixed", "linear"]);
+  translateFolder.add(sx, "translateInc", -500, 500, 0.01);
+  translateFolder.add(sx, "translateReverse");
   const actions = {
     randomize: () => {
       randomizeFeatures();
@@ -76,6 +77,17 @@ const squircle = (sketch) => {
     },
     saveImage: () => {
       sketch.save(`squircle.png`);
+    },
+    shareUrl: () => {
+      const urlParams = {};
+      Object.keys(defaultSx).forEach((key) => {
+        const value = sx[key];
+        if (value !== defaultSx[key]) {
+          urlParams[key] = value;
+        }
+      });
+      const url = setURLParams(urlParams);
+      copyToClipboard(url);
     },
   };
   Object.keys(actions).forEach((name) => gui.add(actions, name));
@@ -95,7 +107,9 @@ const squircle = (sketch) => {
       bw: [data.colors.black, data.colors.white],
     };
 
-    randomizeFeatures();
+    if (Object.entries(urlSx).length === 0) {
+      randomizeFeatures();
+    }
     autoStretchP5(sketch);
   };
 
@@ -164,21 +178,21 @@ const squircle = (sketch) => {
   }
 
   function getRotation(sx, i) {
-    switch (sx.rotate.fn) {
+    switch (sx.rotateFn) {
       case "linear": {
-        return sx.rotate.inc * i * (sx.rotate.reverse ? -1 : 1);
+        return sx.rotateInc * i * (sx.rotateReverse ? -1 : 1);
       }
       case "sin": {
         const period = sx.lineCount;
         const pos = sketch.map(i % period, 0, period, 0, sketch.TWO_PI);
         const factor = sketch.map(Math.sin(pos), 0, 1, -1, 1);
-        return (sx.rotate.inc / (period * 0.3)) * 4 * i * factor;
+        return (sx.rotateInc / (period * 0.3)) * 4 * i * factor;
       }
       case "noise": {
-        sketch.noiseSeed(sx.noise.seed);
+        sketch.noiseSeed(sx.noiseSeed);
         return (
-          sx.rotate.inc *
-          sketch.map(sketch.noise(i * sx.noise.res), 0, 1, -0.5, 0.5) *
+          sx.rotateInc *
+          sketch.map(sketch.noise(i * sx.noiseRes), 0, 1, -0.5, 0.5) *
           10
         );
       }
@@ -188,13 +202,13 @@ const squircle = (sketch) => {
     }
   }
 
-  function getTranslation({ translate }, i) {
-    switch (translate.fn) {
+  function getTranslation(sx, i) {
+    switch (sx.translateFn) {
       case "fixed": {
-        return translate.inc;
+        return sx.translateInc;
       }
       case "linear": {
-        return translate.inc * i * (translate.reverse ? -1 : 1);
+        return sx.translateInc * i * (sx.translateReverse ? -1 : 1);
       }
       default: {
         return 0;
@@ -202,15 +216,15 @@ const squircle = (sketch) => {
     }
   }
 
-  function getRadiuses({ radius, lineCount }, i) {
-    switch (radius.fn) {
+  function getRadiuses(sx, i) {
+    switch (sx.radiusFn) {
       case "fixed": {
-        return [radius.inc, radius.inc, radius.inc, radius.inc];
+        return [sx.radiusInc, sx.radiusInc, sx.radiusInc, sx.radiusInc];
       }
       case "linear": {
-        const r = radius.reverse
-          ? sketch.map(i, 0, lineCount - 1, getMinSide() * 0.1, 0)
-          : sketch.map(i, 0, lineCount - 1, 0, getMinSide() * 0.1);
+        const r = sx.radiusReverse
+          ? sketch.map(i, 0, sx.lineCount - 1, getMinSide() * 0.1, 0)
+          : sketch.map(i, 0, sx.lineCount - 1, 0, getMinSide() * 0.1);
         return [r, r, r, r];
       }
       default: {
@@ -375,17 +389,62 @@ const squircle = (sketch) => {
     }
     const radiusFeature = getFeature(radiusVariants);
 
-    sx.noise.seed = sketch.map(Math.random(), 0, 1, 0, 10000);
+    sx.noiseSeed = Math.floor(sketch.map(Math.random(), 0, 1, 0, 10000));
     sx.lineCount = densityFeature.value;
-    sx.rotate.fn = rotationFeature.value;
-    sx.rotate.inc = rotationStrengthFeature.value;
-    sx.rotate.reverse = Math.random() > 0.5;
-    sx.radius.fn = radiusFeature.value;
+    sx.rotateFn = rotationFeature.value;
+    sx.rotateInc = truncateFloat(rotationStrengthFeature.value, 4);
+    sx.rotateReverse = Math.random() > 0.5;
+    sx.radiusFn = radiusFeature.value;
     sx.background = paperColorFeature.value[0];
     sx.stroke = inkColorFeature.value[1];
 
-    console.log(sx);
+    // console.log(sx);
     gui.controllersRecursive().forEach((c) => c.updateDisplay());
+  }
+
+  function truncateFloat(num, decimalPlaces = 4) {
+    return Number.parseFloat(num.toFixed(decimalPlaces));
+  }
+
+  function getURLParams() {
+    const params = new URLSearchParams(window.location.search);
+    const parsedParams = {};
+    for (const [key, value] of params) {
+      if (/^-?\d+(\.\d+)?$/.test(value)) {
+        parsedParams[key] = parseFloat(value);
+      } else if (
+        value.toLowerCase() === "true" ||
+        value.toLowerCase() === "false"
+      ) {
+        parsedParams[key] = value.toLowerCase() === "true";
+      } else {
+        parsedParams[key] = value;
+      }
+    }
+    return parsedParams;
+  }
+
+  function setURLParams(obj) {
+    const url = new URL(window.location.href);
+    const params = Array.from(url.searchParams.keys());
+    params.forEach((param) => {
+      if (!Object.hasOwnProperty.call(obj, param)) {
+        url.searchParams.delete(param);
+      }
+    });
+    for (const [key, value] of Object.entries(obj)) {
+      url.searchParams.set(key, value);
+    }
+    window.history.replaceState(null, "", url);
+    copyToClipboard(url.toString());
+  }
+
+  async function copyToClipboard(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error("Unable to copy text to clipboard", err);
+    }
   }
 };
 
