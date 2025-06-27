@@ -18,19 +18,16 @@ const revolutions = (sketch) => {
   let dots = [];
 
   // colors
-  let cyan;
-  let magenta;
-  let yellow;
+  const palette = [
+    [0, 174, 239, "c"], // cyan
+    [236, 0, 140, "m"], // magenta
+    [255, 242, 0, "y"], // yellow
+  ];
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
     sketch.strokeWeight(2);
     sketch.noFill();
-
-    dots = [];
-    cyan = sketch.color(0, 174, 239, 150);
-    magenta = sketch.color(236, 0, 140, 150);
-    yellow = sketch.color(255, 242, 0, 150);
 
     if (!isAnimated) {
       sketch.noLoop();
@@ -56,19 +53,13 @@ const revolutions = (sketch) => {
     const circleWidth = Math.min(sketch.width, sketch.height) * 0.8;
 
     for (let i = 0; i < n - 1; i++) {
-      const r = (i + 3) % 3;
-
-      if (r === 0) {
-        sketch.stroke(cyan);
-      } else if (r === 1) {
-        sketch.stroke(yellow);
-      } else if (r === 2) {
-        sketch.stroke(magenta);
-      }
-
+      const [r, g, b, name] = palette[i % palette.length];
+      p5plotSvg.beginSvgGroup(name);
+      sketch.stroke(`rgba(${r},${g},${b},0.6)`);
       const p1 = pointOnCircle(centerX, centerY, dots[i], circleWidth / 2);
       const p2 = pointOnCircle(centerX, centerY, dots[i + 1], circleWidth / 2);
       sketch.line(p1.x, p1.y, p2.x, p2.y);
+      p5plotSvg.endSvgGroup();
     }
   };
 
