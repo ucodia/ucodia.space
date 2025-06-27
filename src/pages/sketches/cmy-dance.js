@@ -49,9 +49,9 @@ const defaultSx = {
 
 const cmyDance = (sketch) => {
   const palette = [
-    [255, 242, 0], // yellow
-    [236, 0, 140], // magenta
-    [0, 174, 239], // cyan
+    [0, 174, 239, "c"], // cyan
+    [236, 0, 140, "m"], // magenta
+    [255, 242, 0, "y"], // yellow
   ];
   let t = 0;
   let realScale = 1;
@@ -172,12 +172,14 @@ const cmyDance = (sketch) => {
     for (let i = 0; i < sx.length; i++) {
       const tInc = i * sx.spacing + sx.offset;
       for (let j = 0; j < paramSet.length; j++) {
-        const [r, g, b] = palette[j % palette.length];
+        const [r, g, b, name] = palette[j % palette.length];
+        p5plotSvg.beginSvgGroup(name);
         sketch.stroke(`rgba(${r},${g},${b},${sx.opacity})`);
         sketch.line(
           ...f(...paramSet[j][0], t + tInc),
           ...f(...paramSet[j][1], t + tInc)
         );
+        p5plotSvg.endSvgGroup();
       }
     }
 

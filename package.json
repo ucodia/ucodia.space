@@ -24,7 +24,7 @@
     "lil-gui": "^0.20.0",
     "lucide-react": "^0.419.0",
     "p5": "^1.11.5",
-    "p5.plotsvg": "^0.1.4",
+    "p5.plotsvg": "^0.1.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-resize-detector": "^12.0.2",
