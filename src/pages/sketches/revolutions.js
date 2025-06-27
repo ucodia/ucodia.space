@@ -26,6 +26,7 @@ const revolutions = (sketch) => {
 
   sketch.setup = () => {
     sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
+    sketch.blendMode(sketch.MULTIPLY);
     sketch.strokeWeight(2);
     sketch.noFill();
 
