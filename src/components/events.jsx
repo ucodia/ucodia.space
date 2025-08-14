@@ -29,6 +29,13 @@ const events = [
     description:
       "Discover a collection of works that started from code and travelled to our world through various means of transformation, it is a tale of what occurs when navigating between realms and the unique manifestations of machine co-creation.",
   },
+  {
+    start: new Date("2025-08-20"),
+    name: "Wattsup - MUTEK AI Ecologies Lab Exhibit",
+    location: "Monument-National, 1182 St Laurent Blvd, Montreal, Quebec H2X 2S5",
+    description:
+      "Wattsup shines a light on AI energy usage by measuring, interpreting and offerring recommendations for a more efficient usage of AI and a sustainable future.",
+  },
 ];
 
 const now = new Date();
@@ -68,7 +75,9 @@ const EventItem = ({ event }) => (
 );
 
 export const UpcomingEvents = () => {
-  const upcomingEvents = events.filter((event) => event.start > now);
+  const upcomingEvents = events
+    .filter((event) => event.start > now)
+    .sort((a, b) => a.start - b.start);
 
   return (
     <ul>
@@ -80,7 +89,9 @@ export const UpcomingEvents = () => {
 };
 
 export const PastEvents = () => {
-  const pastEvents = events.filter((event) => (event.end || event.start) < now);
+  const pastEvents = events
+    .filter((event) => (event.end || event.start) < now)
+    .sort((a, b) => (b.start) - (a.start));
 
   return (
     <ul>
