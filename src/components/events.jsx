@@ -36,6 +36,13 @@ const events = [
     description:
       "Wattsup shines a light on AI energy usage by measuring, interpreting and offerring recommendations for a more efficient usage of AI and a sustainable future.",
   },
+  {
+    start: new Date("2025-10-26"),
+    name: "Mycologue Demo - 44th Annual Fall Mushroom Show",
+    location: "VanDusen Botanical Garden, 5251 Oak St, Vancouver, BC V6M 4H1",
+    description:
+      "Come discover Mycologue, a 3D catalog of mushrooms for the modern era.",
+  },
 ];
 
 const now = new Date();
