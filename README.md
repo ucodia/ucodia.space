@@ -27,11 +27,11 @@ The website will be available at the following address: http://localhost:5173/
 To push
 
 ```
-aws s3 sync ./public/cdn/ s3://cdn.ucodia.space/ --exclude "*.DS_Store"
+rclone sync ./public/cdn/ cloudflare:ucodia-space-cdn --progress
 ```
 
 To pull
 
 ```
-aws s3 sync s3://cdn.ucodia.space/ ./public/cdn/
+rclone sync cloudflare:ucodia-space-cdn ./public/cdn/ --progress
 ```
