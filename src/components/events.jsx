@@ -11,7 +11,7 @@ const events = [
   {
     start: new Date("2024-11-14"),
     end: new Date("2024-11-17"),
-    name: "Man + Machine live installation - Culture Crawl Exhibit",
+    name: "Man + Machine live installation - Culture Crawl Festival",
     location: "Slice of Life, 1636 Venables St, Vancouver, BC V5L 2H2",
     description:
       "Come check out unique algorithmic art coming to life as I collaborate with my trusty drawing machine. You may even be able to create your own and bring it home!.",
@@ -42,6 +42,12 @@ const events = [
     location: "VanDusen Botanical Garden, 5251 Oak St, Vancouver, BC V6M 4H1",
     description:
       "Come discover Mycologue, a 3D catalog of mushrooms for the modern era.",
+  },
+  {
+    start: new Date("2025-11-20"),
+    end: new Date("2025-11-23"),
+    name: "Culture Crawl Festival",
+    location: "Slice of Life, 1636 Venables St, Vancouver, BC V5L 2H2",
   },
 ];
 
