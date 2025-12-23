@@ -45,11 +45,33 @@ export const ThemeProvider = ({ children }) => {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, [theme]);
 
+  const [systemTheme, setSystemTheme] = useState(
+    typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (e) => {
+      setSystemTheme(e.matches ? "dark" : "light");
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  const effectiveTheme = theme === "system" ? systemTheme : theme;
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, effectiveTheme }}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  return {
+    theme: context.effectiveTheme,
+    setTheme: context.setTheme,
+  };
+}

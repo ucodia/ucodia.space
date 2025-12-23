@@ -5,29 +5,14 @@ import { useTheme } from "@/contexts/theme";
 
 const UcodiaHeaderImg = () => {
   const { theme } = useTheme();
-  const [systemTheme, setSystemTheme] = useState(
-    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-  );
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e) => {
-      setSystemTheme(e.matches ? "dark" : "light");
-    };
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
-
-  const effectiveTheme = theme === "system" ? systemTheme : theme;
-  const logoSrc =
-    effectiveTheme === "dark"
-      ? "/dark-ucodia-header.png"
-      : "/light-ucodia-header.png";
 
   return (
     <img
-      src={logoSrc}
+      src={
+        theme === "dark"
+          ? "/dark-ucodia-header.png"
+          : "/light-ucodia-header.png"
+      }
       alt="website header"
       className="h-16 w-auto"
     />

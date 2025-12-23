@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useTheme } from "../contexts/theme";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,28 +10,8 @@ import { Sun, Moon } from "lucide-react";
 
 const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
-  const [systemTheme, setSystemTheme] = useState(
-    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-  );
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e) => {
-      setSystemTheme(e.matches ? "dark" : "light");
-    };
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
-
-  const getCurrentTheme = () => {
-    if (theme === "system") {
-      return systemTheme;
-    }
-    return theme;
-  };
-
-  const ThemeIcon = getCurrentTheme() === "dark" ? Moon : Sun;
+  const ThemeIcon = theme === "dark" ? Moon : Sun;
 
   return (
     <DropdownMenu>
@@ -52,7 +31,7 @@ const ThemeToggle = () => {
           Dark
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          {systemTheme === "dark" ? (
+          {theme === "dark" ? (
             <Moon className="mr-2 h-4 w-4" />
           ) : (
             <Sun className="mr-2 h-4 w-4" />
