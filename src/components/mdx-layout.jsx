@@ -1,20 +1,36 @@
 import ThemeToggle from "@/components/theme-toggle";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useTheme } from "@/contexts/theme";
 
 const UcodiaHeaderImg = () => {
+  const { theme } = useTheme();
+  const [systemTheme, setSystemTheme] = useState(
+    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (e) => {
+      setSystemTheme(e.matches ? "dark" : "light");
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  const effectiveTheme = theme === "system" ? systemTheme : theme;
+  const logoSrc =
+    effectiveTheme === "dark"
+      ? "/dark-ucodia-header.png"
+      : "/light-ucodia-header.png";
+
   return (
-    <picture>
-      <source
-        srcSet="/dark-ucodia-header.png"
-        media="(prefers-color-scheme: dark)"
-      />
-      <img
-        src="/light-ucodia-header.png"
-        alt="website header"
-        className="h-16 w-auto"
-      />
-    </picture>
+    <img
+      src={logoSrc}
+      alt="website header"
+      className="h-16 w-auto"
+    />
   );
 };
 
