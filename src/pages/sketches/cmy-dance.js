@@ -38,12 +38,14 @@ const defaultSx = {
   animate: true,
   autoRand: true,
   autoRandInterval: 60,
+  xmsMin: 1,
+  xmsMax: 6,
+  ymsMin: 1,
+  ymsMax: 6,
   fracMin: 5,
   fracMax: 50,
   ampMin: -300,
   ampMax: 300,
-  xmsMax: 6,
-  ymsMax: 6,
   seed: "",
 };
 
@@ -78,9 +80,13 @@ const cmyDance = (sketch) => {
   gui.add(sx, "autoRandInterval", 1, 120, 1);
   const seedControl = gui.add(sx, "seed");
   const generatorFolder = gui.addFolder("generator");
+  generatorFolder.add(sx, "xmsMin", 1, 10, 1);
   generatorFolder.add(sx, "xmsMax", 1, 10, 1);
+  generatorFolder.add(sx, "ymsMin", 1, 10, 1);
   generatorFolder.add(sx, "ymsMax", 1, 10, 1);
-  generatorFolder.add(sx, "fracMax", 5, 100, 1);
+  generatorFolder.add(sx, "fracMin", 1, 100, 1);
+  generatorFolder.add(sx, "fracMax", 1, 100, 1);
+  generatorFolder.add(sx, "ampMin", -500, -1, 1);
   generatorFolder.add(sx, "ampMax", 1, 500, 1);
   generatorFolder.close();
 
@@ -268,17 +274,17 @@ function getRandomSet(sx) {
   const lcg = numericalRecipesLcg(hashCode(sx.seed));
 
   const getRandomTF = () => [
-    getRandomInt(5, sx.fracMax, lcg),
-    getRandomInt(-300, 300, lcg),
+    getRandomInt(sx.fracMin, sx.fracMax, lcg),
+    getRandomInt(sx.ampMin, sx.ampMax, lcg),
   ];
   const getRandomParams = () => [
     [
-      ...Array.from(Array(getRandomInt(1, sx.xmsMax, lcg)).keys()).map(
+      ...Array.from(Array(getRandomInt(sx.xmsMin, sx.xmsMax, lcg)).keys()).map(
         getRandomTF
       ),
     ],
     [
-      ...Array.from(Array(getRandomInt(1, sx.ymsMax, lcg)).keys()).map(
+      ...Array.from(Array(getRandomInt(sx.ymsMin, sx.ymsMax, lcg)).keys()).map(
         getRandomTF
       ),
     ],
