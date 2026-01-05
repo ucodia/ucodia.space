@@ -115,6 +115,11 @@ const routes = [
     element: <ExternalRedirect to="https://mycologue.org" />,
   },
   {
+    name: "wattsup ⚡️",
+    path: "wattsup",
+    element: <ExternalRedirect to="https://wattsup.tech" />,
+  },
+  {
     name: "source code",
     path: "source-code",
     element: <ExternalRedirect to="https://github.com/Ucodia/ucodia.space" />,
