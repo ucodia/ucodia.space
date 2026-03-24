@@ -20,7 +20,7 @@ Then whenever you want to start the web application, run the following command.
 npm run dev
 ```
 
-The website will be available at the following address: http://localhost:5173/
+The website will be available at the following address: https://ucodia-space.localhost:1355
 
 ### Synchronizing the CDN
 
