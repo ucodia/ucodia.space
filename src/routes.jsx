@@ -119,6 +119,11 @@ const routes = [
     path: "wattsup",
     element: <ExternalRedirect to="https://wattsup.tech" />,
   },
+    {
+    name: "monet 👨‍🎨",
+    path: "monet",
+    element: <ExternalRedirect to="https://monet.ucodia.space" />,
+  },
   {
     name: "source code",
     path: "source-code",
