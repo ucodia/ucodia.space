@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.layers {
+  position: relative;
+  width: 640px;
+  max-width: 100%;
+}
+
+.layers :global(#watch-display) {
+  width: 100%;
+  display: block;
+}
+
+.skin {
+  position: absolute;
+  top: 11.36%;
+  left: 50%;
+  width: 81.25%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+@media (max-width: 700px) {
+  .layers {
+    width: 320px;
+  }
+}
